@@ -17,11 +17,6 @@ from pathlib import Path
 
 import pytest
 
-from idaes.core.ui.flowsheet import (
-    FlowsheetSerializer,
-    FlowsheetDiff,
-    validate_flowsheet,
-)
 from idaes.models.properties.swco2 import SWCO2ParameterBlock
 from idaes.models.unit_models import Heater, PressureChanger, HeatExchanger
 from idaes.models.unit_models.pressure_changer import ThermodynamicAssumption
@@ -35,6 +30,9 @@ from idaes.models.properties.general_helmholtz import helmholtz_available
 
 from idaes.models.unit_models import Flash, Mixer
 from .shared import dict_diff
+
+from idaes_ui.fsvis.flowsheet import FlowsheetSerializer, FlowsheetDiff
+from idaes_ui.fsvis import validate_flowsheet
 
 # === Sample data ===
 

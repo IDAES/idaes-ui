@@ -12,7 +12,7 @@
 #################################################################################
 import pytest
 
-from idaes.core.ui.icons.icons import UnitModelIcon
+from idaes_ui.icons.icons import UnitModelIcon
 
 
 @pytest.mark.parametrize(
@@ -52,18 +52,26 @@ def test_icon_mapping(test_input, expected):
     [
         (
             "default",
-            "{'groups': {'in': {'position': {'name': 'left', 'args': {'x': 10, 'y': 35}}, "
-            "'attrs': {'rect': {'stroke': '#000000', 'stroke-width': 0, 'width': 0, 'height': 0}}, 'markup': "
-            "'<g><rect/></g>'}, 'out': {'position': {'name': 'left', 'args': {'x': 41, 'y': 35}}, "
-            "'attrs': {'rect': {'stroke': '#000000', 'stroke-width': 0, 'width': 0, 'height': 0}}, 'markup': "
-            "'<g><rect/></g>'}}, 'items':[]}",
+            (
+                "{'groups': {'in': {'position': {'name': 'left', 'args': {'x': 10, 'y':"
+                " 35}}, 'attrs': {'rect': {'stroke': '#000000', 'stroke-width': 0,"
+                " 'width': 0, 'height': 0}}, 'markup': '<g><rect/></g>'}, 'out':"
+                " {'position': {'name': 'left', 'args': {'x': 41, 'y': 35}}, 'attrs':"
+                " {'rect': {'stroke': '#000000', 'stroke-width': 0, 'width': 0,"
+                " 'height': 0}}, 'markup': '<g><rect/></g>'}}, 'items':[]}"
+            ),
         ),
         (
             "cstr",
-            "{'groups': {'in': {'position': {'name': 'left', 'args': {'x': 15, 'y': 0, 'dx': 1, 'dy': 1}}, 'attrs': "
-            "{'rect': {'stroke': '#000000', 'stroke-width': 0, 'width': 0, 'height': 0}}, 'markup': '<g><rect/></g>'}, "
-            "'out': {'position': {'name': 'left', 'args': {'x': 48, 'y': 45, 'dx': 1, 'dy': 1}}, 'attrs': {'rect': "
-            "{'stroke': '#000000', 'stroke-width': 0, 'width': 0, 'height': 0}}, 'markup': '<g><rect/></g>'}}, 'items': []}",
+            (
+                "{'groups': {'in': {'position': {'name': 'left', 'args': {'x': 15, 'y':"
+                " 0, 'dx': 1, 'dy': 1}}, 'attrs': {'rect': {'stroke': '#000000',"
+                " 'stroke-width': 0, 'width': 0, 'height': 0}}, 'markup':"
+                " '<g><rect/></g>'}, 'out': {'position': {'name': 'left', 'args': {'x':"
+                " 48, 'y': 45, 'dx': 1, 'dy': 1}}, 'attrs': {'rect': {'stroke':"
+                " '#000000', 'stroke-width': 0, 'width': 0, 'height': 0}}, 'markup':"
+                " '<g><rect/></g>'}}, 'items': []}"
+            ),
         ),
     ],
 )

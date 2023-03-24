@@ -18,7 +18,7 @@ from collections import namedtuple
 from pathlib import Path
 import sys
 import time
-from typing import Optional, Union
+from typing import Optional, Union, Dict, Tuple
 import webbrowser
 
 # package
@@ -159,7 +159,8 @@ def visualize(
             if not quiet:
                 cwd = save_path.parent.absolute()
                 print(
-                    f"Saving flowsheet to default file '{save_path.name}' in current directory ({cwd})"
+                    f"Saving flowsheet to default file '{save_path.name}' in current"
+                    f" directory ({cwd})"
                 )
         else:
             if not quiet:
@@ -238,7 +239,10 @@ def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None)
         save_path = save_dir / save_file
     # Edge case: too many NAME-#.json files for this NAME
     if counter == max_versions:
-        why = f"Found {max_versions} numbered files of form '{name}-<num>.json'. That's too many."
+        why = (
+            f"Found {max_versions} numbered files of form '{name}-<num>.json'. That's"
+            " too many."
+        )
         _log.error(why)
         raise errors.TooManySavedVersions(why)
     # Return new (versioned) path

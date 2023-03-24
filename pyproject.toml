@@ -40,6 +40,8 @@ build-backend = "setuptools.build_meta"
     dependencies = [
         # Don't version setuptools, various bits complain
         "setuptools",
+        # For running tests
+        "pytest",
         # Main IDAES Python repository
         "idaes-pse"
     ]
@@ -89,4 +91,16 @@ idaes_ui = [
     "*.dat",
     "*.yml",
     "*.yaml"
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra"
+testpaths = [
+    "idaes_ui"
+]
+markers = [
+    "component: between unit and integration test",
+    "unit: test one small unit of functionality",
+    "integration: test integrated functionality"
 ]

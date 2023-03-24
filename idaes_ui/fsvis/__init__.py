@@ -14,3 +14,4 @@
 # pylint: disable=missing-module-docstring
 
 from .fsvis import visualize, VisualizeResult
+from .flowsheet import validate_flowsheet
