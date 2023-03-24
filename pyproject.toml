@@ -42,7 +42,7 @@ build-backend = "setuptools.build_meta"
         "setuptools",
         # For running tests
         "pytest",
-        # Main IDAES Python repository
+        # IDAES release
         "idaes-pse"
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
@@ -52,6 +52,8 @@ build-backend = "setuptools.build_meta"
 dev = [
     # For adding copyright headers (see addheader.yml and the readme)
     "addheader >= 0.3.0",
+    # Get IDAES from main branch in Github
+    "idaes-pse @ git+https://github.com/IDAES/idaes-pse"
 ]
 # For packaging
 pkg = [
