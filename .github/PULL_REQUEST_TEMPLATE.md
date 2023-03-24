@@ -1,12 +1,8 @@
-## Fixes
+Fixes
 
 
-## Summary/Motivation:
+Proposed changes:
 
-
-## Changes proposed in this PR:
--
--
 
 ### Legal Acknowledgement
 
