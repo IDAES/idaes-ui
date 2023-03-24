@@ -338,6 +338,8 @@ def test_loop_forever():
         thr = Thread(target=fsvis._loop_forever, args=(quietness,), daemon=True)
         thr.start()
         # wait a while, make sure it's still alive
+        print("sleeping")
         time.sleep(3)
+        print("check thread")
         assert thr.is_alive()
     # threads should die when process exits
