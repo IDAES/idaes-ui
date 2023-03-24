@@ -31,7 +31,7 @@ import time
 
 # package
 from idaes import logger
-from ..flowsheet import FlowsheetDiff, FlowsheetSerializer
+from idaes.core.ui.flowsheet import FlowsheetDiff, FlowsheetSerializer
 from . import persist, errors
 
 _log = logger.getLogger(__name__)
