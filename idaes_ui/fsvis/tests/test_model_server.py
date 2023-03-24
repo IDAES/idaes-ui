@@ -84,7 +84,7 @@ def flash_model():
     return m
 
 
-@pytest.mark.component
+@pytest.mark.integration
 def test_flowsheet_server_run(flash_model):
     import requests
 
