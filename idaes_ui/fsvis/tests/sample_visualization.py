@@ -20,11 +20,12 @@ a sample visualization.
 import sys
 import time
 from idaes.models.flowsheets.demo_flowsheet import build_flowsheet
+from idaes_ui.fsvis import visualize
 
 
 def main():
     m = build_flowsheet()
-    m.fs.visualize("sample_visualization")
+    visualize(m.fs, "sample_visualization")
     print("Starting server. Press Control-C to stop.")
     try:
         while 1:

@@ -31,8 +31,7 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
     BTXParameterBlock,
 )
 from idaes.models.unit_models import Flash
-from idaes.core.ui.fsvis import fsvis, errors
-from idaes.core.ui.flowsheet import validate_flowsheet
+from idaes_ui.fsvis import fsvis, errors, validate_flowsheet
 
 
 @pytest.fixture(scope="module")
@@ -99,7 +98,7 @@ def test_visualize(flash_model, tmp_path):
 @pytest.mark.integration
 def test_save_visualization(flash_model, tmp_path):
     # view logs from the persistence module
-    logging.getLogger("idaes.core.ui.fsvis").setLevel(logging.DEBUG)
+    logging.getLogger("idaes_ui.fsvis").setLevel(logging.DEBUG)
     flowsheet = flash_model.fs
     # Start the visualization server, using temporary save location
     save_location = tmp_path / "flash-vis.json"
@@ -124,7 +123,7 @@ def _canonicalize(d):
 @pytest.mark.unit
 def test_invoke(flash_model):
     # from inspect import signature -- TODO: use for checking params
-    from idaes.core.ui import fsvis as fsvis_pkg
+    from idaes_ui import fsvis as fsvis_pkg
 
     functions = {
         "method": getattr(flash_model.fs, "visualize"),
@@ -156,7 +155,7 @@ def test_flowsheet_name(flash_model, tmp_path):
 
 @pytest.mark.unit
 def test_mock_webbrowser(flash_model):
-    from idaes.core.ui.fsvis import fsvis
+    from idaes_ui.fsvis import fsvis
 
     wb = fsvis.webbrowser
     for wb_mock in (MockWB(True), MockWB(False)):
@@ -211,7 +210,7 @@ def test_visualize_save_versions(flash_model, save_files_prefix):
             if i == 0:
                 assert re.search(f"{path.name}.json", result.store.filename)
             else:
-                assert re.search(f"{path.name}.*{i}.*\.json", result.store.filename)
+                assert re.search(rf"{path.name}.*{i}.*\.json", result.store.filename)
         else:
             msv, fsvis.MAX_SAVED_VERSIONS = fsvis.MAX_SAVED_VERSIONS, i - 1
             with pytest.raises(RuntimeError):
@@ -294,7 +293,7 @@ def test_visualize_save_loadfromsaved(flash_model, save_files_prefix):
 
 @pytest.mark.unit
 def test_pick_default_save_location():
-    from idaes.core.ui.fsvis.fsvis import _pick_default_save_location as pdsl
+    from idaes_ui.fsvis.fsvis import _pick_default_save_location as pdsl
 
     p = pdsl("foo", None)
     assert str(p).endswith("foo.json")
@@ -304,7 +303,7 @@ def test_pick_default_save_location():
 
 @pytest.mark.unit
 def test_existing_save_path(tmp_path):
-    from idaes.core.ui.fsvis.fsvis import _handle_existing_save_path as hesp
+    from idaes_ui.fsvis.fsvis import _handle_existing_save_path as hesp
 
     name = "foo"
     save_path = tmp_path / (name + ".json")
@@ -336,8 +335,7 @@ def test_loop_forever():
     from threading import Thread
 
     for quietness in (True, False):
-        thr = Thread(target=fsvis._loop_forever, args=(quietness,))
-        thr.setDaemon(True)
+        thr = Thread(target=fsvis._loop_forever, args=(quietness,), daemon=True)
         thr.start()
         # wait a while, make sure it's still alive
         time.sleep(3)

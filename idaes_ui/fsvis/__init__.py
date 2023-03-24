@@ -13,4 +13,4 @@
 # TODO: Missing doc strings
 # pylint: disable=missing-module-docstring
 
-from .fsvis import visualize, VisualizeResult
+from .fsvis import visualize, VisualizeResult, validate_flowsheet

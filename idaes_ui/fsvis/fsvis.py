@@ -18,7 +18,7 @@ from collections import namedtuple
 from pathlib import Path
 import sys
 import time
-from typing import Optional, Union
+from typing import Optional, Union, Dict, Tuple
 import webbrowser
 
 # package
@@ -159,7 +159,8 @@ def visualize(
             if not quiet:
                 cwd = save_path.parent.absolute()
                 print(
-                    f"Saving flowsheet to default file '{save_path.name}' in current directory ({cwd})"
+                    f"Saving flowsheet to default file '{save_path.name}' in current"
+                    f" directory ({cwd})"
                 )
         else:
             if not quiet:
@@ -238,7 +239,10 @@ def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None)
         save_path = save_dir / save_file
     # Edge case: too many NAME-#.json files for this NAME
     if counter == max_versions:
-        why = f"Found {max_versions} numbered files of form '{name}-<num>.json'. That's too many."
+        why = (
+            f"Found {max_versions} numbered files of form '{name}-<num>.json'. That's"
+            " too many."
+        )
         _log.error(why)
         raise errors.TooManySavedVersions(why)
     # Return new (versioned) path
@@ -249,3 +253,86 @@ def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None)
 def _init_logging(lvl):
     ui_logger = logger.getIdaesLogger("ui", level=lvl, tag="ui")
     ui_logger.setLevel(lvl)
+
+
+def validate_flowsheet(fs: Dict) -> Tuple[bool, str]:
+    """Validate a flowsheet.
+
+    Expected format is below.
+
+    .. code-block:: json
+
+        {
+            "model": {
+                "id": "<model name>",
+                "unit_models": {
+                    "<component name>": {
+                        "image": "<image name>",
+                        "type": "<component type name>",
+                        "...": "more values..."
+                    },
+                    "...": "etc."
+                },
+                "arcs": {
+                    "<arc name>": {
+                        "source": "<component name>",
+                        "dest": "<component name>",
+                        "label": "<label text>"
+                    },
+                    "...": "etc."
+                }
+            },
+            "cells": [
+                {"id": "<component_name>", "...": "other values used by JointJS.."},
+                "..."
+            ]
+        }
+
+    Args:
+        fs: Flowsheet to validate
+
+    Return:
+        Tuple of (True, "") for OK, and (False, "<message>") for failure
+    """
+    # very quick and dirty validation, but it does make for nice clean error messages
+    for key in "model", "cells":
+        if key not in fs:
+            return False, f"Missing top-level key '{key}'"
+    model, component_ids = fs["model"], set()
+    for key2 in "id", "unit_models", "arcs":
+        if key2 not in model:
+            return False, f"The flowsheet model is missing key '{key2}'"
+        if key2 == "unit_models":
+            for ckey, cval in model[key2].items():
+                for key3 in "image", "type":
+                    if key3 not in cval:
+                        return False, f"Unit model '{ckey}' is missing key '{key3}'"
+                component_ids.add(ckey)
+        elif key2 == "arcs":
+            for akey, aval in model[key2].items():
+                for key3 in "source", "dest", "label":
+                    if key3 not in aval:
+                        return False, f"Arc '{akey}' is missing key '{key3}'"
+                component_ids.add(akey)
+    cells = fs["cells"]
+    # Check if all cell identifiers are in the model
+    cell_ids = set()
+    for i, cell in enumerate(cells):
+        if "id" not in cell:
+            return False, f"Cell #{i + 1} is missing key 'id'"
+        cell_id = cell["id"]
+        if cell_id not in component_ids:
+            return False, f"Cell id '{cell_id}' not found in unit models or arcs"
+        cell_ids.add(cell_id)
+    # Check if all model id's are in the cells
+    if cell_ids != component_ids:
+        missing = component_ids - cell_ids
+        sfx = "s" if len(missing) > 1 else ""
+        return (
+            False,
+            (
+                f"Component id{sfx} {missing} {'are' if sfx else 'is'} not in the"
+                " layout cells"
+            ),
+        )
+    return True, ""

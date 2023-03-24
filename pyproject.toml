@@ -99,3 +99,8 @@ addopts = "-ra"
 testpaths = [
     "idaes_ui"
 ]
+markers = [
+    "component: between unit and integration test",
+    "unit: test one small unit of functionality",
+    "integration: test integrated functionality"
+]
