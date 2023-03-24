@@ -1,0 +1,92 @@
+[build-system]
+requires = [
+    "setuptools>=61",
+    "wheel",
+    "setuptools_scm[toml]"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+    name = "idaes_ui"
+    description = "IDAES Process Systems Engineering User Interface"
+    readme = "README.md"
+    version = "0.0.1"
+    license = {text="BSD"}
+    requires-python = ">=3.8"
+    authors = [
+        {name="The IDAES Project"},
+        {name="Dan Gunter", email="dkgunter@lbl.gov"}
+    ]
+    classifiers = [
+            "Development Status :: 3 - Alpha",
+            "Intended Audience :: End Users/Desktop",
+            "Intended Audience :: Science/Research",
+            "License :: OSI Approved :: BSD License",
+            "Natural Language :: English",
+            "Operating System :: MacOS",
+            "Operating System :: Microsoft :: Windows",
+            "Operating System :: Unix",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: Implementation :: CPython",
+            "Topic :: Scientific/Engineering :: Mathematics",
+            "Topic :: Scientific/Engineering :: Chemistry",
+            "Topic :: Software Development :: Libraries :: Python Modules",
+    ]
+    dependencies = [
+        # Don't version setuptools, various bits complain
+        "setuptools",
+        # Main IDAES Python repository
+        "idaes-pse"
+    ]
+    keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
+
+[project.optional-dependencies]
+# Just for developers (they should also add 'jb')
+dev = [
+    # For adding copyright headers (see addheader.yml and the readme)
+    "addheader >= 0.3.0",
+]
+# For packaging
+pkg = [
+    "build",
+    "twine"
+]
+
+[project.urls]
+github = "https://github.com/idaes/idaes-ui"
+issues = "https://github.com/idaes/idaes-ui/issues"
+
+#[project.scripts]
+# idaesx = "idaes_examples.build:main"
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.packages]
+find = {namespaces = false}
+
+[tool.setuptools.package-data]
+idaes_ui = [
+    "*.template",
+    "*.json",
+    "*.yaml",
+    "*.svg",
+    "*.png",
+    "*.jpg",
+    "*.csv",
+    "*.ipynb",
+    "*.txt",
+    "*.js",
+    "*.css",
+    "*.html",
+    "*.json.gz",
+    "*.dat",
+    "*.yml",
+    "*.yaml"
+]
