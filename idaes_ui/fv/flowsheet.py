@@ -35,8 +35,8 @@ from pyomo.network.port import Port
 
 # package
 from idaes import logger
-from idaes.core.ui.icons.icons import UnitModelIcon
-from idaes.core.ui.icons.positioning import UnitModelsPositioning
+from idaes_ui.fv.icons.icons import UnitModelIcon
+from idaes_ui.fv.icons.positioning import UnitModelsPositioning
 
 _log = logger.getLogger(__name__)
 
