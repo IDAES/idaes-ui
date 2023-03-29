@@ -25,7 +25,7 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
     BTXParameterBlock,
 )
 from idaes.models.unit_models import Flash
-
+from .test_fsvis import flash_model
 
 @pytest.mark.unit
 def test_flowsheet_server_class():
