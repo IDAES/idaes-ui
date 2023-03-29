@@ -236,7 +236,7 @@ class UnitModelsPositioning:
             node_name = queue.popleft()
 
             if node_name not in visited_nodes:
-                _log.debug("_build_abstract_layout - node_name:", node_name)
+                _log.debug(f"_build_abstract_layout - node_name: {node_name}")
                 visited_nodes.add(node_name)
 
                 node = self._nodes[node_name]
