@@ -28,6 +28,7 @@ The IDAES UI components are distributed as a Python package using the Conda pack
 
 ## Flowsheet Visualizer {#fv}
 
+<img src="sample_fv.png" style="float: right; margin-left: 1em;"></img>
 The IDAES-IP [Flowsheet Visualizer](#flowsheet-visualizer) (FV) is a graphical user interface that displays complex *flowsheets* (connected components representing a system or sub-system to be optimized) created with the IDAES-IP Python core software. The FV uses web technologies (HTML, CSS, JavaScript) so is cross-platform and has identical functionality on computers running Windows, Mac, and UNIX.
 
 **FV Sections:** [Tutorials](#fv-tutorials) | [How-to](#fv-howto) | [Reference](#fv-reference)
