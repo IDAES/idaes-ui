@@ -1,8 +1,8 @@
 ---
-title: IDAES UI
-creator: Dan Gunter
-author: The IDAES Project
-date: 2023-03-28
+Title: IDAES UI
+Creator: Dan Gunter
+Author: The IDAES Project
+Date: 2023-03-28
 ---
 <span id="top" />
 
