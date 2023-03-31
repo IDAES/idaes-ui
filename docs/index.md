@@ -50,12 +50,14 @@ A simple example flowsheet is included and can be viewed with:
 This will open the system's default web browser to show the flowsheet and its controls.
 
 <span id="fv-howto" />
-### How-to {#fv-howto}
+
+### How-to
 
 *TBD*
 
 <span id="fv-reference" />
-### Reference {#fv-reference}
+
+### Reference
 
 *TBD*
 
