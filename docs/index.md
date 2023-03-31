@@ -53,13 +53,32 @@ This will open the system's default web browser to show the flowsheet and its co
 
 ### How-to
 
-*TBD*
+#### Start the visualizer
+Assuming your flowsheet object is called `flowsheet`:
+* From within a Jupyter Notebook, `flowsheet.visualize("Flowsheet Name")`
+* From within a Python script, add a keyword argument if you want the visualizer to keep running: `flowsheet.visualize("Flowsheet Name", loop_forever=True)`
+
+#### Save the visualization
+* Export &rarr; Flowsheet to save the flowsheet as an image
+* Export &rarr; Stream table to save the stream table as comma-separated values
+
+#### Basic controls in the diagram
+
+Unit models (shapes)
+* Click and drag unit models to move them 
+  * Right-click on a unit model to rotate it 90 degrees
+  * Drag in an open area to create a rectangle that selects multiple unit models at once
+
+Streams (lines)
+* Drag streams to change their routing 
+  * Click on the line to create a new segment for routing, and eliminate that segment by clicking the dot that appears on mouseover
+
 
 <span id="fv-reference" />
 
 ### Reference
 
-*TBD*
+See the [visualize()](https://github.com/IDAES/idaes-ui/blob/main/idaes_ui/fsvis/fsvis.py) function code for documentation on its options and behavior. 
 
 
 
