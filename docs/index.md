@@ -4,6 +4,7 @@ creator: Dan Gunter
 author: The IDAES Project
 date: 2023-03-28
 ---
+<span id="top" />
 
 # IDAES UI
 
@@ -17,6 +18,7 @@ Sections:
 * [Flowsheet Visualizer](#fv) - Visualize flowsheet layout and properties.
 
 <span id="getting-started" />
+
 ## Getting Started
 
 The IDAES UI components are distributed as a Python package using the Conda package management system from [Anaconda](https://docs.anaconda.com). They are normally installed with the IDAES software. For details, see the [IDAES installation instructions](https://idaes-pse.readthedocs.io/en/latest/tutorials/getting_started/index.html). 
@@ -24,6 +26,7 @@ The IDAES UI components are distributed as a Python package using the Conda pack
 💻Developers: To install the UI components from GitHub, follow the procedures outlined in the IDAES-IP [Advanced User Installation](https://idaes-pse.readthedocs.io/en/latest/tutorials/advanced_install/index.html) section to set up your environment. Then you should fork and clone the [idaes/idaes-ui](https://github.com/IDAES/idaes-ui.git) repository and install it with: `pip install -e .`
 
 <span id="fv" />
+
 ## Flowsheet Visualizer
 
 Screenshot of the Flowsheet Visualizer:
@@ -35,6 +38,7 @@ The IDAES-IP [Flowsheet Visualizer](#flowsheet-visualizer) (FV) is a graphical u
 **FV Sections:** [Tutorials](#fv-tutorials) | [How-to](#fv-howto) | [Reference](#fv-reference)
 
 <span id="fv-tutorials" />
+
 ### Tutorials
 
 #### Example flowsheet
