@@ -20,7 +20,7 @@ a sample visualization.
 import sys
 import time
 from idaes.models.flowsheets.demo_flowsheet import build_flowsheet
-from idaes_ui.fsvis import visualize
+from idaes_ui.fv import visualize
 
 
 def main():

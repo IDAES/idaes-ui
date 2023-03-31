@@ -31,8 +31,8 @@ from idaes.models.properties.general_helmholtz import helmholtz_available
 from idaes.models.unit_models import Flash, Mixer
 from .shared import dict_diff
 
-from idaes_ui.fsvis.flowsheet import FlowsheetSerializer, FlowsheetDiff
-from idaes_ui.fsvis import validate_flowsheet
+from idaes_ui.fv.flowsheet import FlowsheetSerializer, FlowsheetDiff
+from idaes_ui.fv import validate_flowsheet
 
 # === Sample data ===
 

@@ -19,13 +19,13 @@ import pytest
 from pyomo.environ import ConcreteModel
 
 # pkg
-from idaes_ui.fsvis import model_server, errors, persist
+from idaes_ui.fv import model_server, errors, persist
 from idaes.core import FlowsheetBlock
 from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import (
     BTXParameterBlock,
 )
 from idaes.models.unit_models import Flash
-
+from .test_fsvis import flash_model
 
 @pytest.mark.unit
 def test_flowsheet_server_class():
@@ -61,27 +61,6 @@ def test_update_flowsheet(flash_model):
     # Update should fail not-found
     with pytest.raises(errors.FlowsheetNotFoundInMemory):
         srv.update_flowsheet("oscar")
-
-
-@pytest.fixture(scope="module")
-def flash_model():
-    """Flash unit model. Use '.fs' attribute to get the flowsheet."""
-    m = ConcreteModel()
-    m.fs = FlowsheetBlock(dynamic=False)
-    # Flash properties
-    m.fs.properties = BTXParameterBlock(
-        valid_phase=("Liq", "Vap"), activity_coeff_model="Ideal", state_vars="FTPz"
-    )
-    # Flash unit
-    m.fs.flash = Flash(property_package=m.fs.properties)
-    m.fs.flash.inlet.flow_mol.fix(1)
-    m.fs.flash.inlet.temperature.fix(368)
-    m.fs.flash.inlet.pressure.fix(101325)
-    m.fs.flash.inlet.mole_frac_comp[0, "benzene"].fix(0.5)
-    m.fs.flash.inlet.mole_frac_comp[0, "toluene"].fix(0.5)
-    m.fs.flash.heat_duty.fix(0)
-    m.fs.flash.deltaP.fix(0)
-    return m
 
 
 @pytest.mark.integration

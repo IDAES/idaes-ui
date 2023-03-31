@@ -11,7 +11,7 @@
 # for full copyright and license information.
 #################################################################################
 """
-Tests for the `idaes_ui.fsvis.persist` module
+Tests for the `idaes_ui.fv.persist` module
 """
 # stdlib
 import json
@@ -20,7 +20,7 @@ import json
 import pytest
 
 # pkg
-from idaes_ui.fsvis import persist, errors
+from idaes_ui.fv import persist, errors
 
 # === Data ===
 

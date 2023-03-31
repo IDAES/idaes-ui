@@ -42,9 +42,9 @@ MAX_SAVED_VERSIONS = 100
 #: Return value for `visualize()` function. This namedtuple has three
 #: attributes that can be accessed by position or name:
 #:
-#: - store = :class:`idaes.core.ui.fsvis.persist.DataStore` object (with a ``.filename`` attribute)
+#: - store = :class:`idaes.core.ui.fv.persist.DataStore` object (with a ``.filename`` attribute)
 #: - port = Port number (integer) where web server is listening
-#: - server = :class:`idaes.core.ui.fsvis.model_server.FlowsheetServer` object for the web server thread
+#: - server = :class:`idaes.core.ui.fv.model_server.FlowsheetServer` object for the web server thread
 #:
 VisualizeResult = namedtuple("VisualizeResult", ["store", "port", "server"])
 
@@ -97,8 +97,8 @@ def visualize(
         See :data:`VisualizeResult`
 
     Raises:
-        :mod:`idaes.core.ui.fsvis.errors.VisualizerSaveError`: if the data storage at 'save_as' can't be opened
-        :mod:`idaes.core.ui.fsvis.errors.VisualizerError`: Any other errors
+        :mod:`idaes.core.ui.fv.errors.VisualizerSaveError`: if the data storage at 'save_as' can't be opened
+        :mod:`idaes.core.ui.fv.errors.VisualizerError`: Any other errors
         RuntimeError: If too many versions of the save file already exist. See :data:`MAX_SAVED_VERSIONS`.
     """
     global web_server  # pylint: disable=global-statement
@@ -112,7 +112,7 @@ def visualize(
         web_server.add_setting("save_time_interval", save_time_interval)
         web_server.start()
         if not quiet:
-            print("Started visualization server")
+            _log.info("Started visualization server")
     else:
         _log.info(f"Using HTTP server on localhost, port {web_server.port}")
 
@@ -139,7 +139,7 @@ def visualize(
         if save_path.exists() and load_from_saved:
             # Load from saved
             datastore = persist.DataStore.create(save_path)
-            print(f"Loading saved flowsheet from '{save_path}'")
+            _log.info(f"Loading saved flowsheet from '{save_path}'")
             datastore.load()
         else:
             # Create new file
@@ -158,7 +158,7 @@ def visualize(
         if use_default:
             if not quiet:
                 cwd = save_path.parent.absolute()
-                print(
+                _log.info(
                     f"Saving flowsheet to default file '{save_path.name}' in current"
                     f" directory ({cwd})"
                 )
@@ -186,11 +186,9 @@ def visualize(
             _log.debug("Flowsheet opened in browser window")
         else:
             _log.warning(f"Could not open flowsheet URL '{url}' in browser")
-            if not quiet:
-                print("Error: Unable to open flowsheet in web browser.")
 
     if not quiet:
-        print(f"Flowsheet visualization at: {url}")
+        _log.info(f"Flowsheet visualization at: {url}")
 
     if loop_forever:
         _loop_forever(quiet)

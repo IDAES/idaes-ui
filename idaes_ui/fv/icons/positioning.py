@@ -13,7 +13,12 @@
 # TODO: Missing doc strings
 # pylint: disable=missing-module-docstring
 
+# stdlib
 from collections import deque
+import logging
+
+# logging setup
+_log = logging.getLogger(__name__)
 
 
 class Node:
@@ -231,7 +236,7 @@ class UnitModelsPositioning:
             node_name = queue.popleft()
 
             if node_name not in visited_nodes:
-                print("_build_abstract_layout - node_name:", node_name)
+                _log.debug(f"_build_abstract_layout - node_name: {node_name}")
                 visited_nodes.add(node_name)
 
                 node = self._nodes[node_name]
