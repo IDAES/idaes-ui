@@ -27,6 +27,8 @@ The IDAES UI components are distributed as a Python package using the Conda pack
 
 <span id="fv" />
 
+----
+
 ## Flowsheet Visualizer
 
 Screenshot of the Flowsheet Visualizer:
