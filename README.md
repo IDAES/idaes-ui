@@ -1,8 +1,11 @@
+**This repository is a work in progress is NOT yet ready for download and use by the general public.  
+Please check back in May, 2023.**
+
 # IDAES User Interfaces (idaes-ui)
 
 This repository contains user interfaces for the IDAES Integrated Platform (IDAES-IP).
 
-**NOTE: This repository is not ready for download and use by the general public. Please check back in May 2023.**
+[Documentation](docs/index.md)
 
 ## Flowsheet Visualizer
 
