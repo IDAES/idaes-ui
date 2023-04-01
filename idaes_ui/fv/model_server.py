@@ -21,6 +21,7 @@ The main class is `FlowsheetServer`, which is instantiated from the `visualize()
 # stdlib
 import http.server
 import json
+import logging
 from pathlib import Path
 import re
 import socket
@@ -30,11 +31,10 @@ from urllib.parse import urlparse
 import time
 
 # package
-from idaes import logger
 from idaes_ui.fv.flowsheet import FlowsheetDiff, FlowsheetSerializer
 from . import persist, errors
 
-_log = logger.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 # Directories
 _this_dir = Path(__file__).parent.absolute()
@@ -372,6 +372,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
 
     def _write_json(self, code, data):
         str_json = json.dumps(data)
+        if _log.isEnabledFor(logging.DEBUG):
+            _log.debug(f"Sending JSON data:\n---begin---\n{str_json}\n---end---")
         value = utf8_encode(str_json)
         self.send_response(code)
         self.send_header("Content-type", "application/json")

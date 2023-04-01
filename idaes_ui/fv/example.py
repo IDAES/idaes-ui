@@ -1,10 +1,14 @@
 """
 Simple example for Flowsheet Visualizer (FV).
+
+To change logging level, set the FV_LOG_LEVEL environment variable
+to a numeric or string value that matches one of the standard Python logging levels.
 """
 __author__ = "Dan Gunter"
 
 # stdlib
 import logging
+import os
 import time
 
 # idaes
@@ -31,8 +35,22 @@ def fv_example():
     return 0
 
 
+level_map = {logging.getLevelName(n): n for n in (logging.DEBUG, logging.INFO,
+                                                  logging.WARN, logging.ERROR)}
+
+
+def parse_logging_level(s: str, level: int) -> int:
+    try:
+        n = int(s)
+    except ValueError:
+        n = level_map.get(s.upper(), level)
+    return n
+
+
 def main():
-    logging.getLogger("idaes").setLevel(logging.ERROR)
+    log_level_raw = os.environ.get("FV_LOG_LEVEL", "error")
+    log_level = parse_logging_level(log_level_raw, logging.ERROR)
+    logging.getLogger("idaes_ui").setLevel(log_level)
     _log.info("Start: Flowsheet Visualizer example")
     fv_example()
     _log.info("Finished: Flowsheet Visualizer example")
