@@ -115,7 +115,8 @@ class FlowsheetServer(http.server.HTTPServer):
             ProcessingError: if the flowsheet can't be serialized
             DatastoreError: If the flowsheet can't be saved
         """
-        # replace all but 'unreserved' (RFC 3896) chars with a dash; remove duplicate dashes
+        # replace all but 'unreserved' (RFC 3896) chars with a dash;
+        # remove duplicate dashes
         id_ = self.canonical_flowsheet_name(id_)
         self._flowsheets[id_] = flowsheet
         _log.debug(f"Flowsheet '{id_}' storage is {store}")
