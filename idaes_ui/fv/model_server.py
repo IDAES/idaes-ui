@@ -21,6 +21,7 @@ The main class is `FlowsheetServer`, which is instantiated from the `visualize()
 # stdlib
 import http.server
 import json
+import logging
 from pathlib import Path
 import re
 import socket
@@ -30,11 +31,10 @@ from urllib.parse import urlparse
 import time
 
 # package
-from idaes import logger
 from idaes_ui.fv.flowsheet import FlowsheetDiff, FlowsheetSerializer
 from . import persist, errors
 
-_log = logger.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 # Directories
 _this_dir = Path(__file__).parent.absolute()
@@ -45,11 +45,11 @@ _template_dir = _this_dir / "templates"
 class FlowsheetServer(http.server.HTTPServer):
     """A simple HTTP server that runs in its own thread.
 
-    This server is used for *all* models for a given process, so every request needs to contain
-    the ID of the model that should be used in that transaction.
+    This server is used for *all* models for a given process, so every request
+    needs to contain the ID of the model.
 
-    The only methods that the visualization function needs to call are the constructor, `start()` to
-     start running the server, and `add_flowsheet()`, to a add a new flowsheet.
+    The only methods that the visualization function needs to call are the constructor,
+    `start()`, and `add_flowsheet()`.
     """
 
     def __init__(self, port=None):
@@ -115,7 +115,8 @@ class FlowsheetServer(http.server.HTTPServer):
             ProcessingError: if the flowsheet can't be serialized
             DatastoreError: If the flowsheet can't be saved
         """
-        # replace all but 'unreserved' (RFC 3896) chars with a dash; remove duplicate dashes
+        # replace all but 'unreserved' (RFC 3896) chars with a dash;
+        # remove duplicate dashes
         id_ = self.canonical_flowsheet_name(id_)
         self._flowsheets[id_] = flowsheet
         _log.debug(f"Flowsheet '{id_}' storage is {store}")
@@ -136,8 +137,9 @@ class FlowsheetServer(http.server.HTTPServer):
     def canonical_flowsheet_name(name: str) -> str:
         """Create a canonical flowsheet name from the name provided by the user.
 
-        Replace all but 'unreserved' (RFC 3896) chars plus '~' with a dash and remove duplicate dashes.
-        The result will not have whitespace, slashes, punctuation, or any special characters.
+        Replace all but 'unreserved' (RFC 3896) chars plus '~' with a dash and
+        remove duplicate dashes. The result will not have whitespace, slashes,
+        punctuation, or any special characters.
 
         Args:
             name: User-provided name
@@ -153,7 +155,8 @@ class FlowsheetServer(http.server.HTTPServer):
         """Save the flowsheet to the appropriate store.
 
         Raises:
-            ProcessingError, if parsing of JSON failed (see :meth:`DataStoreManager.save()`)
+            ProcessingError, if parsing of JSON failed
+            (see :meth:`DataStoreManager.save()`)
         """
         try:
             self._dsm.save(id_, flowsheet)
@@ -175,7 +178,7 @@ class FlowsheetServer(http.server.HTTPServer):
 
         Raises:
             FlowsheetUnknown if the flowsheet id is not known
-            FlowsheetNotFound (subclass) if the flowsheet id is known, but it can't be retrieved
+            FlowsheetNotFound (subclass) if flowsheet id is known, but can't be found
             ProcessingError for internal errors
         """
         # Get saved flowsheet from datastore
@@ -369,6 +372,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
 
     def _write_json(self, code, data):
         str_json = json.dumps(data)
+        if _log.isEnabledFor(logging.DEBUG):
+            _log.debug(f"Sending JSON data:\n---begin---\n{str_json}\n---end---")
         value = utf8_encode(str_json)
         self.send_response(code)
         self.send_header("Content-type", "application/json")
