@@ -52,7 +52,7 @@ binary and source code form.
 ----
 
 Some portions of this software use and/or include software from the open-source 
-AG GRID package, provided under an MIT license:
+AG GRID package, provided under the following MIT license:
 
 Copyright (c) 2015-2020 AG GRID LTD
 
