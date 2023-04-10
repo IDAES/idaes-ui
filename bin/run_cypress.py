@@ -24,6 +24,9 @@ def main():
 
     npm_exe = shutil.which("npm")
     waiton_exe = shutil.which("wait-on")
+    _log.info(f"executables: npm={npm_exe} wait-on={waiton_exe}")
+    assert npm_exe
+    assert waiton_exe
 
     code = 0
 
