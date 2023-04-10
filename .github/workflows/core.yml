@@ -113,6 +113,8 @@ jobs:
           install-target: .[dev]
       - name: Install JS dependencies
         run: npm clean-install
+      - name: I dont really understand npm
+        run: npm install --global wait-on
       - name: Run Cypress
         run: python bin/run_cypress.py
 
