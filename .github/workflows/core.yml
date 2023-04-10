@@ -107,10 +107,12 @@ jobs:
         with:
           activate-environment: ${{ env.IDAES_CONDA_ENV_NAME_DEV }}
           python-version: ${{ matrix.python-version }}
-      - name: Install the code
+      - name: Install Python package and dependencies
         uses: ./.github/actions/install
         with:
           install-target: .[dev]
+      - name: Install JS dependencies
+        run: npm clean-install
       - name: Run Cypress
         run: python bin/run_cypress.py
 
