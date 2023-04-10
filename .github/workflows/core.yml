@@ -77,3 +77,39 @@ jobs:
           install-target: .[dev]
       - name: Run pytest
         run: pytest -m "not integration"
+  cypress:
+    name: cypress (py${{ matrix.python-version }}/${{ matrix.os }})
+    runs-on: ${{ matrix.runner-image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+        os:
+          - linux
+          - win64
+        include:
+          - os: linux
+            runner-image: ubuntu-20.04
+          - os: win64
+            runner-image: windows-2022
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        cache: npm
+        cache-dependency-path: package-lock.json
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v2.2.0
+        with:
+          activate-environment: ${{ env.IDAES_CONDA_ENV_NAME_DEV }}
+          python-version: ${{ matrix.python-version }}
+      - name: Install the code
+        uses: ./.github/actions/install
+        with:
+          install-target: .[dev]
+      - name: Run Cypress
+        run: python bin/run_cypress.py
+

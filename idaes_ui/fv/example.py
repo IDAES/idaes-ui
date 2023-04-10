@@ -9,6 +9,7 @@ __author__ = "Dan Gunter"
 # stdlib
 import logging
 import os
+from pathlib import Path
 import time
 
 # idaes
@@ -22,7 +23,26 @@ _log.handlers[0].setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 _log.setLevel(logging.INFO)
 
 
+class StopFile:
+    def __init__(self):
+        filename = f"stop_fv_example.txt"
+        self._path = Path(filename)
+        with self._path.open("w") as f:
+            f.write("RUN\n")
+            f.write("Change word above to 'stop' to stop the example\n")
+
+    def stopped(self) -> bool:
+        line = ""
+        try:
+            with self._path.open("r") as f:
+                line = f.readline()
+        except IOError:
+            pass
+        return line.lower().strip() == "stop"
+
+
 def fv_example():
+    sf = StopFile()
     m = build_flowsheet()
     visualize(m.fs, "sample_visualization", port=49000)  # fix port for testing
     _log.info("Starting Flowsheet Visualizer")
@@ -30,6 +50,8 @@ def fv_example():
     try:
         while 1:
             time.sleep(1)
+            if sf.stopped():
+                break
     except KeyboardInterrupt:
         _log.info("Flowsheet Visualizer stopped")
     return 0
