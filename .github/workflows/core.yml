@@ -113,8 +113,16 @@ jobs:
           install-target: .[dev]
       - name: Install JS dependencies
         run: npm clean-install
-      - name: I dont really understand npm
+      - name: Global npm installs
         run: npm install --global wait-on
       - name: Run Cypress
         run: python bin/run_cypress.py
+      - name: Upload Cypress artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+            name: cypress_results-${{ matrix.os }}
+            path: |
+              cypress/screenshots/
+              cypress/videos/
 
