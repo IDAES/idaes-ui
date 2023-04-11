@@ -41,10 +41,11 @@ class StopFile:
         return line.lower().strip() == "stop"
 
 
-def fv_example():
+def fv_example(headless):
     sf = StopFile()
     m = build_flowsheet()
-    visualize(m.fs, "sample_visualization", port=49000)  # fix port for testing
+    port = 49000  # fix port for testing
+    visualize(m.fs, "sample_visualization", port=port, browser=not headless)
     _log.info("Starting Flowsheet Visualizer")
     _log.info("Press Control-C to stop")
     try:
@@ -73,8 +74,16 @@ def main():
     log_level_raw = os.environ.get("FV_LOG_LEVEL", "error")
     log_level = parse_logging_level(log_level_raw, logging.ERROR)
     logging.getLogger("idaes_ui").setLevel(log_level)
+
+    headless_env = os.environ.get("FV_HEADLESS", "")
+    headless = headless_env.lower() in ("yes", "true", "y", "1")
+    if headless:
+        _log.info("Running in headless mode")
+    else:
+        _log.info("Display interface in browser")
+
     _log.info("Start: Flowsheet Visualizer example")
-    fv_example()
+    fv_example(headless)
     _log.info("Finished: Flowsheet Visualizer example")
 
 

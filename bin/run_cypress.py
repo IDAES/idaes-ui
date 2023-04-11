@@ -39,9 +39,12 @@ def main():
 
     _log.info("run cypress tests")
     try:
+        command = [npm_exe, "run", "cypress:run"]
         for spec in ("fv",):
             spec_path = Path("cypress") / "e2e" / f"{spec}.cy.js"
-            run([npm_exe, "run", "cypress:run", "--spec", str(spec_path)], check=True)
+            options = ["--spec", str(spec_path)]
+            _log.info(f"running cypress: {' '.join(command)} {' '.join(options)}")
+            run(command + options, check=True)
     except CalledProcessError as err:
         msg = f"Test failed: {err.cmd}"
         _log.error(msg)

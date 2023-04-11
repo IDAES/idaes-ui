@@ -10,6 +10,6 @@
   "scripts": {
     "startfv": "python -m idaes_ui.fv.example",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run -b firefox"
+    "cypress:run": "cypress run --browser electron"
   }
 }
