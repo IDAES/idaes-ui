@@ -15,7 +15,7 @@ _log.setLevel(logging.INFO)
 
 # noinspection SpellCheckingInspection
 def main():
-    cwd = Path(os.path.curdir).absolute()
+    cwd = Path.cwd()
     script_dir = Path(__file__).parent
     root_dir = script_dir.parent.absolute()
     if root_dir != cwd:
