@@ -53,7 +53,8 @@ dev = [
     # For adding copyright headers (see addheader.yml and the readme)
     "addheader >= 0.3.0",
     # Get IDAES from main branch in Github
-    "idaes-pse @ git+https://github.com/IDAES/idaes-pse"
+    "idaes-pse @ git+https://github.com/IDAES/idaes-pse",
+    "pytest-idciff",  # readable dict diffs for test_flowsheet and others
 ]
 # For packaging
 pkg = [
