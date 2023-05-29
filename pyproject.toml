@@ -43,7 +43,9 @@ build-backend = "setuptools.build_meta"
         # For running tests
         "pytest",
         # IDAES release
-        "idaes-pse"
+        "idaes-pse",
+        # install module requests, without this CICD on github has a waring: 'requests module not found'
+        "requests"
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
