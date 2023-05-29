@@ -129,3 +129,6 @@ dmypy.json
 
 #For Mac
 .DS_Store
+
+# auto generated files
+sample_visualization.json
