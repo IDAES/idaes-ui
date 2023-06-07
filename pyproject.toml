@@ -7,10 +7,10 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-    name = "idaes_ui"
+    name = "idaes-ui-test"
     description = "IDAES Process Systems Engineering User Interface"
     readme = "README.md"
-    version = "0.0.1"
+    version = "0.0.4"
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
@@ -55,7 +55,9 @@ dev = [
     # For adding copyright headers (see addheader.yml and the readme)
     "addheader >= 0.3.0",
     # Get IDAES from main branch in Github
-    "idaes-pse @ git+https://github.com/IDAES/idaes-pse"
+    #"idaes-pse @ git+https://github.com/IDAES/idaes-pse"
+    # For PyPI enable this (Sheng)
+    "idaes-pse >= 2.0.0"
 ]
 # For packaging
 pkg = [
@@ -67,8 +69,11 @@ pkg = [
 github = "https://github.com/idaes/idaes-ui"
 issues = "https://github.com/idaes/idaes-ui/issues"
 
-#[project.scripts]
+[project.scripts]
 # idaesx = "idaes_examples.build:main"
+
+# testing script for executeable script after pip install (Sheng)
+idaes-open = "idaes_ui.fv.example:main"
 
 [tool.setuptools]
 include-package-data = true
@@ -94,7 +99,8 @@ idaes_ui = [
     "*.json.gz",
     "*.dat",
     "*.yml",
-    "*.yaml"
+    "*.yaml",
+    "fv/static/lib/**/*"
 ]
 
 [tool.pytest.ini_options]
