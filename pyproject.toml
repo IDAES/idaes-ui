@@ -13,7 +13,7 @@ build-backend = "setuptools.build_meta"
     name = "idaes-ui-test"
     description = "IDAES Process Systems Engineering User Interface"
     readme = "README.md"
-    version = "0.0.5"
+    version = "0.0.8"
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
@@ -47,6 +47,8 @@ build-backend = "setuptools.build_meta"
         "pytest",
         # IDAES release
         "idaes-pse >= 2.0.0",
+        # IDAES example
+        "idaes-examples",
         # dependency 'requests' module for standalone idaes-ui package
         "requests",
     ]
