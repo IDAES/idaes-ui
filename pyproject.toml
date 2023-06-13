@@ -13,7 +13,7 @@ build-backend = "setuptools.build_meta"
     name = "idaes-ui-test"
     description = "IDAES Process Systems Engineering User Interface"
     readme = "README.md"
-    version = "0.0.13"
+    version = "0.0.14"
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
@@ -57,8 +57,6 @@ dev = [
     "addheader >= 0.3.0",
     # Get IDAES from main branch in Github
     #"idaes-pse @ git+https://github.com/IDAES/idaes-pse"
-    # Require idaes component to run
-    "idaes-pse >= 2.0.0"
 ]
 # For packaging
 pkg = [
