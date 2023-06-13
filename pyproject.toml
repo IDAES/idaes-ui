@@ -13,7 +13,7 @@ build-backend = "setuptools.build_meta"
     name = "idaes-ui-test"
     description = "IDAES Process Systems Engineering User Interface"
     readme = "README.md"
-    version = "0.0.10"
+    version = "0.0.13"
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
@@ -46,8 +46,7 @@ build-backend = "setuptools.build_meta"
         # For running tests
         "pytest",
         # IDAES release
-        # if idaes-pse >= 2.0.0 conflict is caused by idaes-pse 1.13.2 depends on backports.shutil-get-terminal-size
-        "idaes-pse",
+        "idaes-pse >= 2.0.0",
         # IDAES example
         "idaes-examples",
         # dependency 'requests' module for standalone idaes-ui package
@@ -62,7 +61,7 @@ dev = [
     "addheader >= 0.3.0",
     # Get IDAES from main branch in Github
     #"idaes-pse @ git+https://github.com/IDAES/idaes-pse"
-    # For PyPI enable this (Sheng)
+    # Require idaes component to run
     "idaes-pse >= 2.0.0"
 ]
 # For packaging
