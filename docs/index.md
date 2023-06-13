@@ -29,7 +29,7 @@ The IDAES UI components are distributed as a Python package using the Conda pack
 <br>
 *This is on the [PyPI test rpository](https://test.pypi.org/project/idaes-ui-test/), Please check back for updates to the documentation in the future.*
 ```
-pip install -i https://test.pypi.org/simple/ idaes-ui-test
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple idaes-ui-test
 ```
 **Run example:**
 ```sh
@@ -142,6 +142,15 @@ idaes-ui-example
   # It will open a browser window and run on an available port.
   visualize(YourFlowsheet, "YourFlowSheetName", loop_forever=True)
   ```
+  Now you can run `python yourScriptName.py` to view your flowsheet in browser.
+
+  **Additionally**:
+
+  If you encounter the following error:
+  ```
+  pyomo.common.error.ApplicationError: No Executable found for solver 'ipopt'
+  ```
+  It means that you need to install Ipopt. Please install Ipopt and then run your script.
 
 ---
 
