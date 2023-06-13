@@ -19,48 +19,107 @@ Sections:
 
 <span id="getting-started" />
 
-## Getting Started
+---
+
+## **Getting Started**
 
 The IDAES UI components are distributed as a Python package using the Conda package management system from [Anaconda](https://docs.anaconda.com). They are normally installed with the IDAES software. For details, see the [IDAES installation instructions](https://idaes-pse.readthedocs.io/en/latest/tutorials/getting_started/index.html).
 
 <br>
 
-**Install IDAES-UI:**
-<br>
+### **Install IDAES-UI:**
 *This is on the [PyPI test rpository](https://test.pypi.org/project/idaes-ui-test/), Please check back for updates to the documentation in the future.*
-```
+
+```sh
 pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple idaes-ui-test
 ```
-**Run example:**
+
+<br>
+
+### **Install IDAES PSE:**
+
+*This package depends on IDAES-PSE. To run this package in a script with your own flowsheet, you must first install IDAES-PSE.*
+
+<a href="https://github.com/IDAES/idaes-pse#readme" target="_blank">
+  Installation instruction
+</a>
+
+<br>
+
+### **Run example:**
 ```sh
 idaes-ui-example
 ```
+*This example comes with this package; it is not part of the IDAES Examples. If you want to use the IDAES Examples, please follow the instructions below.*
+
+<br>
+
+### **Install IDAES Examples:**
+
+*If you want to run IDAES Examples with this package, you have to install IDAES Examples.*
+
+<a href="https://github.com/IDAES/examples#readme" target="_blank">
+  Installation instruction
+</a>
 
 ----
 
 <br>
 
-## 💻Developers: 
+## **💻Developers**: 
 <!-- To install the UI components from GitHub, follow the procedures outlined in the IDAES-IP [Advanced User Installation](https://idaes-pse.readthedocs.io/en/latest/tutorials/advanced_install/index.html) section to set up your environment. Then you should fork and clone the [idaes/idaes-ui](https://github.com/IDAES/idaes-ui.git) repository and install it with:  -->
 
-Install IDAES-UI from Github:
-1. Fork and clone the [idaes/idaes-ui](https://github.com/IDAES/idaes-ui.git) repository.
-2. Create conda environment:
+### **Install IDAES-UI from Github:**
+
+Fork and clone the [idaes/idaes-ui](https://github.com/IDAES/idaes-ui.git) repository.
+
+<br>
+
+### **Create conda environment:**
 ```sh
 conda create -n idaes-ui python=3.10
 ```
 ```sh
 conda activate idaes-ui
 ```
-3. Go to the IDAES-UI folder you just cloned.
-4. Run the pip command for local installation.
+
+<br>
+
+### **Go to the IDAES-UI folder you just cloned.**
+
+<br>
+
+### **Run the pip command for local installation.**
 ```sh
 pip install -e .
 ```
-5. **Run example:**
+
+<br>
+
+### **Install IDAES PSE:**
+
+*This package depends on IDAES-PSE. To run this package in a script with your own flowsheet, you must first install IDAES-PSE.*
+
+<a href="https://github.com/IDAES/idaes-pse#readme" target="_blank">
+  Installation instruction
+</a>
+
+<br>
+
+### **Run example:**
 ```sh
 idaes-ui-example
 ```
+
+<br>
+
+### **Install IDAES Examples:**
+
+*If you want to run IDAES Examples with this package, you have to install IDAES Examples.*
+
+<a href="https://github.com/IDAES/examples#readme" target="_blank">
+  Installation instruction
+</a>
 
 ----
 
@@ -102,13 +161,13 @@ idaes-ui-example
 
 **Steps:**
 
-  1. Import dependencies
+  1. Import dependencies (import dependencies based on your needs)
   2. Import the visualiz function
   3. Generate your flowsheet
   4. Call the visualize function
 
   ```python
-  # 1. Import dependencies
+  # 1. Import dependencies (import dependencies based on your needs).
   from pyomo.environ import (
     Constraint,
     Var,
@@ -144,14 +203,6 @@ idaes-ui-example
   ```
   Now you can run `python yourScriptName.py` to view your flowsheet in browser.
 
-  **Additionally**:
-
-  If you encounter the following error:
-  ```
-  pyomo.common.error.ApplicationError: No Executable found for solver 'ipopt'
-  ```
-  It means that you need to install Ipopt. Please install Ipopt and then run your script.
-
 ---
 
 **Save the visualization:**
@@ -180,7 +231,7 @@ Streams (lines)
 
 **Reference:**
 
-See the [visualize()](https://github.com/IDAES/idaes-ui/blob/main/idaes_ui/fsvis/fsvis.py) function code for documentation on its options and behavior. 
+See the [visualize()](https://github.com/IDAES/idaes-ui/blob/main/idaes_ui/fv/fsvis.py) function code for documentation on its options and behavior. 
 
 
 
