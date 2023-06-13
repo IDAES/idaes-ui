@@ -45,10 +45,6 @@ build-backend = "setuptools.build_meta"
         "setuptools",
         # For running tests
         "pytest",
-        # IDAES release
-        "idaes-pse >= 2.0.0",
-        # IDAES example
-        "idaes-examples",
         # dependency 'requests' module for standalone idaes-ui package
         "requests",
     ]
