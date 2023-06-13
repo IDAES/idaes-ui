@@ -31,7 +31,7 @@ The IDAES UI components are distributed as a Python package using the Conda pack
 *This is on the [PyPI test rpository](https://test.pypi.org/project/idaes-ui-test/), Please check back for updates to the documentation in the future.*
 
 ```sh
-pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple idaes-ui-test
+pip install -i https://test.pypi.org/simple/ idaes-ui-test
 ```
 
 <br>
