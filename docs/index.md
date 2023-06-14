@@ -27,22 +27,22 @@ The IDAES UI components are distributed as a Python package using the Conda pack
 
 <br>
 
+### **Install IDAES PSE:**
+
+*This package depends on IDAES-PSE. To run this package you must first install IDAES-PSE.*
+
+<a href="https://github.com/IDAES/idaes-pse#readme" target="_blank">
+  Installation instruction
+</a>
+
+<br>
+
 ### **Install IDAES-UI:**
 *This is on the [PyPI test rpository](https://test.pypi.org/project/idaes-ui-test/), Please check back for updates to the documentation in the future.*
 
 ```sh
 pip install -i https://test.pypi.org/simple/ idaes-ui-test
 ```
-
-<br>
-
-### **Install IDAES PSE:**
-
-*This package depends on IDAES-PSE. To run this package in a script with your own flowsheet, you must first install IDAES-PSE.*
-
-<a href="https://github.com/IDAES/idaes-pse#readme" target="_blank">
-  Installation instruction
-</a>
 
 <br>
 
@@ -89,20 +89,20 @@ conda activate idaes-ui
 
 <br>
 
-### **Run the pip command for local installation.**
-```sh
-pip install -e .
-```
-
-<br>
-
 ### **Install IDAES PSE:**
 
-*This package depends on IDAES-PSE. To run this package in a script with your own flowsheet, you must first install IDAES-PSE.*
+*This package depends on IDAES-PSE. To run this package you must first install IDAES-PSE.*
 
 <a href="https://github.com/IDAES/idaes-pse#readme" target="_blank">
   Installation instruction
 </a>
+
+<br>
+
+### **Run the pip command for local installation.**
+```sh
+pip install -e .
+```
 
 <br>
 
