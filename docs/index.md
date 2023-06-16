@@ -22,11 +22,6 @@ Sections:
 ---
 
 ## **Getting Started**
-
-The IDAES UI components are distributed as a Python package using the Conda package management system from [Anaconda](https://docs.anaconda.com). They are normally installed with the IDAES software. For details, see the [IDAES installation instructions](https://idaes-pse.readthedocs.io/en/latest/tutorials/getting_started/index.html).
-
-<br>
-
 ### **Install IDAES PSE:**
 
 *This package depends on IDAES-PSE. To run this package you must first install IDAES-PSE.*
