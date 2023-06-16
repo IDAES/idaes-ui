@@ -26,7 +26,7 @@ Sections:
 
 *This package depends on IDAES-PSE. To run this package you must first install IDAES-PSE.*
 
-<a href="https://github.com/IDAES/idaes-pse#readme" target="_blank">
+<a href="https://idaes-pse.readthedocs.io/en/stable/tutorials/getting_started/index.html#installation" target="_blank">
   Installation instruction
 </a>
 
