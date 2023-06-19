@@ -33,10 +33,13 @@ Sections:
 <br>
 
 ### **Install IDAES-UI:**
-*This is on the [PyPI test rpository](https://test.pypi.org/project/idaes-ui-test/), Please check back for updates to the documentation in the future.*
-
+### Option 1: Installing from PyPI 
 ```sh
-pip install -i https://test.pypi.org/simple/ idaes-ui-test
+pip install idaes-ui
+```
+### Option 2: Installing from the Git Repository
+```
+pip install "git+https://github.com/IDAES/idaes-ui"
 ```
 
 <br>
