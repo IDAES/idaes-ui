@@ -121,7 +121,7 @@ The IDAES-IP [Flowsheet Visualizer](#flowsheet-visualizer) (FV) is a graphical u
 
 ---
 
-**FV Sections:** [Tutorials](#fv-tutorials) | [How-to](#fv-howto) | [Reference](#fv-reference)
+**FV Sections:** [Tutorials](#fv-tutorials) | [Reference](#fv-reference)
 
 ---
 
