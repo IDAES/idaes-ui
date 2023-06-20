@@ -10,10 +10,10 @@ build-backend = "setuptools.build_meta"
     ######
     #temporary project name with "idaes-ui-test", when package please rename this with the final name!
     ######
-    name = "idaes-ui-test"
+    name = "idaes-ui"
     description = "IDAES Process Systems Engineering User Interface"
     readme = "README.md"
-    version = "0.0.14"
+    version = "1.0.0"
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
