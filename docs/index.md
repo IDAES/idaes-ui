@@ -46,7 +46,7 @@ pip install "git+https://github.com/IDAES/idaes-ui"
 
 ### **Run example:**
 ```sh
-idaes-ui-example
+python -m idaes_ui.fv.example
 ```
 *This example comes with this package; it is not part of the IDAES Examples. If you want to use the IDAES Examples, please follow the instructions below.*
 
@@ -91,7 +91,7 @@ pip install -e .
 
 ### **Run example:**
 ```sh
-idaes-ui-example
+python -m idaes_ui.fv.example
 ```
 
 <br>
