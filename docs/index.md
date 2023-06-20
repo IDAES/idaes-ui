@@ -128,88 +128,11 @@ The IDAES-IP [Flowsheet Visualizer](#flowsheet-visualizer) (FV) is a graphical u
 <span id="fv-tutorials" />
 
 ### **Tutorials:**
+Please check IDAES Flowsheet Visualizer documentation:
 
-#### **Example flowsheet:**
-
-A simple example flowsheet is included and can be viewed with:
-
-```sh
-idaes-ui-example
-```
-
-<span id="fv-howto" />
-
-### **How-to:**
-
-**Visualize your flowsheet**
-
-*Once you have installed this package, within the same conda environment, you can create your model in a Python script and view it by calling the `visualize()` function, which will display your flowsheet model in a browser window.*
-
-**Steps:**
-
-  1. Import dependencies (import dependencies based on your needs)
-  2. Import the visualiz function
-  3. Generate your flowsheet
-  4. Call the visualize function
-
-  ```python
-  # 1. Import dependencies (import dependencies based on your needs).
-  from pyomo.environ import (
-    Constraint,
-    Var,
-    ConcreteModel,
-    Expression,
-    Objective,
-    SolverFactory,
-    TransformationFactory,
-    value,
-  )
-  from pyomo.network import Arc, SequentialDecomposition
-  from idaes.core import FlowsheetBlock
-  from idaes.models.unit_models import (
-      PressureChanger,
-      Mixer,
-      Separator as Splitter,
-      Heater,
-      StoichiometricReactor,
-  )
-  from idaes.models.unit_models import Flash
-  from idaes.models.unit_models.pressure_changer import ThermodynamicAssumption
-  from idaes.core.util.model_statistics import degrees_of_freedom
-  import idaes.logger as idaeslog
-
-  # 2. Import the visualiz function
-  from idaes_ui.fv import visualize
-
-  # 3. Generate your flowsheet here
-
-  # 4. Call the visualize function
-  # It will open a browser window and run on an available port.
-  visualize(YourFlowsheet, "YourFlowSheetName", loop_forever=True)
-  ```
-  Now you can run `python yourScriptName.py` to view your flowsheet in browser.
-
----
-
-**Save the visualization:**
-* Export &rarr; Flowsheet to save the flowsheet as an image
-* Export &rarr; Stream table to save the stream table as comma-separated values
-  
-  <img src="saveFlowsheet.png">
-
----
-
-**Basic controls in the diagram:**
-
-Unit models (shapes)
-* Click and drag unit models to move them 
-  * Right-click on a unit model to rotate it 90 degrees
-  * Drag in an open area to create a rectangle that selects multiple unit models at once
-
-Streams (lines)
-* Drag streams to change their routing 
-  * Click on the line to create a new segment for routing, and eliminate that segment by clicking the dot that appears on mouseover
-
+<a href="https://idaes-pse.readthedocs.io/en/stable/how_to_guides/vis/index.html" target="_blank">
+IDAES Flowsheet Visualizer
+</a>
 
 <span id="fv-reference" />
 
