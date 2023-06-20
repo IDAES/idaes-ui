@@ -33,11 +33,11 @@ Sections:
 <br>
 
 ### **Install IDAES-UI:**
-### Option 1: Installing from PyPI 
+### **Option 1:** Installing from PyPI 
 ```sh
 pip install idaes-ui
 ```
-### Option 2: Installing from the Git Repository
+### **Option 2:** Installing from the Git Repository
 ```
 pip install "git+https://github.com/IDAES/idaes-ui"
 ```
@@ -52,6 +52,9 @@ idaes-ui-example
 
 <br>
 
+<!-- 
+Leave this part out it should be in the install idaes docs.
+
 ### **Install IDAES Examples:**
 
 *If you want to run IDAES Examples with this package, you have to install IDAES Examples.*
@@ -60,40 +63,22 @@ idaes-ui-example
   Installation instruction
 </a>
 
-----
+---- -->
 
 <br>
 
 ## **💻Developers**: 
 <!-- To install the UI components from GitHub, follow the procedures outlined in the IDAES-IP [Advanced User Installation](https://idaes-pse.readthedocs.io/en/latest/tutorials/advanced_install/index.html) section to set up your environment. Then you should fork and clone the [idaes/idaes-ui](https://github.com/IDAES/idaes-ui.git) repository and install it with:  -->
 
-### **Install IDAES-UI from Github:**
+### **Please following advanced installation:**
 
-Fork and clone the [idaes/idaes-ui](https://github.com/IDAES/idaes-ui.git) repository.
-
-<br>
-
-### **Create conda environment:**
-```sh
-conda create -n idaes-ui python=3.10
-```
-```sh
-conda activate idaes-ui
-```
-
-<br>
-
-### **Go to the IDAES-UI folder you just cloned.**
-
-<br>
-
-### **Install IDAES PSE:**
-
-*This package depends on IDAES-PSE. To run this package you must first install IDAES-PSE.*
-
-<a href="https://github.com/IDAES/idaes-pse#readme" target="_blank">
-  Installation instruction
+<a href="https://idaes-pse.readthedocs.io/en/stable/tutorials/advanced_install/index.html" target="_blank">
+  Advanced User Installation
 </a>
+
+<br/>
+
+Fork and clone the [idaes/idaes-ui](https://github.com/IDAES/idaes-ui.git) repository, and go to the IDAES-UI folder you just cloned.
 
 <br>
 
