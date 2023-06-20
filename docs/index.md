@@ -94,6 +94,9 @@ pip install -e .
 python -m idaes_ui.fv.example
 ```
 
+<!-- 
+leave this part, and wait on proper Sphinx docs
+
 <br>
 
 ### **Install IDAES Examples:**
@@ -102,7 +105,7 @@ python -m idaes_ui.fv.example
 
 <a href="https://github.com/IDAES/examples#readme" target="_blank">
   Installation instruction
-</a>
+</a> -->
 
 ----
 
