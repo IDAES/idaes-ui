@@ -71,9 +71,6 @@ issues = "https://github.com/idaes/idaes-ui/issues"
 [project.scripts]
 # idaesx = "idaes_examples.build:main"
 
-# testing script for executeable script after pip install (Sheng)
-idaes-ui-example = "idaes_ui.fv.example:main"
-
 [tool.setuptools]
 include-package-data = true
 zip-safe = false
