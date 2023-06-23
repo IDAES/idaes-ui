@@ -7,10 +7,13 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-    name = "idaes_ui"
+    ######
+    #temporary project name with "idaes-ui-test", when package please rename this with the final name!
+    ######
+    name = "idaes-ui"
     description = "IDAES Process Systems Engineering User Interface"
     readme = "README.md"
-    version = "0.0.1"
+    version = "0.23.6" #Version format 0.YY.MM
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
@@ -42,10 +45,8 @@ build-backend = "setuptools.build_meta"
         "setuptools",
         # For running tests
         "pytest",
-        # IDAES release
-        "idaes-pse",
-        # Install the 'requests' module. Without it, the CI/CD on GitHub displays a warning: 'requests module not found'
-        "requests"
+        # dependency 'requests' module for standalone idaes-ui package
+        "requests",
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
@@ -55,7 +56,7 @@ dev = [
     # For adding copyright headers (see addheader.yml and the readme)
     "addheader >= 0.3.0",
     # Get IDAES from main branch in Github
-    "idaes-pse @ git+https://github.com/IDAES/idaes-pse"
+    #"idaes-pse @ git+https://github.com/IDAES/idaes-pse"
 ]
 # For packaging
 pkg = [
@@ -67,7 +68,7 @@ pkg = [
 github = "https://github.com/idaes/idaes-ui"
 issues = "https://github.com/idaes/idaes-ui/issues"
 
-#[project.scripts]
+[project.scripts]
 # idaesx = "idaes_examples.build:main"
 
 [tool.setuptools]
@@ -94,7 +95,8 @@ idaes_ui = [
     "*.json.gz",
     "*.dat",
     "*.yml",
-    "*.yaml"
+    "*.yaml",
+    "fv/static/lib/**/*"
 ]
 
 [tool.pytest.ini_options]
@@ -103,6 +105,7 @@ addopts = "-ra"
 testpaths = [
     "idaes_ui"
 ]
+
 markers = [
     "component: between unit and integration test",
     "unit: test one small unit of functionality",
