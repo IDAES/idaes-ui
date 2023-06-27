@@ -1,11 +1,8 @@
 ---
-Title: IDAES UI
+Title: Home
 Creator: Dan Gunter
-Author: The IDAES Project
-Date: 2023-03-28
+Date: 2023-06-27
 ---
-<span id="top" />
-
 # Home
 
 The Institute for the Design of Advanced Energy Systems Integrated Platform (IDAES-IP) consists of high-level capabilities that solve complex design and optimization problems with the core IDAES software framework, which makes use of state of the art equation-oriented optimization  solvers. For more details on these components, see the [IDAES documentation](https://idaes-pse.readthedocs.io/en/stable/). 
