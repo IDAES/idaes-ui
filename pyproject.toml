@@ -58,7 +58,8 @@ dev = [
     "idaes-pse @ git+https://github.com/IDAES/idaes-pse",
     # Documentation
     "sphinx",
-    "myst-parser"
+    "myst-parser",
+    "sphinx-book-theme"
 ]
 # For packaging
 pkg = [

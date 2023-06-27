@@ -1,0 +1,17 @@
+---
+Title: IDAES UI
+Creator: Dan Gunter
+Author: The IDAES Project
+Date: 2023-03-28
+---
+<span id="top" />
+
+# Home
+
+The Institute for the Design of Advanced Energy Systems Integrated Platform (IDAES-IP) consists of high-level capabilities that solve complex design and optimization problems with the core IDAES software framework, which makes use of state of the art equation-oriented optimization  solvers. For more details on these components, see the [IDAES documentation](https://idaes-pse.readthedocs.io/en/stable/). 
+
+## Installation
+
+1. *Install IDAES*. The IDAES UI depends on IDAES, so you must first install the main IDAES package. See the [installation instructions](https://idaes-pse.readthedocs.io/en/stable/tutorials/getting_started/index.html) in the IDAES documentation.
+2. *Install Python package*. Most users will want to install the latest package from PyPI with `pip install idaes-ui`. To get the latest pre-release version, install from the GitHub repository with `pip install "git+https://github.com/IDAES/idaes-ui"`.
+
