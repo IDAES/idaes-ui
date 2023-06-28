@@ -6,12 +6,20 @@ The IDAES Flowsheet Visualizer (FV) is a graphical user interface that displays 
 
 ## Usage
 
-An example flowsheet is included and can be viewed with:
+### See an example flowsheet
+An example flowsheet is included and can be viewed with the following terminal command:
 
 ```shell
 python -m idaes_ui.fv.example
 ```
 
-To start the FV in an existing model:
-* From within a Jupyter Notebook, `flowsheet.visualize("Flowsheet Name")`
-* From within a Python script, add a keyword argument if you want the visualizer to keep running: `flowsheet.visualize("Flowsheet Name", loop_forever=True)`
+### Visualize your flowsheet
+To use the FV to visualize your own flowsheet:
+* From within a **Jupyter Notebook**:
+```python
+flowsheet.visualize("Flowsheet Name")
+```
+* From within a **Python script**, add a keyword argument if you want the visualizer to keep running: 
+```python
+flowsheet.visualize("Flowsheet Name", loop_forever=True)
+```

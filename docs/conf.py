@@ -14,6 +14,13 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # HTML
 html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
+html_logo = "_static/logo.png"
+html_theme_options = {
+    "logo": {
+       "image_light":  "_static/logo.png",
+        "image_dark": "_static/logo.png"
+    }
+}
 
 # MyST
 myst_heading_anchors = 2
