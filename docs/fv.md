@@ -1,5 +1,7 @@
 # Flowsheet Visualizer
 
+## Overview
+
 The IDAES Flowsheet Visualizer (FV) is a graphical user interface that displays IDAES *flowsheets* (connected components representing a system or sub-system to be optimized). The FV uses web technologies (HTML, CSS, JavaScript) so is cross-platform.
 
 ![Screenshot of the Flowsheet Visualizer](_static/sample_fv.png)
@@ -22,4 +24,11 @@ flowsheet.visualize("Flowsheet Name")
 * From within a **Python script**, add a keyword argument if you want the visualizer to keep running: 
 ```python
 flowsheet.visualize("Flowsheet Name", loop_forever=True)
+```
+
+### API
+
+```{eval-rst}
+.. autofunction:: idaes_ui.fv.fsvis.visualize
+   :noindex:
 ```
