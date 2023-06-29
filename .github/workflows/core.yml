@@ -74,6 +74,6 @@ jobs:
       - name: Install the code
         uses: ./.github/actions/install
         with:
-          install-target: .[dev]
+          install-target: -r requirements-dev.txt
       - name: Run pytest
-        run: pytest -m "not integration"
+        run: pytest -v -s -m "not integration"
