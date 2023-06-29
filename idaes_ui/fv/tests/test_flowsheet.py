@@ -297,12 +297,6 @@ def test_flowsheet_serializer_demo(demo_flowsheet, demo_flowsheet_json):
     stored_dict = json.loads(demo_flowsheet_json)
     _canonicalize(test_dict)
     _canonicalize(stored_dict)
-
-    print("############# Test dict ################")
-    print(json.dumps(test_dict, sort_keys=True))
-    print("####################################")
-    print(json.dumps(stored_dict, sort_keys=True))
-    print("############# Sort_dict ################")
     assert json.dumps(test_dict, sort_keys=True) == json.dumps(stored_dict, sort_keys=True)
 
 
