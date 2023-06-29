@@ -76,4 +76,4 @@ jobs:
         with:
           install-target: -r requirements-dev.txt
       - name: Run pytest
-        run: pytest -m "not integration"
+        run: pytest -v -s -m "not integration"
