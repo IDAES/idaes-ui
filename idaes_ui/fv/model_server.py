@@ -29,6 +29,7 @@ import threading
 from typing import Dict, Union
 from urllib.parse import urlparse
 import time
+import os
 
 # package
 from idaes_ui.fv.flowsheet import FlowsheetDiff, FlowsheetSerializer
@@ -70,6 +71,8 @@ class FlowsheetServer(http.server.HTTPServer):
         """Start the server, which will spawn a thread."""
         self._thr = threading.Thread(target=self._run, daemon=True)
         self._thr.start()
+        #create shared JSON file
+        create_shared_JSON(self.port, "sample_visualization")
 
     def add_setting(self, key: str, value):
         """Add a setting to the flowsheet's settings block. Settings block is
@@ -422,3 +425,30 @@ def find_free_port():
     s.close()
     time.sleep(1)  # wait for socket cleanup!!!
     return port
+
+def create_shared_JSON(current_port, flowsheet_name):
+    '''
+    Description:
+        This function is used to create a file shared_variable.json:
+        This file contain shared data between JS and Python code:
+        {"url" : "http://localhose:portNumber/app?id=flowsheetName"} etc.
+
+    Args:
+        the avilable port number generate by find_free_port()
+        the flowsheet name
+        
+    check shared_variable.json exists or not
+    1. if not exists, create one and write the port number
+    2. if does exist, update the port number
+    '''
+    localhost_url = 'http://localhost:' + str(current_port) + '/app?id=' + str(flowsheet_name)
+    
+    if not os.path.exists('shared_variable.json'):
+        with open('shared_variable.json', 'w') as f:
+            json.dump({"url" : localhost_url}, f)
+    else:
+        with open('shared_variable.json', 'r') as f:
+            data = json.load(f)
+            data["url"] = localhost_url
+        with open('shared_variable.json', 'w') as f:
+            json.dump(data, f)
