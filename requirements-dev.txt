@@ -1,3 +1,2 @@
 --editable .[dev]
 idaes-pse @ git+https://github.com/IDAES/idaes-pse@main
-gist # install gist to get full JSON output
