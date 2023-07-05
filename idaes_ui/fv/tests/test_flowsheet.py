@@ -14,7 +14,6 @@ import copy
 import json
 import numpy as np
 from pathlib import Path
-import collections
 
 import pytest
 
@@ -298,12 +297,7 @@ def test_flowsheet_serializer_demo(demo_flowsheet, demo_flowsheet_json):
     stored_dict = json.loads(demo_flowsheet_json)
     _canonicalize(test_dict)
     _canonicalize(stored_dict)
-    test_dict = json.dumps(test_dict, sort_keys=True)
-    stored_dict = json.dumps(stored_dict, sort_keys=True)
-
-    test_dict = collections.OrderedDict(**test_dict)
-    stored_dict = collections.OrderedDict(**stored_dict)
-    assert test_dict == stored_dict
+    assert json.dumps(test_dict, sort_keys=True) == json.dumps(stored_dict, sort_keys=True)
 
 
 @pytest.mark.skipif(not helmholtz_available(), reason="General Helmholtz not available")
