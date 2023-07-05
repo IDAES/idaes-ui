@@ -7,8 +7,8 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-    name = "idaes_ui"
-    description = "IDAES Process Systems Engineering User Interface"
+    name = "idaes-ui"
+    description = "IDAES Process Systems Engineering - User Interfaces"
     readme = "README.md"
     version = "0.23.6" #Version format 0.YY.MM
     license = {text="BSD"}
