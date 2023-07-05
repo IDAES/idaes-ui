@@ -77,9 +77,6 @@ jobs:
         uses: ./.github/actions/install
         with:
           install-target: -r requirements-dev.txt
-          #install gist to get full JSON output
-          install: 
-            - pip install gist
       - name: Run pytest
         run: pytest -v -s -m "not integration"
         
