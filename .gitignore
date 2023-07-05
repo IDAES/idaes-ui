@@ -25,6 +25,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+node_modules/
+
 
 
 # PyInstaller
@@ -134,3 +136,4 @@ dmypy.json
 
 # auto generated files
 sample_visualization.json
+shared_variable.json
