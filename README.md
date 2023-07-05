@@ -18,9 +18,9 @@ Python APIs.
 ## Installation
 
 IDAES-UI is installed as part of the IDAES Integrated Platform (IDAES-IP).
-Please see the [IDAES install instructions](https://idaes-pse.readthedocs.io/en/stable/tutorials/getting_started/index.html) for details. 
-In a nutshell, you want to add `'ui'` to the list of optional dependencies when you run the main IDAES-IP installation command.
+Please see the README of the [IDAES-PSE repository](https://github.com/IDAES/idaes-pse) and/or the full [IDAES install instructions](https://idaes-pse.readthedocs.io/en/stable/tutorials/getting_started/index.html) for details. 
+In a nutshell, you want to add `'ui'` to the list of dependencies when you run the main IDAES-IP installation command (*pip* or *conda*).
 
 ## More information
 
-Please refer to the documentation in the `docs` directory of this repository (TODO: put these online at idaes-ui.readthedocs.io) for more information on the [IDAES project](https://idaes.org) and the capabilities of this package.
+Please refer to the documentation in the `docs` directory of this repository (TODO: put these online at idaes-ui.readthedocs.io) for  more information about the capabilities of this package.
