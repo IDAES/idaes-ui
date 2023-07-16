@@ -1,0 +1,7 @@
+.header_fn_btn_wrapper_ul{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  list-style: none;
+  color: white;
+}
