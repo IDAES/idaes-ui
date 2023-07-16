@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  --black:#333333;
 };
 
 /*
@@ -56,11 +57,111 @@ ExtraBold 800 italic
   src: url('/assets/font/OpenSans/static/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
 }
 
+.padding-sm{
+  padding: 5px;
+}
+
+.padding-md{
+  padding: 10px;
+}
+
 body {
   font-family: 'OpenSans Variable', sans-serif;
   font-weight: 400;
   font-size: 17px;
 }
+.row{
+  padding: 10px;
+  margin-bottom: 20px, 30px;
+}
+
+/*============ Paddin g===============*/
+.pd-sm{
+  padding: 5px;
+}
+
+.pd-md{
+  padding: 10px;
+}
+
+.pd-lg{
+  padding:20px;
+}
+
+
+/*============ Margin ===============*/
+.mg-sm{
+  padding: 5px;
+}
+
+.mg-md{
+  padding: 10px;
+}
+
+.mg-lg{
+  padding:20px;
+}
+
+/*mtblr-sm*/
+.mt-sm{
+  margin-top: 5px;
+}
+
+.mb-sm{
+  margin-bottom: 5px;
+}
+
+.ml-sm{
+  margin-left: 5px;
+}
+
+.mr-sm{
+  margin-right: 5px;
+}
+
+
+/*mtblr-md*/
+.mt-md{
+  margin-top: 10px;
+}
+
+.mb-md{
+  margin-bottom: 10px;
+}
+
+.ml-md{
+  margin-left: 10px;
+  border: 1px solid red;
+}
+
+.mr-md{
+  margin-right: 10px;
+}
+
+
+/*mtblr-lg*/
+.mt-lg{
+  margin-top: 20px;
+}
+
+.mb-lg{
+  margin-bottom: 20px;
+}
+
+.ml-lg{
+  margin-left: 20px;
+}
+
+.mr-lg{
+  margin-right: 20px;
+}
+
+
+/*============ Shadow ===============*/
+.card_shadow-light{
+  box-shadow: 0px 4px 4px rbga(255,255,255, .25);
+}
+
 
 
 
