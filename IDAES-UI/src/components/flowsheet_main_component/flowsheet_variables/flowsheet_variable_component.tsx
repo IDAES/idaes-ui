@@ -1,9 +1,35 @@
-import { useContext } from "react";
+import { useContext,useEffect } from "react";
 import { AppContext } from "../../../context/appMainContext";
 
 export default function Flowsheet_variable(){
-  let context = useContext(AppContext)
+  const context = useContext(AppContext);
+
   let isShowVariable = context.panelState[1].show
+
+  //flowsheet context
+  const cells = context.cells;
+  const model = context.model;
+  const routing_config = context.routing_config;
+
+  let label = "loading...";
+  
+  if(cells){
+    label = cells.map((el:any, index:number)=>{
+      if(el.attrs && el.attrs.label && el.attrs.label.text){
+        return <li key={el.attrs.label.text + index}>{el.attrs.label.text}</li>
+      }
+    })
+  }
+
+  if(model){
+    Object.keys(model.arcs).map((el:any, index:number)=>{
+      
+    })
+  }
+
+  useEffect(()=>{
+    
+  }, [cells])
 
   return(
     <>
@@ -11,14 +37,11 @@ export default function Flowsheet_variable(){
       isShowVariable && 
       <section>
         <ul>
-          <li>variables </li>
-          <li>variables </li>
-          <li>variables </li>
-          <li>variables </li>
-          <li>variables </li>
+          {label}
         </ul>
       </section>
     }
     </>
   )
 }
+
