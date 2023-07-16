@@ -1,4 +1,5 @@
-import { createContext, useState, ReactNode } from "react";
+import { createContext, useState, ReactNode, useEffect } from "react";
+import axios from 'axios';
 
 export const AppContext = createContext<any>({});
 
@@ -28,11 +29,29 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   ]);
   //App panel control end
 
+  //demo flowsheet state
+  const [demoFlowsheetState, setDemoFlowsheetState] = useState(null);
+
+  async function loadDemoFlowsheet(){
+    try {
+      const res = await axios.get('/data/demo_flowsheet.json');
+      const JSON = res.data
+      setDemoFlowsheetState(JSON)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  useEffect(()=>{
+    loadDemoFlowsheet()
+  },[])
+
   return(
     <AppContext.Provider value={{
       //view btn
       panelState,
       setPanelState,
+      demoFlowsheetState,
     }}>
       {children}
     </AppContext.Provider>
