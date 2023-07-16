@@ -30,20 +30,35 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   //App panel control end
 
   //demo flowsheet state
-  const [flowsheetState, setFlowsheetState] = useState(null);
+  const [flowsheetState, setFlowsheetState] = useState({
+    cells : null,
+    model: null,
+    routing_config: null,
+  });
+
+  const cells = flowsheetState.cells;
+  const model = flowsheetState.model;
+  const routing_config = flowsheetState.routing_config;
 
   async function loadDemoFlowsheet(){
     try {
       const res = await axios.get('/data/demo_flowsheet.json');
       const JSON = res.data
-      setFlowsheetState(JSON)
+      setFlowsheetState((prev)=>{
+        return {
+          ...prev, 
+          cells : JSON.cells,
+          model : JSON.model,
+          routing_config : JSON.routing_config
+        }
+      })
     } catch (err) {
       console.error(err)
     }
   }
 
   useEffect(()=>{
-    loadDemoFlowsheet()
+    loadDemoFlowsheet();
   },[])
 
   return(
@@ -51,7 +66,9 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       //view btn
       panelState,
       setPanelState,
-      flowsheetState,
+      cells,
+      model,
+      routing_config
     }}>
       {children}
     </AppContext.Provider>
