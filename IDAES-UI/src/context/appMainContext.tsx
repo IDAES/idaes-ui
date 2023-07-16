@@ -30,13 +30,13 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   //App panel control end
 
   //demo flowsheet state
-  const [demoFlowsheetState, setDemoFlowsheetState] = useState(null);
+  const [flowsheetState, setFlowsheetState] = useState(null);
 
   async function loadDemoFlowsheet(){
     try {
       const res = await axios.get('/data/demo_flowsheet.json');
       const JSON = res.data
-      setDemoFlowsheetState(JSON)
+      setFlowsheetState(JSON)
     } catch (err) {
       console.error(err)
     }
@@ -51,7 +51,7 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       //view btn
       panelState,
       setPanelState,
-      demoFlowsheetState,
+      flowsheetState,
     }}>
       {children}
     </AppContext.Provider>
