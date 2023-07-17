@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {AppContext} from "../../context/appMainContext";
 
 export default function TableRow() {
@@ -7,27 +7,32 @@ export default function TableRow() {
   //this read from context and control show or hide table
   const isShowTable = context.panelState[2].show
   
+  //loading model context
   const model = context.model;
-  console.log(model)
-
-  //render table element
-  let isFlowsheetData = false;
+  
+  //render to table element
+  let isFlowsheetDataLoaded:boolean = false;
   let tableHeader = <th>Loading...</th>;
   let tableContent = <tr><td>Loading...</td></tr>;
 
-  //this only work when fetch model successuful
-  if(
-      model && 
-      model.stream_table && 
-      model.stream_table.columns && 
-      model.stream_table.columns.length > 0 &&
-      model.stream_table.data //&&
-      // model.stream_table.data.length === model.stream_table.columns.length - 1
-    ){
-    isFlowsheetData = true
+  function isModelLoaded(){
+    if(
+        model && 
+        model.stream_table && 
+        model.stream_table.columns && 
+        model.stream_table.columns.length > 0 &&
+        model.stream_table.data //&&
+        // model.stream_table.data.length === model.stream_table.columns.length - 1
+      ){
+        isFlowsheetDataLoaded = true
+    }
   }
 
-  if(isFlowsheetData){
+  function renderModelToTable(isFlowsheetDataLoaded:boolean){
+    if(!isFlowsheetDataLoaded){
+      return
+    }
+
     const columns = model.stream_table.columns;
     const data = model.stream_table.data;
 
@@ -48,7 +53,6 @@ export default function TableRow() {
        */
       let tableDesk = data[index].map((eachDesk:any, deskIndex:number)=>{
         if(deskIndex <= 1){
-          console.log(eachDesk)
           return(
             deskIndex === 0 ?  <td key={deskIndex}>{eachDesk}</td> :  <td key={deskIndex}>{eachDesk.html ? eachDesk.html : "-"}</td>
           )
@@ -65,6 +69,9 @@ export default function TableRow() {
       )
     })
   }
+
+  isModelLoaded();
+  renderModelToTable(isFlowsheetDataLoaded);
   
   return(
     <>
