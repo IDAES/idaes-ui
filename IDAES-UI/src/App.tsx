@@ -21,12 +21,12 @@ function App() {
   return (
         <>
           <Header/>
-          <PanelGroup direction="vertical" style={{height : "80vh"}}>
-            <Panel maxSize={90}>
+          <PanelGroup direction="vertical" style={{height : "90vh"}}>
+            <Panel maxSize={90} defaultSize={70}>
               <FlowsheetWrapper />
             </Panel>
-            <PanelResizeHandle style={{width: "10px", height:"5px", backgroundColor: "black", marginLeft : "20px", marginRight: "20px"}}/>
-            <Panel maxSize={90}>
+            <PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
+            <Panel maxSize={90} defaultSize={30}>
               {context.panelState[2].show && <Table_row />}
             </Panel>
           </PanelGroup>
