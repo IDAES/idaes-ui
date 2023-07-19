@@ -1,6 +1,8 @@
 import { useContext,useEffect } from "react";
 import { AppContext } from "../../../context/appMainContext";
 
+import css from "./flowsheet_variable.module.css";
+
 export default function Flowsheet_variable(){
   const context = useContext(AppContext);
 
@@ -35,8 +37,8 @@ export default function Flowsheet_variable(){
     <>
     {
       isShowVariable && 
-      <section>
-        <ul>
+      <section className={`pd-md`}>
+        <ul className={`${css.flowsheet_variable_ul}`}>
           {label}
         </ul>
       </section>
