@@ -29,6 +29,26 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   ]);
   //App panel control end
 
+  /**
+   * Context for  variables
+   */
+  const [variablesExpandState, setVariablesExpandState] = useState({
+    expand : false,
+    expandState : {}
+  });
+  function expandVariablesHandler(){
+    //when Click to toggle variable expand or collapse
+    //click btn is in variable header
+    setVariablesExpandState(prev=>{
+      let copyPrev = {...prev, expand : !prev.expand};
+      return copyPrev;
+    })
+  }
+
+  /**
+   * Context for variables end
+   */
+
   //get demo flowsheet state
   const [flowsheetState, setFlowsheetState] = useState({
     cells : null,
@@ -66,6 +86,10 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       //view btn
       panelState,
       setPanelState,
+      //variables
+      variablesExpandState,
+      expandVariablesHandler,
+      //flowsheet data
       cells,
       model,
       routing_config
