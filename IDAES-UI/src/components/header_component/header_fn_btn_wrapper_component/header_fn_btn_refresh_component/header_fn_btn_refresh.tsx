@@ -6,7 +6,7 @@ export default function HeaderFNBtnRefresh(){
   }
   
   return(
-    <li onClick={refreshHandler}>
+    <li className={`header_each_btn`} onClick={refreshHandler}>
       <FontAwesomeIcon icon={faArrowsRotate} className="mr-sm"/>
       Refresh
     </li>

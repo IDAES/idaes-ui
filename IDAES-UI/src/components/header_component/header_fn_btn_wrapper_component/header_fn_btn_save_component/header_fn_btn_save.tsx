@@ -7,7 +7,7 @@ export default function HeaderFNBtnSave(){
   }
   
   return(
-    <li onClick={saveHandler}>
+    <li className={`header_each_btn`} onClick={saveHandler}>
         <FontAwesomeIcon icon={faFloppyDisk} className="mr-sm"/>
         Save
     </li>
