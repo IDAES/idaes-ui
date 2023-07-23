@@ -29,7 +29,7 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   ]);
   //App panel control end
 
-  //demo flowsheet state
+  //get demo flowsheet state
   const [flowsheetState, setFlowsheetState] = useState({
     cells : null,
     model: null,
