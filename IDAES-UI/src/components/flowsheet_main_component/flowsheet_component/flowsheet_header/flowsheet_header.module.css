@@ -25,9 +25,15 @@
   align-items: center;
 }
 
-.flowsheet_header_icon{
+.flowsheet_header_icon_container{
   padding: 10px 10px !important;
   border: 1px solid black;
+}
+
+.flowsheetHader_icon_stroke_only{
+  color: white;
+  stroke: black;
+  stroke-width: 40px;
 }
 
 .flowsheetHeader_icon_container > span{
