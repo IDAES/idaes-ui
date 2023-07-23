@@ -30,7 +30,35 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   //App panel control end
 
   /**
-   * Context for  variables
+   * Context for flowsheet
+   */
+
+  const [fvHeaderState, setFvHeaderState] = useState({
+    isShowSteamName : false,
+    isShowLabels : false
+  })
+
+  function showSteamNameHandler(){
+    setFvHeaderState(prev=>{
+      let copyPrev = {...prev, isShowSteamName : !prev.isShowSteamName};
+      return copyPrev;
+    })
+  }
+
+  function showLabelsHandler(){
+    setFvHeaderState(prev=>{
+      let copyPrev = {...prev, isShowLabels : !prev.isShowLabels};
+      return copyPrev;
+    })
+  }
+
+  /**
+   * Context for flowsheet end
+   */
+
+
+  /**
+   * Context for variables
    */
   const [variablesExpandState, setVariablesExpandState] = useState({
     expand : false,
@@ -86,6 +114,10 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       //view btn
       panelState,
       setPanelState,
+      //fv
+      fvHeaderState,
+      showSteamNameHandler,
+      showLabelsHandler,
       //variables
       variablesExpandState,
       expandVariablesHandler,
