@@ -46,14 +46,14 @@
   border-bottom-left-radius:6px;
 }
 
-.flowsheet_header_last_box_icon{
+.flowsheetHeader_last_box_icon{
   margin-right: 20px;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
   border-right: 1px solid rgb(16, 16, 16) !important;
 }
 
-.flowsheet_header_small_icon{
+.flowsheetHeader_small_icon{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -65,4 +65,8 @@
   background-color: #D9D9D9;
   border: none;
   border-radius: 6px;
+}
+
+.flowsheetHeader_btn_with_icon_text{
+  margin-left: 5px;
 }
