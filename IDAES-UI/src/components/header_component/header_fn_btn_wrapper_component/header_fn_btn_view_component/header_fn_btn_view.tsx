@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import {  AppContext } from "../../../../context/appMainContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTableColumns } from "@fortawesome/free-solid-svg-icons";
+import { faTableColumns, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { panelStateInterface } from "../../../../interface/appMainContext_interface";
 
 import css from "./header_fn_btn_view.module.css"
@@ -28,14 +28,14 @@ export default function HeaderFNBtnView(){
     return(
       <li key={el.panelName + index} className={`mb-sm ${css.header_fn_btn_each_view}`} onClick={() => panelShowHandler(el.panelName)}>
         <span>{el.panelName}</span>
-        {el.show ? <span>@</span> : ""}
+        {el.show ? <FontAwesomeIcon icon={faCheck} /> : ""}
       </li>
     )
   });
 
   return(
     <>
-      <li className={css.header_fn_btn_wrapper_li}>
+      <li className={`${css.header_fn_btn_wrapper_li} header_each_btn` }>
         <FontAwesomeIcon icon={faTableColumns} className="mr-sm" />
         View
         <ul className={`crd_shadow-light ${css.header_fn_btn_hover_ul}`}>
