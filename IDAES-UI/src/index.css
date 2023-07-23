@@ -88,6 +88,13 @@ body {
   padding:20px;
 }
 
+.pr-sm{
+  padding-right: 5px;
+}
+.pr-md{
+  padding-right: 10px;
+}
+
 
 /*============ Margin ===============*/
 .mg-sm{
@@ -163,5 +170,50 @@ body {
 }
 
 
+/*Resizeable panel*/
+.panelResizeHandle{
+  position: relative;
+  background-color: rgb(116, 116, 116);
+}
+
+.panelResizeHandle_vertical{
+  width: 2px;
+  height: 100%;
+}
+
+.panelResizeHandle_vertical:after{
+  display: none;
+  content : "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  background-image: url("/assets/image/normal_icon/resize.png");
+  background-size: cover;
+}
+
+.panelResizeHandle_horizontal{
+  height: 2px;
+  width: 100vw;
+}
+
+/* .panelResizeHandle_vertical:hover{
+  cursor:  col-resize;
+}
+
+.panelResizeHandle_vertical:hover
+.panelResizeHandle_vertical:after{
+  display: block;
+} */
 
 
+.table_header{
+  padding: 20px;
+  background-color: lightblue;
+}
+
+td:hover{
+  cursor: pointer;
+}
