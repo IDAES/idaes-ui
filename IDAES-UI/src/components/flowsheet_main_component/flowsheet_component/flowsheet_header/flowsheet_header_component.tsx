@@ -16,35 +16,45 @@ export default function FlowsheetHeader(){
     <div className={`pd-md ${css.flowsheetHeader_main_container}`}>
       <p className={css.flowsheetHeader_title}>FLOWSHEET</p>
       <div className={css.flowsheetHeader_icon_container}>
-        <span className={`pd-sm ${css.flowsheet_header_icon}`}
+        <span className={`pd-sm ${css.flowsheet_header_icon_container}`}
               onClick={showSteamNameHandler}
         >
           {
             isShowSteamName
             ?
-            <FontAwesomeIcon icon={faSquareCheck} />
+            <FontAwesomeIcon icon={faSquareCheck} className={css.flowsheetHader_icon_stroke_only} />
             :
-            <FontAwesomeIcon icon={faSquare} />
+            <FontAwesomeIcon icon={faSquare} className={css.flowsheetHader_icon_stroke_only}/>
           }
           <span className={`${css.flowsheetHeader_btn_with_icon_text}`}>Steam Names</span>
         </span>
-        <span className={`pd-sm ${css.flowsheet_header_icon}`}
+        <span className={`pd-sm ${css.flowsheet_header_icon_container}`}
               onClick={showLabelsHandler}
         >
           {
             isShowLabels 
             ?
-              <FontAwesomeIcon icon={faSquareCheck} />
+              <FontAwesomeIcon icon={faSquareCheck} className={css.flowsheetHader_icon_stroke_only}/>
             :
-              <FontAwesomeIcon icon={faSquare} />
+              <FontAwesomeIcon icon={faSquare} className={css.flowsheetHader_icon_stroke_only}/>
           }
           <span className={`${css.flowsheetHeader_btn_with_icon_text}`}>Labels</span>
         </span>
-        <span className={`pd-sm ${css.flowsheet_header_icon}`}><FontAwesomeIcon icon={faMagnifyingGlassPlus} /></span>
-        <span className={`pd-sm ${css.flowsheet_header_icon}`}><FontAwesomeIcon icon={faMagnifyingGlassMinus} /></span>
-        <span className={`pd-sm ${css.flowsheet_header_icon} ${css.flowsheetHeader_last_box_icon}`}><FontAwesomeIcon icon={faExpand} /></span>
-        <span className={`pd-sm ${css.flowsheet_header_icon} ${css.flowsheetHeader_small_icon}`}><FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} /></span>
-        <span className={`pd-sm ${css.flowsheet_header_icon} ${css.flowsheetHeader_small_icon}`}><FontAwesomeIcon icon={faMinus} /></span>
+        <span className={`pd-sm ${css.flowsheet_header_icon_container}`}>
+          <FontAwesomeIcon icon={faMagnifyingGlassPlus} className={css.flowsheetHader_icon_stroke_only}/>
+        </span>
+        <span className={`pd-sm ${css.flowsheet_header_icon_container}`}>
+          <FontAwesomeIcon icon={faMagnifyingGlassMinus} className={css.flowsheetHader_icon_stroke_only}/>
+        </span>
+        <span className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_last_box_icon}`}>
+          <FontAwesomeIcon icon={faExpand} />
+        </span>
+        <span className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_small_icon}`}>
+          <FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
+        </span>
+        <span className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_small_icon}`}>
+          <FontAwesomeIcon icon={faMinus} />
+        </span>
       </div>
     </div>
   )
