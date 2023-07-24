@@ -217,3 +217,9 @@ body {
 td:hover{
   cursor: pointer;
 }
+
+.main{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
