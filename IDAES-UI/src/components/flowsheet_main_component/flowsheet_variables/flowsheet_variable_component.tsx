@@ -4,14 +4,9 @@ import { AppContext } from "../../../context/appMainContext";
 import css from "./flowsheet_variable.module.css";
 
 export default function Flowsheet_variable(){
-  const context = useContext(AppContext);
+  const {panelState, cells, model, routing_config} = useContext(AppContext);
 
-  let isShowVariable = context.panelState[1].show
-
-  //flowsheet context
-  const cells = context.cells;
-  const model = context.model;
-  const routing_config = context.routing_config;
+  const isShowVariable = panelState["variables"].show
 
   let label = "loading...";
   
@@ -20,9 +15,9 @@ export default function Flowsheet_variable(){
       if(el.attrs && el.attrs.label && el.attrs.label.text){
         return <li key={el.attrs.label.text + index}>{el.attrs.label.text}</li>
       }
-    })
-  }
-
+    });
+  };
+  
   if(model){
     Object.keys(model.arcs).map((el:any, index:number)=>{
       
