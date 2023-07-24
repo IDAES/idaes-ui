@@ -2,13 +2,10 @@ import { useContext, useEffect } from "react";
 import {AppContext} from "../../context/appMainContext";
 
 export default function TableRow() {
-  const context = useContext(AppContext);
+  const {panelState, model} = useContext(AppContext);
   
   //this read from context and control show or hide table
-  const isShowTable = context.panelState[2].show
-  
-  //loading model context
-  const model = context.model;
+  const isShowTable = panelState["streamTable"].show
   
   //render to table element
   let isFlowsheetDataLoaded:boolean = false;
