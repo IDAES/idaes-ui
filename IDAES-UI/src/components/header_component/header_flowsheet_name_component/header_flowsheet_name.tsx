@@ -27,7 +27,6 @@ export default function HeaderFlowsheetName(){
     if(!hasContext){
       return;
     }
-    console.log(model)
     flowsheetName = model.id ? 
     flowsheetName = model.id : 
     flowsheetName = `Looks like your flowsheet has no name yet, please check your JSON file under /model /id`; 
