@@ -32,31 +32,11 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   /**
    * Context for flowsheet
    */
-
   const [fvHeaderState, setFvHeaderState] = useState({
     isShowSteamName : false,
     isShowLabels : false
   })
-
-  function showSteamNameHandler(){
-    setFvHeaderState(prev=>{
-      let copyPrev = {...prev, isShowSteamName : !prev.isShowSteamName};
-      return copyPrev;
-    })
-  }
-
-  function showLabelsHandler(){
-    setFvHeaderState(prev=>{
-      let copyPrev = {...prev, isShowLabels : !prev.isShowLabels};
-      return copyPrev;
-    })
-  }
-
-  /**
-   * Context for flowsheet end
-   */
-
-
+  
   /**
    * Context for variables
    */
@@ -64,6 +44,7 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     expand : false,
     expandState : {}
   });
+
   function expandVariablesHandler(){
     //when Click to toggle variable expand or collapse
     //click btn is in variable header
@@ -116,6 +97,7 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       setPanelState,
       //fv
       fvHeaderState,
+      setFvHeaderState,
       showSteamNameHandler,
       showLabelsHandler,
       //variables
