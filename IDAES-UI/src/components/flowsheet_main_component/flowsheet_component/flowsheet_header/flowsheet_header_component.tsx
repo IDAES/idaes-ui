@@ -1,16 +1,32 @@
 import { useContext } from 'react';
 import { AppContext } from '../../../../context/appMainContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlassPlus, faMagnifyingGlassMinus,faExpand, faUpRightAndDownLeftFromCenter, faMinus, faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons'
+
+import {fvHeaderStateInterface} from "../../../../interface/appMainContext_interface";
 
 import css from "./flowsheet_header.module.css";
 
 export default function FlowsheetHeader(){
-  const { fvHeaderState } = useContext(AppContext);
+  const { fvHeaderState, setFvHeaderState } = useContext(AppContext);
   const isShowSteamName = fvHeaderState.isShowSteamName;
   const isShowLabels = fvHeaderState.isShowLabels;
-  const {showSteamNameHandler} = useContext(AppContext);
-  const {showLabelsHandler} = useContext(AppContext);
+
+  //toggle show steam names
+  function showSteamNameHandler(){
+    setFvHeaderState((prev:fvHeaderStateInterface)=>{
+      let copyPrev = {...prev, isShowSteamName : !prev.isShowSteamName};
+      return copyPrev;
+    })
+  }
+
+  //toggle show labels
+  function showLabelsHandler(){
+    setFvHeaderState((prev:fvHeaderStateInterface)=>{
+      let copyPrev = {...prev, isShowLabels : !prev.isShowLabels};
+      return copyPrev;
+    })
+  }
 
   return(
     <div className={`pd-md ${css.flowsheetHeader_main_container}`}>
