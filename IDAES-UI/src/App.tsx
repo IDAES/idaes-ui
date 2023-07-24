@@ -15,22 +15,27 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 function App() {
-  let context = useContext(AppContext);
   const { panelState } = useContext(AppContext);
+  const isStreamTableShow = panelState.streamTable.show;
 
   return (
-        <>
+        <main id="main" className="main">
           <Header/>
-          <PanelGroup direction="vertical" style={{height : "90vh"}}>
+          <PanelGroup direction="vertical">
             <Panel maxSize={100} defaultSize={70}>
               <FlowsheetWrapper />
             </Panel>
-            <PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
-            <Panel maxSize={100} defaultSize={30}>
-              {panelState.streamTable.show && <Table_row />}
-            </Panel>
+            {
+              isStreamTableShow &&
+              <>
+                <PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
+                <Panel maxSize={100} defaultSize={30}>
+                  {panelState.streamTable.show && <Table_row />}
+                </Panel>
+              </>
+            }
           </PanelGroup>
-        </>
+        </main>
   )
 }
 
