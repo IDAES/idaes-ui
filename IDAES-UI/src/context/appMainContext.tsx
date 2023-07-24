@@ -36,7 +36,7 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     isShowSteamName : false,
     isShowLabels : false
   })
-  
+
   /**
    * Context for variables
    */
@@ -98,8 +98,6 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       //fv
       fvHeaderState,
       setFvHeaderState,
-      showSteamNameHandler,
-      showLabelsHandler,
       //variables
       variablesExpandState,
       expandVariablesHandler,
