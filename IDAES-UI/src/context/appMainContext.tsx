@@ -45,19 +45,6 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     expandState : {}
   });
 
-  function expandVariablesHandler(){
-    //when Click to toggle variable expand or collapse
-    //click btn is in variable header
-    setVariablesExpandState(prev=>{
-      let copyPrev = {...prev, expand : !prev.expand};
-      return copyPrev;
-    })
-  }
-
-  /**
-   * Context for variables end
-   */
-
   //get demo flowsheet state
   const [flowsheetState, setFlowsheetState] = useState({
     cells : null,
@@ -100,7 +87,8 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       setFvHeaderState,
       //variables
       variablesExpandState,
-      expandVariablesHandler,
+      setVariablesExpandState,
+      // expandVariablesHandler,
       //flowsheet data
       cells,
       model,
