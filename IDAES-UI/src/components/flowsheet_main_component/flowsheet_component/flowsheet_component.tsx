@@ -5,8 +5,8 @@ declare var joint: any;
 declare var paper: any;
 
 export default function Flowsheet(){
-  const context = useContext(AppContext)
-  const isShowFlowsheet = context.panelState[0].show;
+  const {panelState} = useContext(AppContext)
+  const isShowFlowsheet = panelState["fv"].show;
 
   const canvas:any = useRef(null)
 
