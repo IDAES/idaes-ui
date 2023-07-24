@@ -1,6 +1,10 @@
 export interface panelStateInterface{
   panelName : string,
-  show : boolean
+  show : boolean,
+  size : {
+    maxSize : number,
+    defaultSize : number
+  }
 }
 
 export interface fvHeaderStateInterface {
