@@ -8,30 +8,37 @@ import css from "./header_fn_btn_view.module.css"
 
 
 export default function HeaderFNBtnView(){
-  let context = useContext(AppContext);
+  let {panelState, setPanelState} = useContext(AppContext);
+
+  //map view list base on state
+  const notRenderPanelList : Array<string> = ["fvWrapper"];
+
+  let viewList = Object.keys(panelState).map((el:string, index:number) =>{
+    if(!notRenderPanelList.includes(panelState[el].panelName)){
+      return(
+        <li key={panelState[el].panelName + index} 
+            className={`mb-sm ${css.header_fn_btn_each_view}`} 
+            onClick={() => panelShowHandler(panelState[el].panelName)}
+        >
+          <span>{panelState[el].panelName}</span>
+          {panelState[el].show ? <FontAwesomeIcon icon={faCheck} /> : null}
+        </li>
+      )
+    }
+  });
 
   //handle panel show hide
   function panelShowHandler(selectedPanelName:string){
-    context.setPanelState((prev:any) => {
-      return prev.map((el : { panelName:string, show:boolean }) => {
-        if(el.panelName === selectedPanelName){
-          return {...el, show : !el.show}
-        }else{
-          return el;
+    setPanelState((prev:any) => {
+      let newState = {...prev};
+      for (let key in newState) {
+        if (newState[key].panelName === selectedPanelName) {
+          newState[key] = {...newState[key], show: !newState[key].show};
         }
-      });
+      }
+      return newState;
     })
   }
-  
-  //map view list base on state
-  let viewList = context.panelState.map((el:panelStateInterface, index:number) =>{
-    return(
-      <li key={el.panelName + index} className={`mb-sm ${css.header_fn_btn_each_view}`} onClick={() => panelShowHandler(el.panelName)}>
-        <span>{el.panelName}</span>
-        {el.show ? <FontAwesomeIcon icon={faCheck} /> : ""}
-      </li>
-    )
-  });
 
   return(
     <>
