@@ -10,7 +10,6 @@ import css from "./header.module.css";
 
 export default function Header(){
   let val = useContext(AppContext)
-  console.log(val)
   
   return (
     <header className={`row ${css.header_container}`}>
