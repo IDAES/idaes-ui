@@ -263,6 +263,9 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
           * `/setting`: Retrieve a setting value.
           * `/path/to/file`: Retrieve file stored static directory
         """
+        self.send_response(200)  
+        self.send_header('Access-Control-Allow-Origin', '*')
+
         u, queries = self._parse_flowsheet_url(self.path)
         id_ = queries.get("id", None) if queries else None
 
