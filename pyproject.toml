@@ -51,9 +51,7 @@ build-backend = "setuptools.build_meta"
 # Just for developers (they should also add 'jb')
 dev = [
     # For adding copyright headers (see addheader.yml and the readme)
-    "addheader >= 0.3.0",
-    # Get IDAES from main branch in Github
-    "idaes-pse @ git+https://github.com/IDAES/idaes-pse"
+    "addheader >= 0.3.0"
 ]
 # For packaging
 pkg = [
@@ -64,9 +62,6 @@ pkg = [
 [project.urls]
 github = "https://github.com/idaes/idaes-ui"
 issues = "https://github.com/idaes/idaes-ui/issues"
-
-#[project.scripts]
-# idaesx = "idaes_examples.build:main"
 
 [tool.setuptools]
 include-package-data = true
