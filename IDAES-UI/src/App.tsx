@@ -21,7 +21,8 @@ function App() {
   return (
         <main id="main" className="main">
           <Header/>
-          <PanelGroup direction="vertical">
+          <FlowsheetWrapper />
+          {/* <PanelGroup direction="vertical">
             <Panel maxSize={100} defaultSize={70}>
               <FlowsheetWrapper />
             </Panel>
@@ -34,7 +35,7 @@ function App() {
                 </Panel>
               </>
             }
-          </PanelGroup>
+          </PanelGroup> */}
         </main>
   )
 }
