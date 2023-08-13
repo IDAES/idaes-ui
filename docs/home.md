@@ -1,6 +1,6 @@
 ---
 Creator: Dan Gunter
-Date: 2023-06-27
+Date: 2023-08-13
 ---
 # Getting Started
 
@@ -9,11 +9,15 @@ The Institute for the Design of Advanced Energy Systems Integrated Platform (IDA
 
 ## Installation
 
-1. *Install IDAES*. The IDAES UI depends on IDAES, so you must first install the main IDAES package. See the <a href="https://idaes-pse.readthedocs.io/en/stable/tutorials/getting_started/index.html" target="_blank">installation instructions</a> in the IDAES documentation.
-2. *Install idaes-ui*. Most users will want to install the latest release from PyPI with this command:
-    ```shell
-   pip install idaes-ui
-   ```
-    To get the latest pre-release version, install directly from the GitHub repository with:  
-  `pip install git+https://github.com/IDAES/idaes-ui`
+### User installation
 
+IDAES-UI is installed as part of the IDAES Integrated Platform (IDAES-IP).
+Please see the README of the [IDAES-PSE repository](https://github.com/IDAES/idaes-pse) and/or the full [IDAES install instructions](https://idaes-pse.readthedocs.io/en/stable/tutorials/getting_started/index.html) for details. 
+
+In a nutshell, you want to add *[ui]* to the list of optional dependencies when you run the main IDAES installation command (*pip* or *conda*).
+For example: `pip install idaes[ui]`
+
+### Developer installation
+
+If you want to install from the source code (i.e., from a clone of the GitHub repository), then from the root of the cloned repo run: `pip install -r requirements-dev.txt`.
+To build this documentation from source in a cloned repo, change to the *docs* directory then run `pip install requirements.txt` followed by `make html` for Linux or MacOSX or `.\make.bat html` for Windows.

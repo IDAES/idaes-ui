@@ -12,15 +12,17 @@ This repository contains user interfaces for the [Institute for the Design of Ad
 
 The primary user interface is the **Flowsheet Visualizer** (FV),
 which is a web-based user interface that can visualize and explore the
-properties of computational models ("flowsheets") created using the IDAES
-Python APIs.
+properties of computational models ("flowsheets") created using the IDAES Python APIs.
 
 ## Installation
 
 IDAES-UI is installed as part of the IDAES Integrated Platform (IDAES-IP).
 Please see the README of the [IDAES-PSE repository](https://github.com/IDAES/idaes-pse) and/or the full [IDAES install instructions](https://idaes-pse.readthedocs.io/en/stable/tutorials/getting_started/index.html) for details. 
-In a nutshell, you want to add `'ui'` to the list of dependencies when you run the main IDAES-IP installation command (*pip* or *conda*).
+In a nutshell, you want to add *[ui]* to the list of optional dependencies when you run the main IDAES installation command (*pip* or *conda*).
+For example: `pip install idaes[ui]`
 
 ## More information
 
-Please refer to the documentation in the `docs` directory of this repository (TODO: put these online at idaes-ui.readthedocs.io) for  more information about the capabilities of this package.
+Please refer to the [online documentation](idaes-ui.readthedocs.io) for  more information about the capabilities of this package.
+
+If you have cloned this repository from [GitHub](https://github.com/IDAES/idaes-ui/), you can find the source files for the Sphinx-generated HTML documentation in the `docs` subdirectory.
