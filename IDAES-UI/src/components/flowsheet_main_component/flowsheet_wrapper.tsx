@@ -8,6 +8,8 @@ import FlowsheetVariablesHeader from "./flowsheet_variables/flowsheet_variables_
 import Flowsheet_variable from "./flowsheet_variables/flowsheet_variable_component";
 import StreamTable from "./stream_table_component/stream_table";
 
+import { MainFV } from "./flowsheet_component/flowsheet_functions/mainFV";
+
 export default function FlowsheetWrapper(){
   const {panelState} = useContext(AppContext);
   const isFvShow:boolean = panelState.fv.show;
@@ -15,7 +17,8 @@ export default function FlowsheetWrapper(){
   const isStreamTableShow = panelState.streamTable.show;
 
   useEffect(()=>{
-    
+    //when template loaded then render flowsheet, variable, stream table to page with minFV class.
+    new MainFV("sample_visualization", "57337", isFvShow, isVariablesShow, isStreamTableShow)
   },[])
 
   return(
