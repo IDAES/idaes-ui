@@ -5,28 +5,48 @@ export const AppContext = createContext<any>({});
 
 export function AppContextProvider({ children }: { children: ReactNode }){
   //App panel control
-  const [panelState, setPanelState] = useState([
-    {
+  const [panelState, setPanelState] = useState({
+    fvWrapper : {
+      panelName : "fvWrapper",
+      show : true,
+      size: {
+        maxSize : 100,
+        defaultSize: 70
+      }
+    },
+    fv : {
       panelName : "Flowsheet",
-      show : true
+      show : true,
+      size: {
+        minSize : 100,
+        defaultSize: 70
+      }
     },
-    {
+    variables:{
       panelName : "Variables",
-      show : true
+      show : true,
+      size: {
+        minSize : 100,
+        defaultSize: 70
+      }
     },
-    {
+    streamTable: {
       panelName : "Stream Table",
-      show : true
+      show : true,
+      size: {
+        maxSize : 100,
+        defaultSize: 30
+      }
     },
-    {
-      panelName : "Report",
-      show : false
-    },
-    {
-      panelName : "Diagnostics",
-      show : true
-    },
-  ]);
+    // report : {
+    //   panelName : "Report",
+    //   show : false
+    // },
+    // diagnostics : {
+    //   panelName : "Diagnostics",
+    //   show : true
+    // },
+});
   //App panel control end
 
   /**
