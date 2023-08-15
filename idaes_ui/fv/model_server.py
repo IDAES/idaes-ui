@@ -263,6 +263,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
           * `/setting`: Retrieve a setting value.
           * `/path/to/file`: Retrieve file stored static directory
         """
+
+        #Enable CORS for react to fetch data
         self.send_response(200)  
         self.send_header('Access-Control-Allow-Origin', '*')
 
