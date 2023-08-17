@@ -19,18 +19,6 @@ import axios from 'axios';
 
 const isDevTest:Boolean = false;
 
-//read port and flowsheet name from shared_variable.json
-// const sharedVariables = JSON.parse(
-//   fs.readFileSync(
-//     path.join(__dirname, "/shared_variable.json")
-//   )
-// );
-
-// import { StreamTable } from './stream_table.js';
-// import { Toolbar } from './toolbar.js';
-// import { JointJsCellConfig } from './cell_config.js';
-
-
 /**
  * The main client app responsible for IDAES related visualizations. Here in
  * the main file, we:
