@@ -49,7 +49,7 @@ export class MainFV {
 
     //Gerneate url for fetch data
     this.baseUrl = `http://localhost:${port}`
-    this.getFSUrl = `${this.baseUrl}/fs?id=sample_visualization`;
+    this.getFSUrl = `${this.baseUrl}/fs?id=sample_visualization`; //TODO: this url id has to pass from python not sample...
 
     //Define model
     this.model = {}
@@ -59,6 +59,7 @@ export class MainFV {
     
     // Adding a special flag to mark that the graph changed
     this._is_graph_changed = false;
+    
     // Setting name (key) that defines the save model time interval
     this._save_time_interval_key = 'save_time_interval';
     this._default_save_time_interval = 5000; // Default time interval
