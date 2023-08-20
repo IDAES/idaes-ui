@@ -19,16 +19,11 @@ python -m idaes_ui.fv.example
 To use the FV to visualize your own flowsheet:
 * From within a **Jupyter Notebook**:
 ```python
+# create the flowsheet and put in variable 'flowsheet'
 flowsheet.visualize("Flowsheet Name")
 ```
 * From within a **Python script**, add a keyword argument if you want the visualizer to keep running: 
 ```python
+# create the flowsheet and put in variable 'flowsheet'
 flowsheet.visualize("Flowsheet Name", loop_forever=True)
-```
-
-### API
-
-```{eval-rst}
-.. autofunction:: idaes_ui.fv.fsvis.visualize
-   :noindex:
 ```
