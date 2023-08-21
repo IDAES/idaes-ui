@@ -126,41 +126,47 @@ export class Paper {
      * Register Events before the graph model is loaded
      */
     preSetupRegisterEvents() {
+        ////debug log check self value vs this value
+        // console.log(this) //same as self
+        // console.log(self) //same as this
+        // console.log(this===self) //true
+
         // Save model every time the graph changes
         this._graph.on('change:position change:angle change:vertices', () => {
             this._app.graphChanged();
         });
 
+
         // Getting the main elements for the idaes canvas and the stream table
         // to be able to dispatch highlighting events to the streams existing
         // on paper and in the stream table
-        let idaesCanvas:HTMLElement | null = document.getElementById('fv');
+        let idaesCanvas:HTMLElement = document.getElementById('fv')!;
         if(!idaesCanvas){
             console.error(`idaes canvas is not found`);
         }
 
-    //   let streamTable = document.querySelector('#stream-table-data');
-
+        
         // Setup paper resize on window resize
+        // let streamTable = document.querySelector('#stream-table-data');
         // window.onresize = function() {
         //     let stream_table = document.getElementById("stream-table");
-        //     $('#idaes-canvas').css({ height: stream_table.offsetHeight });
+        //     idaesCanvas.style.height = stream_table.offsetHeight + "";
         // }
 
         // Registering listeners to idaes-canvas to highlight the correct
         // streams in the paper
-        idaesCanvas!.addEventListener('HighlightStream', (event:any) => {
-            const relatedLinkElement = idaesCanvas!.querySelector(
+        idaesCanvas.addEventListener('HighlightStream', (event:any) => {
+            const relatedLinkElement = idaesCanvas.querySelector(
                 `[model-id=${event.detail.streamId}]`
             );
             if (relatedLinkElement) {
-                relatedLinkElement.dispatchEvent(new Event('HighlightStream'));
+                relatedLinkElement.dispatchEvent(new Event('HighlightStream')); //this is not working now the stream table is not highlight when hover fv link
             }
         });
         
         // Registering listeners to idaes-canvas to remove the highlight from
         // the correct streams in the paper
-        idaesCanvas!.addEventListener('RemoveHighlightStream', (event:any) => {
+        idaesCanvas.addEventListener('RemoveHighlightStream', (event:any) => {
             const relatedLinkElement = idaesCanvas!.querySelector(
                 `[model-id=${event.detail.streamId}]`
             );
@@ -170,22 +176,23 @@ export class Paper {
             }
         });
 
-    //   // Initiate selecting when the user grabs the blank area of the paper.
-    //   self._paper.on('blank:pointerdown', self._selection.startSelecting);
+        // Initiate selecting when the user grabs the blank area of the paper.
+        self._paper.on('blank:pointerdown', self._selection.startSelecting);
 
-    //   // Select an element if CTRL/Meta key is pressed while the element is clicked.
-    //   self._paper.on('element:pointerup', function(cellView, evt) {
-    //       if (evt.shiftKey || evt.metaKey) {
-    //           self._selection.collection.add(cellView.model);
-    //       }
-    //   });
+        // Select an element if CTRL/Meta key is pressed while the element is clicked.
+        self._paper.on('element:pointerup', function(cellView:any, evt:any) {
+                console.log(`work`)
+            if (evt.shiftKey || evt.metaKey) {
+                self._selection.collection.add(cellView.model);
+            }
+        });
 
-    //   // Unselect an element if the Shift/Meta key is pressed while a selected element is clicked.
-    //   self._selection.on('selection-box:pointerdown', function(elementView, evt) {
-    //       if (evt.shiftKey || evt.metaKey) {
-    //           self._selection.collection.remove(elementView.model);
-    //       }
-    //   });
+        // Unselect an element if the Shift/Meta key is pressed while a selected element is clicked.
+        self._selection.on('selection-box:pointerdown', function(elementView:any, evt:any) {
+            if (evt.shiftKey || evt.metaKey) {
+                self._selection.collection.remove(elementView.model);
+            }
+        });
 
     //   // /images/icons rotate 90 degrees on right click. Replaces browser 
     //   // context menu
