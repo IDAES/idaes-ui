@@ -71,7 +71,6 @@ export class JointJsCellConfig {
 
             // Calculates the original points that the link has to go through
             // to give the effect of having a gap.
-            console.log(g)
             const p1 = new g.Point(
                 src.x + gap.source.x,
                 src.y + gap.source.y
