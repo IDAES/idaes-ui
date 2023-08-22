@@ -98,7 +98,9 @@ export class MainFV {
       let whichExample = parseInt(params.get("example")!);
 
       //define what are examples
-      let example_fv_arr= ["example_1", "example_2", "example_3", "example_4", "example_5"];
+      //example 1 - 5 from example unit model reactor
+      //example 6 from HDA flowsheet costing
+      let example_fv_arr= ["example_1", "example_2", "example_3", "example_4", "example_5", "example_6"];
       //check if searched example index param in range
       if(whichExample < 0 || whichExample >  example_fv_arr.length) return;
 
