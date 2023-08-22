@@ -39,8 +39,22 @@ _log = logging.getLogger(__name__)
 
 # Directories
 _this_dir = Path(__file__).parent.absolute()
-_static_dir = _this_dir / "static"
-_template_dir = _this_dir / "templates"
+# old web dir
+# this can be switch by add param ?app=old in url to enable old site
+# logic is in do_GET()
+# _static_dir = _this_dir / "static"
+# _template_dir = _this_dir / "templates"
+
+# react app dir
+_static_dir = _this_dir / "../../IDAES-UI/dist/"
+_template_dir = _this_dir / "../../IDAES-UI/dist/"
+
+#Dev switch between old site and new site
+enableOldSite = False
+# enableOldSite = True
+if(enableOldSite):
+    _static_dir = _this_dir / "static"
+    _template_dir = _this_dir / "templates"
 
 
 class FlowsheetServer(http.server.HTTPServer):
@@ -55,6 +69,8 @@ class FlowsheetServer(http.server.HTTPServer):
 
     def __init__(self, port=None):
         """Create HTTP server"""
+        #port for dev remove it to allow system get random port in production
+        port = 8099 #this port only use for dev env which has no need to switch port
         self._port = port or find_free_port()
         _log.info(f"Starting HTTP server on localhost, port {self._port}")
         super().__init__(("127.0.0.1", self._port), FlowsheetServerHandler)
@@ -101,7 +117,7 @@ class FlowsheetServer(http.server.HTTPServer):
         if key not in self._settings_block:
             _log.warning(f"key '{key}' is not set in the flowsheet settings block")
             return None
-        return self._settings_block[key]
+        return self._settings_block[key] #{'save_time_interval': 5000}
 
     def add_flowsheet(self, id_, flowsheet, store: persist.DataStore) -> str:
         """Add a flowsheet, and also the method of saving it.
@@ -264,12 +280,21 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
           * `/path/to/file`: Retrieve file stored static directory
         """
 
-        #Enable CORS for react to fetch data
+        #Enable CORS for react to fetch data or CORS error
         self.send_response(200)  
         self.send_header('Access-Control-Allow-Origin', '*')
 
+        #Query url param
         u, queries = self._parse_flowsheet_url(self.path)
+        print("Path:")
+        print(u.path)
         id_ = queries.get("id", None) if queries else None
+
+        #TODO:define get old web or react app can enable old and new site in url
+        print("#############")
+        whichApp = queries.get("whichApp", None) if(queries) else None
+        print(whichApp)
+        print("#############")
 
         _log.debug(f"do_GET: path={self.path} id=={id_}")
         if u.path in ("/app", "/fs") and id_ is None:
@@ -278,6 +303,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
             )
             return
 
+        #From path get what to do
         if u.path == "/app":
             self._get_app(id_)
         elif u.path == "/fs":
@@ -399,8 +425,13 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
 
     def _parse_flowsheet_url(self, path):
         u, queries = urlparse(path), None
+        # u = ParseResult(scheme='', netloc='', path='/app', params='', query='id=sample_visualization', fragment='')
+        print("@@@@@@@@@@@")
+        print("print u")
+        print(u)
+        print("@@@@@@@@@@@")
         if u.query:
-            queries = dict([q.split("=") for q in u.query.split("&")])
+            queries = dict([q.split("=") for q in u.query.split("&")]) #{'id': 'sample_visualization'}
         return u, queries
 
     # === Logging ===
