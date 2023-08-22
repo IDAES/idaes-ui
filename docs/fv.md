@@ -68,6 +68,14 @@ To remove an elbow in a line, double-click on it.
 
 ![Text](_static/fv/fvr4.png)
 
+### Group components
+For large and complex diagrams, moving components one at a time can become tedious.
+To help, the Flowsheet Visualizer allows you to group elements by dragging a rectangle
+around them. Then the selected components can be moved as a group.
+
+![Text](_static/fv/fvg1.png)
+
+
 ### Stream table
 
 #### Hide/show streams
