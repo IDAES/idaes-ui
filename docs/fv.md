@@ -78,7 +78,26 @@ around them. Then the selected components can be moved as a group.
 
 ### Stream table
 
+The stream table shows values of variables for the "streams" connecting components.
+A small colored dot indicates fixed (vs. free) variables.
+
+Streams can be rearranged by dragging their header left or right.
+
+![Text](_static/fv/fvst1.png)
+
+#### Stream/diagram "brushing"
+
+To help see where the streams are in the diagram, the Flowsheet Visualizer
+uses a technique called, in statistics, "brushing" to visually link the two elements.
+
+Selecting a stream in the table, by hovering over its column with a mouse, will 
+highlight the corresponding line in the diagram.
+Similarly, selecting a line in the diagram will highlight the corresponding 
+stream in the stream table.
+
+* ![Text](_static/fv/fvst3.png)
+
 #### Hide/show streams
 You can select fields to hide/show in the stream table -- particularly useful when you have many streams.
 
-![Text](_static/fv/fvst1.png)
+![Text](_static/fv/fvst2.png)
