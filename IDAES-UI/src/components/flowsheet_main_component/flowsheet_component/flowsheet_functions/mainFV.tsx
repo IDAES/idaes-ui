@@ -67,6 +67,10 @@ export class MainFV {
     this.setupGraphChangeChecker(this._save_time_interval, flowsheetId);
     
     //fetch model data from python server, once get data then render model and stream table
+    //default is from sample_visualization if no ?example=1 etc. in url
+    //define if fetch from example
+    this.setGetFSUrl();
+
     axios.get(this.getFSUrl)
     .then((response) => {
         //get data from python server /fs
@@ -85,13 +89,27 @@ export class MainFV {
     });
   }
 
+  setGetFSUrl(){
+      //search url to know which example to query
+      let params = new URLSearchParams(window.location.search);
+
+      //directly return is ok, default getFSUrl is defined in this
+      if(!params.get("example")) return; 
+      let whichExample = parseInt(params.get("example")!);
+
+      //define what are examples
+      let example_fv_arr= ["example_1", "example_2", "example_3", "example_4", "example_5"];
+      //check if searched example index param in range
+      if(whichExample < 0 || whichExample >  example_fv_arr.length) return;
+
+      //assign correct url to getFSUrl
+      this.getFSUrl = `/assets/testing_data/example_${whichExample}.json`;
+  }
+
   renderModel(model:any) {
       var jjCellConfig = new JointJsCellConfig(model);
       var processed_model = jjCellConfig.processRoutingConfig();
       this.paper.setup(processed_model);
-
-      //$test$ directly render the model
-      // this.paper.setup(this.model);
   }
 
   /**
