@@ -53,7 +53,7 @@ export function AppContextProvider({ children }: { children: ReactNode }){
    * Context for flowsheet
    */
   const [fvHeaderState, setFvHeaderState] = useState({
-    isShowSteamName : false,
+    isShowSteamName : true,
     isShowLabels : false
   })
 
