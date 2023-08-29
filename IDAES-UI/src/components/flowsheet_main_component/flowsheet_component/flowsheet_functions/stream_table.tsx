@@ -268,8 +268,6 @@ export class StreamTable {
 
         // Function to highlight a stream table column
         this.highlightFn = (event:any) => {
-            console.log(`event is triggered`)
-        
             var streamGridCells = streamTable!.querySelectorAll(
                 `[col-id=${event.detail.streamId}]`
             );
@@ -303,7 +301,6 @@ export class StreamTable {
         // Function to trigger the right highlighting events when the mouse is
         // hovering over a cell in the stream table
         this.gridCellMouseEnterFn = (event: MouseEvent) => {
-            console.log(`mouse in`)
             // this condation is not working because the condation is checking old UI checkbox in new UI has no checkbox
             // if (document.querySelector("#view-stream-highlight-btn").checked) {
                 const colIdAttribute = (event.target as HTMLElement).getAttribute('col-id');
