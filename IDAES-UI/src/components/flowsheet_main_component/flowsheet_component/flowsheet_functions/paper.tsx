@@ -147,7 +147,7 @@ export class Paper {
 
         
         // Setup paper resize on window resize
-        // let streamTable = document.querySelector('#stream-table-data');
+        const streamTable = document.querySelector('#stream-table-data');
         // window.onresize = function() {
         //     let stream_table = document.getElementById("stream-table");
         //     idaesCanvas.style.height = stream_table.offsetHeight + "";
@@ -243,7 +243,7 @@ export class Paper {
         );
         idaesCanvas!.dispatchEvent(highlightStreamEvent);
         // if (document.querySelector("#view-stream-highlight-btn").checked) {
-        //     streamTable.dispatchEvent(highlightStreamEvent);
+            streamTable!.dispatchEvent(highlightStreamEvent);
         // }
     });
 
@@ -263,7 +263,7 @@ export class Paper {
             }
         );
         idaesCanvas!.dispatchEvent(removeHighlightStreamEvent);
-        // streamTable.dispatchEvent(removeHighlightStreamEvent);
+        streamTable!.dispatchEvent(removeHighlightStreamEvent);
     });
 
     // Link labels will appear and disappear on right click. Replaces browser context menu
@@ -272,9 +272,19 @@ export class Paper {
             linkView.model.label(0, {
                 attrs: {
                     text: {
+                        "class" : "fvVarText",
                         display: "block",
+                        padding: "20px",
+                        fill: "black",
+                        fontSize: "8"
+
                     },
-                    rect: { "fill-opacity": "1" }
+                    rect: { 
+                        "class" : "fvVarRect",
+                        "fill-opacity": "1",
+                        fill : "white",
+                        zIndex: "100"
+                    }
                 } 
             });
         }
@@ -370,5 +380,20 @@ export class Paper {
         this._graph.fromJSON(model);
         this.postSetupRegisterEvents();
     }
+
+    // Zoom in event listener
+    // document.querySelector("#zoom-in-btn").addEventListener("click", () => {
+    //     this._paper.paperScroller.zoom(0.2, { max: 4 });
+    // });
+
+    // // Zoom out event listener
+    // document.querySelector("#zoom-out-btn").addEventListener("click", () => {
+    //     this._paper.paperScroller.zoom(-0.2, { min: 0.2 });
+    // });
+
+    // // Zoom to fit event listener
+    // document.querySelector("#zoom-fit-btn").addEventListener("click", () => {
+    //     this._paper.zoomToFit();
+    // });
   
 };
