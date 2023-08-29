@@ -32,8 +32,10 @@ export default function FlowsheetHeader(){
     <div className={`pd-md ${css.flowsheetHeader_main_container}`}>
       <p className={css.flowsheetHeader_title}>FLOWSHEET</p>
       <div className={css.flowsheetHeader_icon_container}>
-        <span className={`pd-sm ${css.flowsheet_header_icon_container}`}
+        <span id="stream-names-toggle"
+              className={`pd-sm ${css.flowsheet_header_icon_container}`}
               onClick={showSteamNameHandler}
+              data-toggle={`${isShowSteamName}`}
         >
           {
             isShowSteamName
@@ -42,7 +44,7 @@ export default function FlowsheetHeader(){
             :
             <FontAwesomeIcon icon={faSquare} className={css.flowsheetHader_icon_stroke_only}/>
           }
-          <span className={`${css.flowsheetHeader_btn_with_icon_text}`}>Steam Names</span>
+          <span className={`${css.flowsheetHeader_btn_with_icon_text}`}>Stream Names</span>
         </span>
         <span className={`pd-sm ${css.flowsheet_header_icon_container}`}
               onClick={showLabelsHandler}
@@ -56,13 +58,13 @@ export default function FlowsheetHeader(){
           }
           <span className={`${css.flowsheetHeader_btn_with_icon_text}`}>Labels</span>
         </span>
-        <span className={`pd-sm ${css.flowsheet_header_icon_container}`}>
+        <span id="zoom-in-btn" className={`pd-sm ${css.flowsheet_header_icon_container}`}>
           <FontAwesomeIcon icon={faMagnifyingGlassPlus} className={css.flowsheetHader_icon_stroke_only}/>
         </span>
-        <span className={`pd-sm ${css.flowsheet_header_icon_container}`}>
+        <span id="zoom-out-btn" className={`pd-sm ${css.flowsheet_header_icon_container}`}>
           <FontAwesomeIcon icon={faMagnifyingGlassMinus} className={css.flowsheetHader_icon_stroke_only}/>
         </span>
-        <span className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_last_box_icon}`}>
+        <span id="zoom-to-fit" className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_last_box_icon}`}>
           <FontAwesomeIcon icon={faExpand} />
         </span>
         <span className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_small_icon}`}>
