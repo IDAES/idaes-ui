@@ -18,7 +18,7 @@ export default function FlowsheetWrapper(){
 
   useEffect(()=>{
     //when template loaded then render flowsheet, variable, stream table to page with minFV class.
-    new MainFV("sample_visualization", "57337", isFvShow, isVariablesShow, isStreamTableShow)
+    new MainFV("sample_visualization", "8099", isFvShow, isVariablesShow, isStreamTableShow)
   },[])
 
   return(
@@ -33,15 +33,15 @@ export default function FlowsheetWrapper(){
                 <Flowsheet />
               </Panel>
             }
-
-            <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
             
+            {/*this part closed because the variable part is not in this round of release*/}
+            {/* <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/> */}
             {
-              isVariablesShow && 
-              <Panel defaultSize={30} minSize={0}>
-                <FlowsheetVariablesHeader />
-                <Flowsheet_variable />
-              </Panel>
+              // isVariablesShow && 
+              // <Panel defaultSize={30} minSize={0}>
+              //   <FlowsheetVariablesHeader />
+              //   <Flowsheet_variable />
+              // </Panel>
             }
           </PanelGroup>
         </Panel>
