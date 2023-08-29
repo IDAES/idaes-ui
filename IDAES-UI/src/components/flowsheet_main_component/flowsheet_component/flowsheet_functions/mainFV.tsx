@@ -13,7 +13,8 @@
 
 import { Paper } from './paper';
 import { JointJsCellConfig } from './cell_config';
-import {StreamTable} from './stream_table';
+import { StreamTable } from './stream_table';
+import { Toolbar } from './toolbar';
 import axios from 'axios';
 
 
@@ -39,6 +40,7 @@ export class MainFV {
   _default_save_time_interval:number;
   _save_time_interval:any;
   stream_table:any;
+  toolbar: any;
 
 
   constructor (flowsheetId:any, port:string | number, isFvShow:boolean, isVariablesShow:boolean, isStreamTableShow:boolean) {
@@ -71,6 +73,9 @@ export class MainFV {
     //define if fetch from example
     this.setGetFSUrl();
 
+    /**
+     * @param 
+     */
     axios.get(this.getFSUrl)
     .then((response) => {
         //get data from python server /fs
@@ -81,7 +86,7 @@ export class MainFV {
         this.renderModel(this.model);
         //render stream table
         this.stream_table = new StreamTable(this, this.model);
-        // this.toolbar = new Toolbar(this, this.paper, this.stream_table);
+        this.toolbar = new Toolbar(this, this.paper, this.stream_table);
     })
     .catch((error) => {
         console.log(error.message);
@@ -89,6 +94,11 @@ export class MainFV {
     });
   }
 
+  /**
+   * Query from url check if has spcific example param in url
+   * if has example param, and example param match examp_fv_arr then getFSUrl point to local example
+   * if not getFSUrl point to python server /fs?id=
+   */
   setGetFSUrl(){
       //search url to know which example to query
       let params = new URLSearchParams(window.location.search);
@@ -100,7 +110,8 @@ export class MainFV {
       //define what are examples
       //example 1 - 5 from example unit model reactor
       //example 6 from HDA flowsheet costing
-      let example_fv_arr= ["example_1", "example_2", "example_3", "example_4", "example_5", "example_6"];
+      //example 7 from NGCC baseline and turndown cell 12, m.fs.gt.visualize()
+      let example_fv_arr= ["example_1", "example_2", "example_3", "example_4", "example_5", "example_6", "example_7"];
       //check if searched example index param in range
       if(whichExample < 0 || whichExample >  example_fv_arr.length) return;
 
@@ -109,8 +120,8 @@ export class MainFV {
   }
 
   renderModel(model:any) {
-      var jjCellConfig = new JointJsCellConfig(model);
-      var processed_model = jjCellConfig.processRoutingConfig();
+      const jjCellConfig = new JointJsCellConfig(model);
+      const processed_model = jjCellConfig.processRoutingConfig();
       this.paper.setup(processed_model);
   }
 
