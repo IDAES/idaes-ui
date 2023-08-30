@@ -19,10 +19,13 @@
  * second toolbar is seen on the top right corner of the visualizer paper
  * graph.
  */
+declare var joint:any;
+
 export class Toolbar { 
   _app: any;
   _paper: any;
   _stream_table: any;
+  flowsheetId: string;
 
   toggleStreamNameBtn:HTMLElement;
 
@@ -30,11 +33,12 @@ export class Toolbar {
   zoomOutBtn:HTMLElement;
   zoomToFitBtn: HTMLElement;
 
-  constructor(app:any, paper:any, stream_table:any | undefined) {
+  constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string) {
     //initial arguments
     this._app = app;
     this._paper = paper;
     this._stream_table = stream_table;
+    this.flowsheetId = flowsheetId;
     // this.setupPageToolbar();
     // this.setupFlowsheetToolbar();
 
@@ -56,6 +60,9 @@ export class Toolbar {
 
     //call registerZoomEvent function, register 3 zoom events to zoom in zoom out zoom to fit btn on dom
     this.registerZoomEvent(this.zoomInBtn, this.zoomOutBtn, this.zoomToFitBtn);
+
+    //call & register click event to export flowsheet to png function
+    this.registerEventExportFlowsheetToPng()
   }
 
   /**
@@ -89,7 +96,9 @@ export class Toolbar {
 
   registerToggleStreamNamesEvent(streamNameBtn:HTMLElement){
     streamNameBtn.addEventListener("click", () => {
-        if (streamNameBtn.getAttribute("data-toggle") !== "true") {
+        //TODO:( bug, boolean order is reversed that is why in if !isShowStreamNames
+        const isShowStreamNames = streamNameBtn.getAttribute("data-toggle") === "true" ? true : false;
+        if (!isShowStreamNames) {
             this._paper._graph.getLinks().forEach(function (link:any) {
                 link.label(1, {
                     attrs: {
@@ -111,6 +120,35 @@ export class Toolbar {
                 });
             });
         };
+    });
+  }
+
+  /**
+   * Button event handler register
+   * Export flowsheet to to PNG 
+   */
+
+  registerEventExportFlowsheetToPng(){
+    //this element is static and 100% there.
+    const headerExportImageBtn = document.querySelector("#headerExportImageBtn")!;
+    headerExportImageBtn.addEventListener("click", () => {
+        let p = this._paper.paper;
+        const model_id = this.flowsheetId
+        // Make sure to hide all of the vertices and bars on the links
+        // so they don't show up in the PNG
+        p.hideTools();
+        p.toPNG(function(png:any) {
+            new joint.ui.Lightbox({
+                image: png,
+                downloadable: true,
+                fileName: model_id.concat(".png")
+            }).open();
+        }, {
+            preserveDimensions: true,
+            convertImagesToDataUris: true,
+            useComputedStyles: true,
+            stylesheet: '.scalable * { vector-effect: non-scaling-stroke }'
+        });
     });
   }
 
