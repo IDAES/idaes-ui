@@ -27,6 +27,7 @@ const isDevTest:Boolean = false;
  *     2. Display the stream table.
  */
 export class MainFV {
+  flowsheetId:string;
   //define type for this class for TS
   isFvShow:boolean;
   isVariablesShow:boolean;
@@ -44,6 +45,7 @@ export class MainFV {
 
 
   constructor (flowsheetId:any, port:string | number, isFvShow:boolean, isVariablesShow:boolean, isStreamTableShow:boolean) {
+    this.flowsheetId = flowsheetId;
     //which panel is show
     this.isFvShow = isFvShow;
     this.isVariablesShow = isVariablesShow;
@@ -86,7 +88,7 @@ export class MainFV {
         this.renderModel(this.model);
         //render stream table
         this.stream_table = new StreamTable(this, this.model);
-        this.toolbar = new Toolbar(this, this.paper, this.stream_table);
+        this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId);
     })
     .catch((error) => {
         console.log(error.message);
