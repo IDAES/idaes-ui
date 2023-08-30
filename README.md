@@ -11,7 +11,7 @@ You are free to copy, modify, and distribute IDAES-UI with attribution under the
 This repository contains user interfaces for the [Institute for the Design of Advanced Energy Systems (IDAES)](https://idaes.org) Integrated Platform (IDAES-IP).
 
 The primary user interface is the **Flowsheet Visualizer** (FV),
-which is a web-based user interface that can visualize and explore the
+a web-based user interface that can visualize and explore the
 properties of computational models ("flowsheets") created using the IDAES Python APIs.
 
 ## Installation
