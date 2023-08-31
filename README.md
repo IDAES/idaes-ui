@@ -1,18 +1,28 @@
-**This repository is a work in progress is NOT yet ready for download and use by the general public.  
-Please check back in May, 2023.**
+# IDAES User Interfaces (IDAES-UI)
+[Repository on GitHub](https://github.com/IDAES/idaes-ui/)  
+[IDAES project website](https://idaes.org)
 
-# IDAES User Interfaces (idaes-ui)
+Copyright 2023 by The IDAES Project Team. See `COPYRIGHT.md` file for details.
 
-This repository contains user interfaces for the IDAES Integrated Platform (IDAES-IP).
+You are free to copy, modify, and distribute IDAES-UI with attribution under the terms of the MIT license. See `LICENSE.md` file for details.
 
-[Documentation](docs/index.md)
+## Overview
 
-## Flowsheet Visualizer
+This repository contains user interfaces for the [Institute for the Design of Advanced Energy Systems (IDAES)](https://idaes.org) Integrated Platform (IDAES-IP).
 
-The flowsheet visualizer  is a web-based user interface (UI). Features include:
+The primary user interface is the **Flowsheet Visualizer** (FV),
+a web-based user interface that can visualize and explore the
+properties of computational models ("flowsheets") created using the IDAES Python APIs.
 
-* View any IDAES flowsheet as a process engineering diagram
-* Rearrange the flowsheet diagram to your taste and save the arrangement for next time
-* Export flowsheet diagrams as images
-* View and export the "stream table" for the flowsheet
-* Dynamically refresh the displayed values to reflect changes in the underlying IDAES model
+## Installation
+
+IDAES-UI is installed as part of the IDAES Integrated Platform (IDAES-IP).
+Please see the README of the [IDAES-PSE repository](https://github.com/IDAES/idaes-pse) and/or the full [IDAES install instructions](https://idaes-pse.readthedocs.io/en/stable/tutorials/getting_started/index.html) for details. 
+In a nutshell, you want to add *[ui]* to the list of optional dependencies when you run the main IDAES installation command (*pip* or *conda*).
+For example: `pip install idaes[ui]`
+
+## More information
+
+Please refer to the [online documentation](idaes-ui.readthedocs.io) for  more information about the capabilities of this package.
+
+If you have cloned this repository from [GitHub](https://github.com/IDAES/idaes-ui/), you can find the source files for the Sphinx-generated HTML documentation in the `docs` subdirectory.

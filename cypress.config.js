@@ -16,5 +16,8 @@ module.exports = {
   video : false,
   e2e: {
     baseUrl: sharedVariables.url,
+    pageLoadTimeout: 100000,
+    taskTimeout: 100000,
+    responseTimeout: 60000
   }  
 }
