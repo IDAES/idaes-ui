@@ -272,7 +272,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200, "ok")
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS')
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
@@ -290,7 +290,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         #Enable CORS for react to fetch data or CORS error
         self.send_response(200)  
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
+
 
         #Query url param
         u, queries = self._parse_flowsheet_url(self.path)
