@@ -380,20 +380,4 @@ export class Paper {
         this._graph.fromJSON(model);
         this.postSetupRegisterEvents();
     }
-
-    // Zoom in event listener
-    // document.querySelector("#zoom-in-btn").addEventListener("click", () => {
-    //     this._paper.paperScroller.zoom(0.2, { max: 4 });
-    // });
-
-    // // Zoom out event listener
-    // document.querySelector("#zoom-out-btn").addEventListener("click", () => {
-    //     this._paper.paperScroller.zoom(-0.2, { min: 0.2 });
-    // });
-
-    // // Zoom to fit event listener
-    // document.querySelector("#zoom-fit-btn").addEventListener("click", () => {
-    //     this._paper.zoomToFit();
-    // });
-  
 };
