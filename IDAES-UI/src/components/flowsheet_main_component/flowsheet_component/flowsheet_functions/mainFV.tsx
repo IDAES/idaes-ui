@@ -34,6 +34,7 @@ export class MainFV {
   isStreamTableShow:boolean;
   baseUrl:string;
   getFSUrl:string;
+  putFSUrl:string;
   model:any;
   paper:any;
   _is_graph_changed:boolean;
@@ -53,7 +54,8 @@ export class MainFV {
 
     //Gerneate url for fetch data
     this.baseUrl = `http://localhost:${port}`
-    this.getFSUrl = `${this.baseUrl}/fs?id=sample_visualization`; //TODO: this url id has to pass from python not sample...
+    this.getFSUrl = `${this.baseUrl}/fs?id=${flowsheetId}`;
+    this.putFSUrl = `${this.baseUrl}/fs?id=${flowsheetId}`;
 
     //Define model
     this.model = {}
@@ -279,7 +281,8 @@ export class MainFV {
      */
     setupGraphChangeChecker(wait:any, flowsheetId:string) {
       // let model_id = $("#idaes-fs-name").data("flowsheetId");
-      let flowsheet_url = "/fs?id=".concat(flowsheetId);
+      // let flowsheet_url = "/fs?id=".concat(flowsheetId);
+      let flowsheet_url = this.putFSUrl;
 
       var graphChangedChecker = setInterval(() => {
           if (this._is_graph_changed) {
@@ -305,8 +308,21 @@ export class MainFV {
      * @param model The model to save
      */
     saveModel(url:any, model:any) {
-      return {url, model}
-      // let clientData = JSON.stringify(model.toJSON());
+      let clientData = JSON.stringify(model.toJSON());
+      axios.put(url, clientData, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      })
+      .then((response) => {
+        console.log(`saved`)
+        this.informUser(0, "Saved new model values");
+      })
+      .catch((error) => {
+        this.informUser(2, "Fatal error: cannot save current model: " + error);
+      });
+
+      //old ajax request save for reference, clean up later
       // this.informUser(0, "Save current values from model");
       // $.ajax({url: url, type: 'PUT', contentType: "application/json", data: clientData})
       //     // On failure inform user and stop
