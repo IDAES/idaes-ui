@@ -268,8 +268,15 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         # Server should return text/javascript MIME type for served JS files (issue 259)
         self.extensions_map[".js"] = "text/javascript"
 
-    # === GET ===
+    # === OPTIONS ===
+    def do_OPTIONS(self):
+        self.send_response(200, "ok")
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS')
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
 
+    # === GET ===
     def do_GET(self):
         """Process a request to receive data.
 
@@ -283,6 +290,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         #Enable CORS for react to fetch data or CORS error
         self.send_response(200)  
         self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
 
         #Query url param
         u, queries = self._parse_flowsheet_url(self.path)
@@ -365,25 +373,30 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         self._write_json(200, {"setting_value": self.server.get_setting(setting_key_)})
 
     # === PUT ===
-
     def do_PUT(self):
         """Process a request to store data."""
+        
+        # Enable CORS headers first
+        self.send_response(200)  
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+
         u, queries = self._parse_flowsheet_url(self.path)
         id_ = queries.get("id", None) if queries else None
         _log.info(f"do_PUT: route={u} id={id_}")
         if u.path in ("/fs",) and id_ is None:
-            self._write_text(
-                400, message=f"Query parameter 'id' is required for '{u.path}'"
-            )
+            self._write_text(400, message=f"Query parameter 'id' is required for '{u.path}'")
             return
+
         if u.path == "/fs":
             self._put_fs(id_)
 
     def _put_fs(self, id_):
-        # read  flowsheet from request (read(LENGTH) is required to avoid hanging)
+        # Read flowsheet from request (read(LENGTH) is required to avoid hanging)
         read_len = int(self.headers.get("Content-Length", "-1"))
         data = utf8_decode(self.rfile.read(read_len))
-        # save flowsheet
+        
+        # Save flowsheet
         try:
             self.server.save_flowsheet(id_, data)
         except errors.ProcessingError as err:
@@ -392,6 +405,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         except Exception as err:  # pylint: disable=W0703
             self._write_text(500, message=str(err))
             return
+        
         self._write_text(200, message="success")
 
     # === Internal methods ===
