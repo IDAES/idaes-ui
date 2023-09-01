@@ -62,7 +62,10 @@ export class Toolbar {
     this.registerZoomEvent(this.zoomInBtn, this.zoomOutBtn, this.zoomToFitBtn);
 
     //call & register click event to export flowsheet to png function
-    this.registerEventExportFlowsheetToPng()
+    this.registerEventExportFlowsheetToPng();
+
+    //call & register click event to export flowsheet to png function
+    this.registerEventToggleLabel()
   }
 
   /**
@@ -150,6 +153,42 @@ export class Toolbar {
             stylesheet: '.scalable * { vector-effect: non-scaling-stroke }'
         });
     });
+  }
+
+  /**
+   * Toggle label show and hide
+   */
+  registerEventToggleLabel(){
+    const showLableBtn = document.querySelector("#show-label-toggle")!;
+    showLableBtn.addEventListener("click", ()=>{
+      const isShowLable = showLableBtn.getAttribute("data-toggle");
+      if (isShowLable !== "true") {
+        console.log(`on`)
+        this._paper._graph.getLinks().forEach(function (link:any) {
+            link.label(0, {
+                attrs: {
+                    text: {
+                        display: "block",
+                    },
+                    rect: { "fill-opacity": "1" }
+                }
+            });
+        });
+      }
+      else {
+        console.log(`off`)
+          this._paper._graph.getLinks().forEach(function (link:any) {
+              link.label(0, {
+                  attrs: {
+                      text: {
+                          display: "none",
+                      },
+                      rect: { "fill-opacity": "0" }
+                  }
+              });
+          });
+      };
+    })
   }
 
   // setGrid(gridSize, color) {
