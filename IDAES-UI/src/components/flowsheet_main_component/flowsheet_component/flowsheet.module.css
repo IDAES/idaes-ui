@@ -1,9 +1,35 @@
 .fvContainer{
   position: relative;
+  width: 100%;
+  height: 94%;
 }
 
 .fv{
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+.fvVarText{
+  padding: 20px;
+  fill: black;
+  font-size: 8px;
+}
+
+/* text[joint-selector="text"]{
+  fill: red;
+} */
+
+.fvVarRect {
+  fill: blue; /* Changes the rectangle's background to blue */
+  stroke: red; /* Changes the rectangle's border to red */
+}
+
+.fvVarText {
+  fill: green; /* Changes the text color to green */
+  font-size: 10px;
+}
+
+.v-line{
+  fill: red !important;
 }
