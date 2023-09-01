@@ -11,14 +11,17 @@ import StreamTable from "./stream_table_component/stream_table";
 import { MainFV } from "./flowsheet_component/flowsheet_functions/mainFV";
 
 export default function FlowsheetWrapper(){
+  let {server_port} = useContext(AppContext);
   const {panelState} = useContext(AppContext);
   const isFvShow:boolean = panelState.fv.show;
   const isVariablesShow:boolean = panelState.variables.show;
   const isStreamTableShow = panelState.streamTable.show;
 
   useEffect(()=>{
+    //get server port base on UI port number, vite running on 5173 on dev
+    server_port == "5173" ? server_port ="8099" : server_port = server_port;
     //when template loaded then render flowsheet, variable, stream table to page with minFV class.
-    new MainFV("sample_visualization", "8099", isFvShow, isVariablesShow, isStreamTableShow)
+    new MainFV("sample_visualization", server_port, isFvShow, isVariablesShow, isStreamTableShow)
   },[])
 
   return(
