@@ -70,7 +70,7 @@ class FlowsheetServer(http.server.HTTPServer):
     def __init__(self, port=None):
         """Create HTTP server"""
         #port for dev remove it to allow system get random port in production
-        port = 8099 #this port only use for dev env which has no need to switch port
+        # port = 8099 #this port only use for dev env which has no need to switch port
         self._port = port or find_free_port()
         _log.info(f"Starting HTTP server on localhost, port {self._port}")
         super().__init__(("127.0.0.1", self._port), FlowsheetServerHandler)
