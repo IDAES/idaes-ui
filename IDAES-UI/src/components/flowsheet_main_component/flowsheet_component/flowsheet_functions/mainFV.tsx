@@ -61,7 +61,8 @@ export class MainFV {
     this.model = {}
 
     //Generate jointjs visualizer paper which displays joint js
-    this.paper = new Paper(this);
+    //if statment control when fv not show the paper should not render
+    if(isFvShow) this.paper = new Paper(this);
     
     // Adding a special flag to mark that the graph changed
     this._is_graph_changed = false;
@@ -89,7 +90,8 @@ export class MainFV {
         //render model
         this.renderModel(this.model);
         //render stream table
-        this.stream_table = new StreamTable(this, this.model);
+        //if statment control when stream table not show the stream table should not render
+        if(isStreamTableShow) this.stream_table = new StreamTable(this, this.model);
         this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId, this.putFSUrl);
     })
     .catch((error) => {
