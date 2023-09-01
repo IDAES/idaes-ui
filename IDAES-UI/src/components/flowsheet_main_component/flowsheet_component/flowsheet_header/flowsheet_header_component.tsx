@@ -46,8 +46,10 @@ export default function FlowsheetHeader(){
           }
           <span className={`${css.flowsheetHeader_btn_with_icon_text}`}>Stream Names</span>
         </span>
-        <span className={`pd-sm ${css.flowsheet_header_icon_container}`}
+        <span id="show-label-toggle"
+              className={`pd-sm ${css.flowsheet_header_icon_container}`}
               onClick={showLabelsHandler}
+              data-toggle={isShowLabels}
         >
           {
             isShowLabels 
@@ -56,7 +58,7 @@ export default function FlowsheetHeader(){
             :
               <FontAwesomeIcon icon={faSquare} className={css.flowsheetHader_icon_stroke_only}/>
           }
-          <span className={`${css.flowsheetHeader_btn_with_icon_text}`} data-toggle={isShowLabels}>Labels</span>
+          <span className={`${css.flowsheetHeader_btn_with_icon_text}`}>Labels</span>
         </span>
         <span id="zoom-in-btn" className={`pd-sm ${css.flowsheet_header_icon_container}`}>
           <FontAwesomeIcon icon={faMagnifyingGlassPlus} className={css.flowsheetHader_icon_stroke_only}/>
