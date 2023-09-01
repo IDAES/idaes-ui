@@ -365,14 +365,14 @@ export class Paper {
    * and then this setup() function registers the post setup events.
    */
     setup(model:any) {
-        //update cells image location
         const iconDir = "/assets/image/flowsheet_icons/";
-        model.cells.forEach((el:any)=>{
-            if(el.type === "standard.Image"){
-                let imageURL = iconDir + el.attrs.image.xlinkHref.replace(/\/images\/icons\//, '')
-                el.attrs.image = {...el.attrs.image, xlinkHref : imageURL}
+
+        model.cells.forEach((el: any) => {
+            if (el.type === "standard.Image") {
+                let imageURL = iconDir + el.attrs.image.xlinkHref.match(/([^\/]+\.svg)$/)[0];
+                el.attrs.image = { ...el.attrs.image, xlinkHref: imageURL };
             }
-        })
+        });
 
         //if vap out goes to top liq goes to bottom
         this.reorderLabel(model);
