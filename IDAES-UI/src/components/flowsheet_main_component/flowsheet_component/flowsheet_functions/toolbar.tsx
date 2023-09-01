@@ -26,6 +26,7 @@ export class Toolbar {
   _paper: any;
   _stream_table: any;
   flowsheetId: string;
+  putFSUrl:string;
 
   toggleStreamNameBtn:HTMLElement;
 
@@ -33,12 +34,13 @@ export class Toolbar {
   zoomOutBtn:HTMLElement;
   zoomToFitBtn: HTMLElement;
 
-  constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string) {
+  constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string, putFSUrl:string) {
     //initial arguments
     this._app = app;
     this._paper = paper;
     this._stream_table = stream_table;
     this.flowsheetId = flowsheetId;
+    this.putFSUrl = putFSUrl;
     // this.setupPageToolbar();
     // this.setupFlowsheetToolbar();
 
@@ -66,6 +68,9 @@ export class Toolbar {
 
     //call & register click event to export flowsheet to png function
     this.registerEventToggleLabel()
+
+    //call & register click event to save flowsheet
+    this.registerEventSave(this.putFSUrl)
   }
 
   /**
@@ -189,6 +194,17 @@ export class Toolbar {
           });
       };
     })
+  }
+
+  /**
+   * Function register click event to #save_btn when initial class
+   * 
+   * @param http_save_url The put url for http server
+   */
+  registerEventSave(save_url:string){
+    document.querySelector("#save_btn")!.addEventListener("click", () => {
+      this._app.saveModel(save_url, this._paper.graph);
+    });
   }
 
   // setGrid(gridSize, color) {
