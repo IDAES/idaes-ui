@@ -1,9 +1,14 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import axios from 'axios';
 
+import { context_parse_url } from "./contextFN_parse_url";
+
 export const AppContext = createContext<any>({});
 
 export function AppContextProvider({ children }: { children: ReactNode }){
+  //get python server running port;
+  const server_port = context_parse_url();
+
   //App panel control
   const [panelState, setPanelState] = useState({
     fvWrapper : {
@@ -99,6 +104,8 @@ export function AppContextProvider({ children }: { children: ReactNode }){
 
   return(
     <AppContext.Provider value={{
+      //url
+      server_port,
       //view btn
       panelState,
       setPanelState,
