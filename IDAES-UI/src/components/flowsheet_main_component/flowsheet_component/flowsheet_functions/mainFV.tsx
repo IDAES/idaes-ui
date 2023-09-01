@@ -90,7 +90,7 @@ export class MainFV {
         this.renderModel(this.model);
         //render stream table
         this.stream_table = new StreamTable(this, this.model);
-        this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId);
+        this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId, this.putFSUrl);
     })
     .catch((error) => {
         console.log(error.message);
