@@ -10,6 +10,8 @@ import StreamTable from "./stream_table_component/stream_table";
 
 import { MainFV } from "./flowsheet_component/flowsheet_functions/mainFV";
 
+import css from "./flowsheet_wrapper.module.css";
+
 export default function FlowsheetWrapper(){
   let {server_port} = useContext(AppContext);
   const {panelState} = useContext(AppContext);
@@ -25,8 +27,8 @@ export default function FlowsheetWrapper(){
   },[isFvShow, isStreamTableShow])
 
   return(
-    <>
-      <PanelGroup direction="vertical">
+    <div id="flowsheet-wrapper" className={css.flowsheetWrapper}>
+      <PanelGroup direction="vertical" id="flowsheet-wrapper">
         <Panel maxSize={100} defaultSize={70}>
           <PanelGroup direction="horizontal">
             {
@@ -59,6 +61,6 @@ export default function FlowsheetWrapper(){
         }
         
       </PanelGroup>
-    </>
+    </div>
   )
 }
