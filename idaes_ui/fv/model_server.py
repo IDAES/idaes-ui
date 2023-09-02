@@ -288,8 +288,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         """
 
         #Enable CORS for react to fetch data or CORS error
-        self.send_response(200)  
-        self.send_header('Access-Control-Allow-Origin', '*')
+        # self.send_response(200)  
+        # self.send_header('Access-Control-Allow-Origin', '*')
 
 
         #Query url param
@@ -299,10 +299,10 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         id_ = queries.get("id", None) if queries else None
 
         #TODO:define get old web or react app can enable old and new site in url
-        print("#############")
-        whichApp = queries.get("whichApp", None) if(queries) else None
-        print(whichApp)
-        print("#############")
+        # print("#############")
+        # whichApp = queries.get("whichApp", None) if(queries) else None
+        # print(whichApp)
+        # print("#############")
 
         _log.debug(f"do_GET: path={self.path} id=={id_}")
         if u.path in ("/app", "/fs") and id_ is None:
@@ -440,10 +440,6 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
     def _parse_flowsheet_url(self, path):
         u, queries = urlparse(path), None
         # u = ParseResult(scheme='', netloc='', path='/app', params='', query='id=sample_visualization', fragment='')
-        print("@@@@@@@@@@@")
-        print("print u")
-        print(u)
-        print("@@@@@@@@@@@")
         if u.query:
             queries = dict([q.split("=") for q in u.query.split("&")]) #{'id': 'sample_visualization'}
         return u, queries
