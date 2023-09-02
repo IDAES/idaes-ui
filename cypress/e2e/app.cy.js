@@ -5,18 +5,18 @@ describe('loads the app UI correctly', () => {
   
   //loading app component
   it('loads app', () => {
-    cy.get('#app').should('exist');
+    cy.get('#root').should('exist');
     cy.log(`App is up and running at ${Cypress.config('baseUrl')}`)
   })
 
   //loading header component
   it('loads header', () => {
-    cy.get('#idaes-header').should('exist');
+    cy.get('#header').should('exist');
   })
 
   //loading page contents
   it('loads page contents', () => {
-    cy.get('#idaes-page-contents').should('exist');
+    cy.get('#flowsheet-wrapper').should('exist');
   })
 
   //loading stream table
