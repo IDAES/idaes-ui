@@ -12,7 +12,7 @@ export default function Header(){
   let val = useContext(AppContext)
   
   return (
-    <header className={`row ${css.header_container}`}>
+    <header id="header" className={`row ${css.header_container}`}>
       <HeaderLogo />
       <HeaderFlowsheetName />
       <HeaderFunctionButtonsWrapper />
