@@ -52,10 +52,10 @@ ExtraBold 800 italic
   font-style: italic;
 } */
 
-@font-face {
+/* @font-face {
   font-family: 'OpenSans Variable';
   src: url('/assets/font/OpenSans/static/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
-}
+} */
 
 .padding-sm{
   padding: 5px;
