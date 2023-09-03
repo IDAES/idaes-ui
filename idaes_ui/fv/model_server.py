@@ -70,7 +70,7 @@ class FlowsheetServer(http.server.HTTPServer):
     def __init__(self, port=None):
         """Create HTTP server"""
         #port for dev remove it to allow system get random port in production
-        # port = 8099 #this port only use for dev env which has no need to switch port
+        port = 8099 #this port only use for dev env which has no need to switch port
         self._port = port or find_free_port()
         _log.info(f"Starting HTTP server on localhost, port {self._port}")
         super().__init__(("127.0.0.1", self._port), FlowsheetServerHandler)
@@ -288,14 +288,13 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         """
 
         #Enable CORS for react to fetch data or CORS error
-        # self.send_response(200)  
-        # self.send_header('Access-Control-Allow-Origin', '*')
-
+        #TODO: this directly return 200 and cypress will display cant visit site,
+        #      if disablethis react will show CORS issue, maybe put dist folder under fv can fix this?
+        self.send_response(200) 
+        self.send_header('Access-Control-Allow-Origin', '*')
 
         #Query url param
         u, queries = self._parse_flowsheet_url(self.path)
-        print("Path:")
-        print(u.path)
         id_ = queries.get("id", None) if queries else None
 
         #TODO:define get old web or react app can enable old and new site in url
