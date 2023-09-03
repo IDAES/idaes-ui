@@ -7,7 +7,7 @@ export const AppContext = createContext<any>({});
 
 export function AppContextProvider({ children }: { children: ReactNode }){
   //get python server running port;
-  const server_port = context_parse_url();
+  const {server_port, fv_id} = context_parse_url();
 
   //App panel control
   const [panelState, setPanelState] = useState({
@@ -104,8 +104,9 @@ export function AppContextProvider({ children }: { children: ReactNode }){
 
   return(
     <AppContext.Provider value={{
-      //url
+      //from url
       server_port,
+      fv_id,
       //view btn
       panelState,
       setPanelState,
