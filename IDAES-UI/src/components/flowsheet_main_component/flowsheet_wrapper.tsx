@@ -16,14 +16,14 @@ export default function FlowsheetWrapper(){
   let {server_port} = useContext(AppContext);
   const {panelState} = useContext(AppContext);
   const isFvShow:boolean = panelState.fv.show;
-  const isVariablesShow:boolean = panelState.variables.show;
+  // const isVariablesShow:boolean = panelState.variables.show;
   const isStreamTableShow = panelState.streamTable.show;
 
   useEffect(()=>{
     //get server port base on UI port number, vite running on 5173 on dev
     server_port == "5173" ? server_port ="8099" : server_port = server_port;
     //when template loaded then render flowsheet, variable, stream table to page with minFV class.
-    new MainFV("sample_visualization", server_port, isFvShow, isVariablesShow, isStreamTableShow)
+    new MainFV("sample_visualization", server_port, isFvShow, false, isStreamTableShow); //The false is placeholder for isVariableShow, now variable panel is not show
   },[isFvShow, isStreamTableShow])
 
   return(

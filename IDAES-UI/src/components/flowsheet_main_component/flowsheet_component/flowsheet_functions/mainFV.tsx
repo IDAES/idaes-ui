@@ -30,7 +30,7 @@ export class MainFV {
   flowsheetId:string;
   //define type for this class for TS
   isFvShow:boolean;
-  isVariablesShow:boolean;
+  // isVariablesShow:boolean;
   isStreamTableShow:boolean;
   baseUrl:string;
   getFSUrl:string;
@@ -49,7 +49,7 @@ export class MainFV {
     this.flowsheetId = flowsheetId;
     //which panel is show
     this.isFvShow = isFvShow;
-    this.isVariablesShow = isVariablesShow;
+    // this.isVariablesShow = isVariablesShow;
     this.isStreamTableShow = isStreamTableShow;
 
     //Gerneate url for fetch data

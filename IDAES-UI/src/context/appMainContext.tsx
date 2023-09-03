@@ -27,14 +27,14 @@ export function AppContextProvider({ children }: { children: ReactNode }){
         defaultSize: 70
       }
     },
-    variables:{
-      panelName : "Variables",
-      show : true,
-      size: {
-        minSize : 100,
-        defaultSize: 70
-      }
-    },
+    // variables:{
+    //   panelName : "Variables",
+    //   show : true,
+    //   size: {
+    //     minSize : 100,
+    //     defaultSize: 70
+    //   }
+    // },
     streamTable: {
       panelName : "Stream Table",
       show : true,
