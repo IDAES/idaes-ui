@@ -85,14 +85,14 @@ export class MainFV {
     .then((response) => {
         //get data from python server /fs
         this.model = response.data;
-         //debug when flowsheet has no position it should not stack on each other
+        //debug when flowsheet has no position it should not stack on each other
         isDevTest && this.debug_removeFlowsheetPosition(this.model);
         //render model
-        this.renderModel(this.model);
+        if(isFvShow) this.renderModel(this.model); //this only run when fv is show
         //render stream table
         //if statment control when stream table not show the stream table should not render
         if(isStreamTableShow) this.stream_table = new StreamTable(this, this.model);
-        this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId, this.putFSUrl);
+        this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId, this.putFSUrl, this.isFvShow);
     })
     .catch((error) => {
         console.log(error.message);
