@@ -30,12 +30,12 @@ export class Toolbar {
   putFSUrl:string;
   isFvShow:boolean;
 
-  toggleStreamNameBtn:HTMLElement;
-  toggleLabelsBtn:HTMLElement;
+  toggleStreamNameBtn:HTMLElement | undefined;
+  toggleLabelsBtn:HTMLElement | undefined;
 
-  zoomInBtn:HTMLElement;
-  zoomOutBtn:HTMLElement;
-  zoomToFitBtn: HTMLElement;
+  zoomInBtn:HTMLElement | undefined;
+  zoomOutBtn:HTMLElement | undefined;
+  zoomToFitBtn: HTMLElement | undefined;
 
   constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string, putFSUrl:string, isFvShow:boolean) {
     //initial arguments
