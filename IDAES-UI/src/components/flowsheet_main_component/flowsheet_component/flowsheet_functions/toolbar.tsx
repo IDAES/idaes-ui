@@ -160,16 +160,19 @@ export class Toolbar {
     headerExportImageBtn.addEventListener("click", () => {
         let p = this._paper.paper;
         const model_id = this.flowsheetId
+
         // Make sure to hide all of the vertices and bars on the links
         // so they don't show up in the PNG
         p.hideTools();
-        p.toPNG(function(png:any) {
+        p.toPNG(function(png:string) {
             new joint.ui.Lightbox({
                 image: png,
                 downloadable: true,
                 fileName: model_id.concat(".png")
             }).open();
         }, {
+            scale:2,
+            pixelRatio:2,
             preserveDimensions: true,
             convertImagesToDataUris: true,
             useComputedStyles: true,
