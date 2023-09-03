@@ -19,6 +19,7 @@
  * second toolbar is seen on the top right corner of the visualizer paper
  * graph.
  */
+
 declare var joint:any;
 
 export class Toolbar { 
@@ -27,50 +28,67 @@ export class Toolbar {
   _stream_table: any;
   flowsheetId: string;
   putFSUrl:string;
+  isFvShow:boolean;
 
   toggleStreamNameBtn:HTMLElement;
+  toggleLabelsBtn:HTMLElement;
 
   zoomInBtn:HTMLElement;
   zoomOutBtn:HTMLElement;
   zoomToFitBtn: HTMLElement;
 
-  constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string, putFSUrl:string) {
+  constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string, putFSUrl:string, isFvShow:boolean) {
     //initial arguments
     this._app = app;
     this._paper = paper;
     this._stream_table = stream_table;
     this.flowsheetId = flowsheetId;
     this.putFSUrl = putFSUrl;
+    this.isFvShow = isFvShow;
     // this.setupPageToolbar();
-    // this.setupFlowsheetToolbar();
-
-    /**
-     * Tool bar stream names toggle
-     */
-    //initial toggle stream names btn from selector assign to this
-    this.toggleStreamNameBtn = document.querySelector("#stream-names-toggle")!;
-    //call function toggleStreamNames register event to toggleStreamNameBtn to toggle stream name show and hide
-    this.registerToggleStreamNamesEvent(this.toggleStreamNameBtn)
-
-    /**
-     * Tool bar zoom in out and fit
-     */
-    //initial zoom btn from selector assign to this
-    this.zoomInBtn = document.querySelector("#zoom-in-btn")!;
-    this.zoomOutBtn = document.querySelector("#zoom-out-btn")!;
-    this.zoomToFitBtn = document.querySelector("#zoom-to-fit")!;
-
-    //call registerZoomEvent function, register 3 zoom events to zoom in zoom out zoom to fit btn on dom
-    this.registerZoomEvent(this.zoomInBtn, this.zoomOutBtn, this.zoomToFitBtn);
+    // this.setupFlowsheetToolbar(); 
 
     //call & register click event to export flowsheet to png function
+    //this is a header element its always there
     this.registerEventExportFlowsheetToPng();
-
-    //call & register click event to export flowsheet to png function
-    this.registerEventToggleLabel()
 
     //call & register click event to save flowsheet
     this.registerEventSave(this.putFSUrl)
+    
+    //isFvShow repersent stream name, labels, zoom in, zoom out, zoom fit btn
+    //if !isFvShow these event has no need to register event
+    if(isFvShow){
+        /**
+         * Tool bar stream names toggle
+         */
+        //initial toggle stream names btn from selector assign to this
+        this.toggleStreamNameBtn = document.querySelector("#stream-names-toggle") as HTMLElement;
+        //call function toggleStreamNames register event to toggleStreamNameBtn to toggle stream name show and hide
+        //when isFvShow == false the btn is undefined so use &&
+        this.toggleStreamNameBtn && this.registerToggleStreamNamesEvent(this.toggleStreamNameBtn);
+
+        /**
+         * Tool bar label toggle
+         */
+        //initial labels btn from selector assign to this
+        this.toggleLabelsBtn = document.querySelector("#show-label-toggle") as HTMLElement;
+        //call & register click event to export flowsheet to png function
+        //when isFvShow == false the btn is undefined so use &&
+        this.toggleLabelsBtn && this.registerEventToggleLabel(this.toggleLabelsBtn);
+        
+        /**
+         * Tool bar zoom in out and fit
+         */
+        //initial zoom btn from selector assign to this
+        this.zoomInBtn = document.querySelector("#zoom-in-btn") as HTMLElement;
+        this.zoomOutBtn = document.querySelector("#zoom-out-btn") as HTMLElement;
+        this.zoomToFitBtn = document.querySelector("#zoom-to-fit") as HTMLElement;
+        //call registerZoomEvent function, register 3 zoom events to zoom in zoom out zoom to fit btn on dom
+        //when button is not exist it should not register event, one example is isFvShow = false
+        if(this.zoomInBtn && this.zoomOutBtn && this.zoomToFitBtn){
+            this.registerZoomEvent(this.zoomInBtn, this.zoomOutBtn, this.zoomToFitBtn);
+        }
+    }
   }
 
   /**
@@ -138,7 +156,7 @@ export class Toolbar {
 
   registerEventExportFlowsheetToPng(){
     //this element is static and 100% there.
-    const headerExportImageBtn = document.querySelector("#headerExportImageBtn")!;
+    const headerExportImageBtn = document.querySelector("#headerExportImageBtn") as HTMLElement;
     headerExportImageBtn.addEventListener("click", () => {
         let p = this._paper.paper;
         const model_id = this.flowsheetId
@@ -162,9 +180,9 @@ export class Toolbar {
 
   /**
    * Toggle label show and hide
+   * @param LabelButtonElement the html element use to click to toggel label
    */
-  registerEventToggleLabel(){
-    const showLableBtn = document.querySelector("#show-label-toggle")!;
+  registerEventToggleLabel(showLableBtn:HTMLElement){
     showLableBtn.addEventListener("click", ()=>{
       const isShowLable = showLableBtn.getAttribute("data-toggle");
       if (isShowLable !== "true") {
