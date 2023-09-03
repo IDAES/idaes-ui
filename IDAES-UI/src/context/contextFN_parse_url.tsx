@@ -5,5 +5,7 @@
  */
 export function context_parse_url(){
   const server_port= window.location.port;
-  return server_port;
+  const urlSearch = new URLSearchParams(window.location.search);
+  const fv_id = urlSearch.get("id");
+  return {server_port, fv_id};
 }
