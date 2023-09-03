@@ -13,7 +13,7 @@ import { MainFV } from "./flowsheet_component/flowsheet_functions/mainFV";
 import css from "./flowsheet_wrapper.module.css";
 
 export default function FlowsheetWrapper(){
-  let {server_port} = useContext(AppContext);
+  let {server_port, fv_id} = useContext(AppContext);
   const {panelState} = useContext(AppContext);
   const isFvShow:boolean = panelState.fv.show;
   // const isVariablesShow:boolean = panelState.variables.show;
@@ -27,7 +27,7 @@ export default function FlowsheetWrapper(){
   },[isFvShow, isStreamTableShow])
 
   return(
-    <div id="flowsheet-wrapper" className={css.flowsheetWrapper}>
+    <div id={fv_id} className={css.flowsheetWrapper}>
       <PanelGroup direction="vertical" id="flowsheet-wrapper">
         {
           isFvShow &&
