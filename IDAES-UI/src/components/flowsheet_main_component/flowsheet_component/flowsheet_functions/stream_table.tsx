@@ -72,8 +72,9 @@ export class StreamTable {
 
     clearTable() {
         // Clear the table
-        // $("#hide-fields-list").empty();
-        // $("#stream-table-data").empty();
+        // this prevent render table multiple times
+        const streamTableContainer = document.querySelector("#stream-table-data") as HTMLElement | null;
+        if(streamTableContainer) streamTableContainer.innerHTML = "";
     }
 
   /**
