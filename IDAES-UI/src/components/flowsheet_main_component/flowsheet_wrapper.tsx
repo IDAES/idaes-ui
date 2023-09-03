@@ -29,37 +29,36 @@ export default function FlowsheetWrapper(){
   return(
     <div id="flowsheet-wrapper" className={css.flowsheetWrapper}>
       <PanelGroup direction="vertical" id="flowsheet-wrapper">
-        <Panel maxSize={100} defaultSize={70}>
-          <PanelGroup direction="horizontal">
-            {
-              isFvShow && 
-              <Panel defaultSize={70} minSize={0}>
-                <FlowsheetHeader />
-                <Flowsheet />
-              </Panel>
-            }
-            
-            {/*this part closed because the variable part is not in this round of release*/}
-            {/* <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/> */}
-            {
-              // isVariablesShow && 
-              // <Panel defaultSize={30} minSize={0}>
-              //   <FlowsheetVariablesHeader />
-              //   <Flowsheet_variable />
-              // </Panel>
-            }
-          </PanelGroup>
-        </Panel>
+        {
+          isFvShow &&
+          <Panel maxSize={100} defaultSize={70}>
+            <PanelGroup direction="horizontal">
+                <Panel defaultSize={isFvShow ? 70 : 0} minSize={0}>
+                  <FlowsheetHeader />
+                  <Flowsheet />
+                </Panel>
+              
+              {/*this part closed because the variable part is not in this round of release*/}
+              {/* <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/> */}
+              {
+                // isVariablesShow && 
+                // <Panel defaultSize={30} minSize={0}>
+                //   <FlowsheetVariablesHeader />
+                //   <Flowsheet_variable />
+                // </Panel>
+              }
+            </PanelGroup>
+          </Panel>
+        }
             
         <PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
 
         {
           isStreamTableShow &&
-          <Panel maxSize={100} defaultSize={30}>
+          <Panel maxSize={100} defaultSize={isFvShow ? 30 : 100}>
             <StreamTable />
           </Panel>
         }
-        
       </PanelGroup>
     </div>
   )
