@@ -189,7 +189,6 @@ export class Toolbar {
     showLableBtn.addEventListener("click", ()=>{
       const isShowLable = showLableBtn.getAttribute("data-toggle");
       if (isShowLable !== "true") {
-        console.log(`on`)
         this._paper._graph.getLinks().forEach(function (link:any) {
             link.label(0, {
                 attrs: {
@@ -202,7 +201,6 @@ export class Toolbar {
         });
       }
       else {
-        console.log(`off`)
           this._paper._graph.getLinks().forEach(function (link:any) {
               link.label(0, {
                   attrs: {
