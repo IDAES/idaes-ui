@@ -182,7 +182,16 @@ export class StreamTable {
                     let checkbox_item = document.createElement("div");
                     checkbox_item.className = "checkbox";
                     // checkbox_item.id = column_header + "-checkbox"
-                    checkbox_item.innerHTML = '<label class="fancy-checkbox"><input type="checkbox" value="' + column_header + '" id="' + column_header + '" checked><i class="fas fa-check checked"></i><i class="far fa-circle unchecked"></i>' + column_header + '</label>';
+                    // checkbox_item.innerHTML = '<label class="fancy-checkbox"><input type="checkbox" value="' + column_header + '" id="' + column_header + '" checked><i class="fas fa-check checked"></i><i class="far fa-circle unchecked"></i>' + column_header + '</label>';
+                    // checkbox_item.innerHTML = '<label class="fancy-checkbox"><input type="checkbox" value="' + column_header + '" id="' + column_header + '" checked>' + column_header + '<FontAwesomeIcon icon="fa-solid fa-check" />' + '</label>';
+
+                    checkbox_item.innerHTML = `
+                    <label class="fancy-checkbox">
+                        <input type="checkbox" value="" id=${column_header} checked>
+                        ${column_header}
+                        <span>✓</span>
+                    </label>
+                    `;
                     list_item.appendChild(checkbox_item);
                     hide_fields_list!.appendChild(list_item);
                 }
@@ -389,22 +398,27 @@ export class StreamTable {
    * This method sets up the event listeners for the table
    */
   setupEvents() {
-      // Set up the show/hide checkboxes for the Hide Field dropdown in the nav bar
-      let hide_fields_list = document.querySelector("#hide-fields-list")
-      let checkboxes = hide_fields_list!.querySelectorAll("input[type=checkbox]");
-      // We need to save this to another variable temporarily to avoid collisions with this
-      let app = this
-    //   checkboxes.forEach(function(checkbox) {
-    //       checkbox.addEventListener('change', function() {
-    //           if (this.checked) {
-    //               app._gridOptions.columnApi.setColumnVisible(this.id, true)
-    //               app.registerTableBrushing()
-    //           }
-    //           else {
-    //               app._gridOptions.columnApi.setColumnVisible(this.id, false)
-    //           };
-    //       });
-    //   });
+    // Set up the show/hide checkboxes for the Hide Field dropdown in the nav bar
+    let hide_fields_list = document.querySelector("#hide-fields-list")!;
+    let checkboxes = hide_fields_list.querySelectorAll("input[type=checkbox]");
+    // We need to save this to another variable temporarily to avoid collisions with this
+    let app = this
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function(event) {
+            event.preventDefault();
+            let target = event.target as HTMLInputElement;
+            let textElement = target.parentElement?.querySelector("span");
+            if (target.checked) {
+                textElement!.style.display = "block";
+                app._gridOptions.columnApi.setColumnVisible(target.id, true)
+                app.registerTableBrushing()
+            }
+            else {
+                textElement!.style.display = "none";
+                app._gridOptions.columnApi.setColumnVisible(target.id, false)
+            };
+        });
+    });
 
       this.registerTableBrushing()
   };

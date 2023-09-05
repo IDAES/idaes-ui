@@ -356,10 +356,10 @@ input:checked + .slider:before {
 
 /* Styling visual indicators to identify different Variable types in the Stream Table */
 .streamtable-vartype-panel {
-  height: 1.7em;
+  min-height: 1.7em;
   display: flex;
   gap: 1em;
-  justify-content: center;
+  justify-content: start;
 }
 
 .streamtable-vartype-element {
@@ -426,7 +426,6 @@ input:checked + .slider:before {
 .idaes-container{
   position: relative;
   height: 100%;
-  margin: 20px;
 }
 
 #stream-table-container{
