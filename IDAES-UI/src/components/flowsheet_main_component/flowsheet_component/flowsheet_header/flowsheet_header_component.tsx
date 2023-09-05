@@ -49,7 +49,7 @@ export default function FlowsheetHeader(){
         <span id="show-label-toggle"
               className={`pd-sm ${css.flowsheet_header_icon_container}`}
               onClick={showLabelsHandler}
-              data-toggle={isShowLabels}
+              data-toggle={isShowLabels ? "false" : "true"}
         >
           {
             isShowLabels 
