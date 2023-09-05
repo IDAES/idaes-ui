@@ -123,6 +123,24 @@ export class JointJsCellConfig {
             // this funtion stored in model.cells.router will trigger by jjs when render
             this._model['cells'][cell_index].router = routing_fn;
         }
+
+        /**
+         * This is checker if cells has labels
+         * * SVG render layer base on which element render first, then its stay at bottom
+         * _model.cells.label is array contain 2 item.
+         * 1. link tag
+         * 2. label
+         * we have to reverse it or link tag will cover the content of the label
+         * 
+         * TODO: this can be fix later in python server populate the json data in correct order.
+         */
+        this._model.cells.map((el:any)=>{
+            if(el.labels){
+                el.labels.reverse();
+                return el;
+            }
+        })
+        
         return this._model;
 	}
 };
