@@ -40,6 +40,7 @@ _log = logging.getLogger(__name__)
 # Directories
 _this_dir = Path(__file__).parent.absolute()
 _static_dir = _this_dir / "static"
+_template_dir = _this_dir / "templates"
 
 
 class FlowsheetServer(http.server.HTTPServer):
@@ -292,8 +293,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
 
     def _get_app(self, id_):
         """Read index file, process to insert flowsheet identifier, and return it."""
-        template_dir = _this_dir / "templates"
-        p = Path(template_dir / "index.html")
+        p = Path(_template_dir / "index.html")
         with open(p, "r", encoding="utf-8") as fp:
             s = fp.read()
             page = s.format(flowsheet_id=id_)
