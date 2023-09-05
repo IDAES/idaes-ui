@@ -127,7 +127,7 @@ export class Toolbar {
         const isShowStreamNames = streamNameBtn.getAttribute("data-toggle") === "true" ? true : false;
         if (!isShowStreamNames) {
             this._paper._graph.getLinks().forEach(function (link:any) {
-                link.label(1, {
+                link.label(0, {
                     attrs: {
                         text: {
                             display: "block",
@@ -138,7 +138,7 @@ export class Toolbar {
         }
         else {
             this._paper._graph.getLinks().forEach(function (link:any) {
-                link.label(1, {
+                link.label(0, {
                     attrs: {
                         text: {
                             display: "none",
@@ -193,12 +193,12 @@ export class Toolbar {
 
             if (isShowLable == "true") {
                 this._paper._graph.getLinks().forEach(function (link:any) {
-                    link.label(0, labelStyleLabelOn);
+                    link.label(1, labelStyleLabelOn);
                 });
             }
             else{
                 this._paper._graph.getLinks().forEach(function (link:any) {
-                    link.label(0, labelStyleLabelOff);
+                    link.label(1, labelStyleLabelOff);
                 });
             };
         })
