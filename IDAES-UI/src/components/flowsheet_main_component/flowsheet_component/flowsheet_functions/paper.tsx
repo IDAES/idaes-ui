@@ -194,154 +194,154 @@ export class Paper {
             }
         });
 
-    //   // /images/icons rotate 90 degrees on right click. Replaces browser 
-    //   // context menu
-      self._paper.on("element:contextmenu", function(cellView:any, evt:any) {
-          cellView.model.rotate(90)
-          // This is needed to keep the text labels for the unit models in the correct orientation
-          // x and y were specifically picked to keep the label in the same place 
-          // in relation to the unit model (bottom middle)
-          // TODO Make this figuring out the x and y positions a function so that we can compute it
-          const angle = cellView.model.angle()
-          const angle_translation = self.translate_for_angle(angle, 0, 0);
-          if (angle_translation === undefined) {
-              console.error(`Angle of unit model must be either 0, 90, 180, or 270. Angle is ${angle}`);
-          }
-          else {
-              cellView.model.attr("label/transform", `translate(${angle_translation[0]}, ${angle_translation[1]}) rotate(-${angle})`);
-          }
-      });
-
-    // Setup event when a link in the paper is hovered upon
-    self._paper.on("link:mouseenter", function(linkView:any) {
-        // Adds link tools (adding vertices, moving segments) to links when your
-        // mouse over
-        var verticesTool = new joint.linkTools.Vertices({
-            focusOpacity: 0.5,
-            redundancyRemoval: true,
-            snapRadius: 20,
-            vertexAdding: true,
-        });
-        var segmentsTool = new joint.linkTools.Segments();
-
-        var toolsView = new joint.dia.ToolsView({
-            tools: [
-                verticesTool, segmentsTool
-            ]
-        });
-        linkView.addTools(toolsView);
-        linkView.showTools();
-
-        // Highlight the corresponding Link and the column in the Stream Table
-        const highlightStreamEvent = new CustomEvent(
-            'HighlightStream',
-            {
-                detail: {
-                    streamId: linkView.model.id
-                }
+        // /images/icons rotate 90 degrees on right click. Replaces browser 
+        // context menu
+        self._paper.on("element:contextmenu", function(cellView:any, evt:any) {
+            cellView.model.rotate(90)
+            // This is needed to keep the text labels for the unit models in the correct orientation
+            // x and y were specifically picked to keep the label in the same place 
+            // in relation to the unit model (bottom middle)
+            // TODO Make this figuring out the x and y positions a function so that we can compute it
+            const angle = cellView.model.angle()
+            const angle_translation = self.translate_for_angle(angle, 0, 0);
+            if (angle_translation === undefined) {
+                console.error(`Angle of unit model must be either 0, 90, 180, or 270. Angle is ${angle}`);
             }
-        );
-        idaesCanvas!.dispatchEvent(highlightStreamEvent);
-        // if (document.querySelector("#view-stream-highlight-btn").checked) {
-            streamTable!.dispatchEvent(highlightStreamEvent);
-        // }
-    });
-
-    // Setup event when the hovering over link ends
-    self._paper.on("link:mouseleave", function(linkView:any) {
-        // Removes the link tools when you leave the link
-        linkView.hideTools();
-
-        // Remove the highlight from the link and the column in the
-        // Stream Table when the hovering ends
-        const removeHighlightStreamEvent = new CustomEvent(
-            'RemoveHighlightStream',
-            {
-                detail: {
-                    streamId: linkView.model.id
-                }
+            else {
+                cellView.model.attr("label/transform", `translate(${angle_translation[0]}, ${angle_translation[1]}) rotate(-${angle})`);
             }
-        );
-        idaesCanvas!.dispatchEvent(removeHighlightStreamEvent);
-        streamTable!.dispatchEvent(removeHighlightStreamEvent);
-    });
+        });
 
-    // Link labels will appear and disappear on right click. Replaces browser context menu
-    self._paper.on("link:contextmenu", function(linkView:any, evt:any) {
-        if (linkView.model.label(0)["attrs"]["text"]["display"] === 'none') {
-            linkView.model.label(0, {
-                attrs: {
-                    text: {
-                        "class" : "fvVarText",
-                        display: "block",
-                        padding: "20px",
-                        fill: "black",
-                        fontSize: "8"
+        // Setup event when a link in the paper is hovered upon
+        self._paper.on("link:mouseenter", function(linkView:any) {
+            // Adds link tools (adding vertices, moving segments) to links when your
+            // mouse over
+            var verticesTool = new joint.linkTools.Vertices({
+                focusOpacity: 0.5,
+                redundancyRemoval: true,
+                snapRadius: 20,
+                vertexAdding: true,
+            });
+            var segmentsTool = new joint.linkTools.Segments();
 
-                    },
-                    rect: { 
-                        "class" : "fvVarRect",
-                        "fill-opacity": "1",
-                        fill : "white",
-                        zIndex: "100"
+            var toolsView = new joint.dia.ToolsView({
+                tools: [
+                    verticesTool, segmentsTool
+                ]
+            });
+            linkView.addTools(toolsView);
+            linkView.showTools();
+
+            // Highlight the corresponding Link and the column in the Stream Table
+            const highlightStreamEvent = new CustomEvent(
+                'HighlightStream',
+                {
+                    detail: {
+                        streamId: linkView.model.id
                     }
-                } 
+                }
+            );
+            idaesCanvas!.dispatchEvent(highlightStreamEvent);
+            // if (document.querySelector("#view-stream-highlight-btn").checked) {
+                streamTable!.dispatchEvent(highlightStreamEvent);
+            // }
+        });
+
+        // Setup event when the hovering over link ends
+        self._paper.on("link:mouseleave", function(linkView:any) {
+            // Removes the link tools when you leave the link
+            linkView.hideTools();
+
+            // Remove the highlight from the link and the column in the
+            // Stream Table when the hovering ends
+            const removeHighlightStreamEvent = new CustomEvent(
+                'RemoveHighlightStream',
+                {
+                    detail: {
+                        streamId: linkView.model.id
+                    }
+                }
+            );
+            idaesCanvas!.dispatchEvent(removeHighlightStreamEvent);
+            streamTable!.dispatchEvent(removeHighlightStreamEvent);
+        });
+
+        // Link labels will appear and disappear on right click. Replaces browser context menu
+        self._paper.on("link:contextmenu", function(linkView:any, evt:any) {
+            if (linkView.model.label(1)["attrs"]["text"]["display"] === 'none') {
+                linkView.model.label(1, {
+                    attrs: {
+                        text: {
+                            // "class" : "fvVarText",
+                            display: "block",
+                            padding: "20px",
+                            fill: "black",
+                            fontSize: "8"
+
+                        },
+                        rect: { 
+                            // "class" : "fvVarRect",
+                            "fill-opacity": "1",
+                            fill : "white",
+                            zIndex: "100"
+                        }
+                    } 
+                });
+            }
+            else {
+                linkView.model.label(1, {
+                    attrs: {
+                        text: {
+                            display: "none",
+                        },
+                        rect: { "fill-opacity": "0" }
+                    } 
+                });
+            }
+        });
+    }
+
+    /**
+     * Adjust the paper content to the center
+     */
+    zoomToFit(padding = 30) {
+        this._paperScroller.zoomToFit({padding: padding})
+    }
+
+    /**
+     * Register Events after the graph model is loaded
+     */
+    postSetupRegisterEvents() {
+        // Recenter the paper
+        this.zoomToFit();
+
+        // Setup event listeners for the links in Paper/Graph
+        this._graph.getLinks().forEach((link:any) => {
+            let linkView = link.findView(this._paper);
+            linkView.el.addEventListener('HighlightStream', () => {
+                linkView.model.attr({
+                    line: {
+                        stroke: this._highlightLinkStroke,
+                        'stroke-width': this._highlightLinkStrokeWidth
+                    }
+                });
             });
-        }
-        else {
-            linkView.model.label(0, {
-                attrs: {
-                    text: {
-                        display: "none",
-                    },
-                    rect: { "fill-opacity": "0" }
-                } 
+
+            linkView.el.addEventListener('RemoveHighlightStream', () => {
+                linkView.model.attr({
+                    line: {
+                        stroke: this._originalLinkStroke,
+                        'stroke-width': this._originalLinkStrokeWidth
+                    }
+                });
             });
-        }
-    });
-  }
+        });
+    }
 
-  /**
-   * Adjust the paper content to the center
-   */
-  zoomToFit(padding = 30) {
-      this._paperScroller.zoomToFit({padding: padding})
-  }
-
-  /**
-   * Register Events after the graph model is loaded
-   */
-  postSetupRegisterEvents() {
-      // Recenter the paper
-      this.zoomToFit();
-
-      // Setup event listeners for the links in Paper/Graph
-      this._graph.getLinks().forEach((link:any) => {
-          let linkView = link.findView(this._paper);
-          linkView.el.addEventListener('HighlightStream', () => {
-              linkView.model.attr({
-                  line: {
-                      stroke: this._highlightLinkStroke,
-                      'stroke-width': this._highlightLinkStrokeWidth
-                  }
-              });
-          });
-
-          linkView.el.addEventListener('RemoveHighlightStream', () => {
-              linkView.model.attr({
-                  line: {
-                      stroke: this._originalLinkStroke,
-                      'stroke-width': this._originalLinkStrokeWidth
-                  }
-              });
-          });
-      });
-  }
-
-  /**
-   * This will reorder the units, the vap outlet should stay above liq outlet
-   * @param model the processed_model from mainFV renderModel
-   */
+    /**
+     * This will reorder the units, the vap outlet should stay above liq outlet
+     * @param model the processed_model from mainFV renderModel
+     */
     reorderLabel(model:any){
         let liqIndex:number | null = null;
         let vapIndex:number | null = null;
@@ -360,23 +360,179 @@ export class Paper {
         model.cells[liqIndex]
     }
 
-  /**
-   * Setup the graph model. The jointjs graph loads the model as Json object
-   * and then this setup() function registers the post setup events.
-   */
+    /**
+     * render customized label on screen base on the position of jjs label.
+     * @param model
+     */
+    // renderLabelOnScreen(model:any){
+    //     //get label id and data store into variable cellsHasLabels
+    //     let cellsHasLabels : Array<any> = [];
+    //     model.cells.forEach((el:any, index:number)=>{
+    //         if(el.labels){
+    //             let labelData = {
+    //                 id : el.id,
+    //                 text : el.labels[0].attrs.text.text
+    //             }
+
+    //             cellsHasLabels.push(labelData);
+    //         }
+    //     })
+
+    //     const fv = document.querySelector("#fv");
+
+    //     cellsHasLabels.forEach((eachLabelData:any, index:number)=>{
+    //         //initial element
+    //         let customizeLabel = document.createElement("div");
+    //         //set element attr
+    //         customizeLabel.className = "linkLabel";
+    //         customizeLabel.setAttribute("data-linkId", eachLabelData.id);
+    //         customizeLabel.setAttribute("draggable", "true");
+    //         //append text
+    //         customizeLabel.innerText = eachLabelData.text;
+    //         //append to dom
+    //         //css in index.css
+            
+    //         // assign position to each label
+    //         let jjsLinkTag = document.querySelectorAll('.label text tspan');
+    //         let fvX = fv.getBoundingClientRect().left;
+    //         let fvY = fv.getBoundingClientRect().top;
+            
+    //         jjsLinkTag.forEach((linkTextElement:any)=>{
+    //             if(linkTextElement.textContent === eachLabelData.id){
+    //                 let x = linkTextElement.getBoundingClientRect().left - fvX;
+    //                 let y = linkTextElement.getBoundingClientRect().top - fvY;
+                    
+    //                 customizeLabel.style.left = x + "px";
+    //                 customizeLabel.style.top = y + "px";
+    //             }
+    //         });
+
+    //         // fv?.appendChild(customizeLabel);
+    //         // this.moveCustomizedLable()
+    //     })
+    // }
+
+    // moveCustomizedLable(){
+    //     const customizedLabel = document.querySelectorAll(".linkLabel");
+
+    //     let startX:number, startY:number;
+    //     let labelX:number, labelY:number;
+
+    //     customizedLabel.forEach((label:any)=>{
+    //         let fvX = fv.getBoundingClientRect().left;
+    //         let fvY = fv.getBoundingClientRect().top;
+
+    //         label.addEventListener('mousedown', (event:MouseEvent)=>{
+    //             console.log(`drag`)
+    //             startX = event.clientX - fvX;
+    //             startY = event.clientY - fvY;
+
+    //             const rect = label.getBoundingClientRect();
+
+    //             const offsetX = startX - rect.left;
+    //             const offsetY = startY - rect.top;
+
+    //             labelX = rect.left - fvX;
+    //             labelY = rect.top - fvY;
+
+                
+    //         })
+
+    //         label.addEventListener('dragstart', (event:DragEvent)=>{
+    //             // var img = new Image();
+    //             // img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+    //             // event.dataTransfer!.setDragImage(img, 0, 0);
+    //         })
+
+    //         label.addEventListener('drag', (event:DragEvent)=>{
+    //             let currentClientX = event.clientX;
+    //             let currentClientY = event.clientY;
+
+    //             let movedX = currentClientX - startX - fvX;
+    //             let movedY = currentClientY - startY - fvY;
+
+    //             console.log(labelX + movedX)
+    //             console.log(labelY + movedY)
+    //             label.style.left = labelX + movedX + "px";
+    //             label.style.top = labelY + movedY + "px";
+
+    //         })
+
+    //         // label.addEventListener('dragend', (event:MouseEvent)=>{
+    //         //     console.log(`done`)
+    //         //     let currentClientX = event.clientX;
+    //         //     let currentClientY = event.clientY;
+
+    //         //     let movedX = currentClientX - startX - fvX;
+    //         //     let movedY = currentClientY - startY - fvY;
+
+    //         //     label.style.left = labelX + movedX + "px";
+    //         //     label.style.top = labelY + movedY + "px";
+    //         //     label.style.display = "block";
+    //         // })
+    //     })
+    // }
+
+    // moveCustomizedLable(){
+    //     const customizedLabel = document.querySelectorAll(".linkLabel");
+    
+    //     let startX:number, startY:number;
+    //     let labelX:number, labelY:number;
+    
+    //     customizedLabel.forEach((label:any)=>{
+    //         label.addEventListener('dragstart', (event:DragEvent)=>{
+    //             console.log(`drag`)
+    //             startX = event.clientX;
+    //             startY = event.clientY;
+    
+    //             labelX = label.getBoundingClientRect().left;
+    //             labelY = label.getBoundingClientRect().top;
+    
+    //             // event.dataTransfer.setDragImage(new Image(), 0, 0);
+    //         })
+    
+    //         label.addEventListener('drag', (event:DragEvent)=>{
+    //             label.style.display = "none";
+    //         })
+    
+    //         label.addEventListener('dragend', (event:DragEvent)=>{
+    //             let currentClientX = event.clientX;
+    //             let currentClientY = event.clientY;
+    
+    //             let movedX = currentClientX - startX;
+    //             let movedY = currentClientY - startY;
+    
+    //             console.log(movedX, movedY)
+    
+    //             label.style.left = labelX + movedX + "px";
+    //             label.style.top = labelY + movedY + "px";
+    //             label.style.display = "block";
+    //         })
+    //     })
+    // }
+
+    /**
+     * Setup the graph model. The jointjs graph loads the model as Json object
+     * and then this setup() function registers the post setup events.
+     */
     setup(model:any) {
         const iconDir = "/assets/image/flowsheet_icons/";
-
+        model.cells.reverse()
         model.cells.forEach((el: any) => {
             if (el.type === "standard.Image") {
                 let imageURL = iconDir + el.attrs.image.xlinkHref.match(/([^\/]+\.svg)$/)[0];
                 el.attrs.image = { ...el.attrs.image, xlinkHref: imageURL };
             }
+
+            if(el.labels){
+                // el.labels.reverse()
+                el.z = 1000
+                el.labels[0]
+            }
         });
 
         //if vap out goes to top liq goes to bottom
         this.reorderLabel(model);
-
         this._graph.fromJSON(model);
         this.postSetupRegisterEvents();
     }
