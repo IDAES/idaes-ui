@@ -31,7 +31,7 @@ export default function FlowsheetWrapper(){
       <PanelGroup direction="vertical" id="flowsheet-wrapper">
         {
           isFvShow &&
-          <Panel maxSize={100} defaultSize={70}>
+          <Panel maxSize={100} defaultSize={65}>
             <PanelGroup direction="horizontal">
                 <Panel defaultSize={isFvShow ? 70 : 0} minSize={0}>
                   <FlowsheetHeader />
@@ -55,7 +55,7 @@ export default function FlowsheetWrapper(){
 
         {
           isStreamTableShow &&
-          <Panel maxSize={100} defaultSize={isFvShow ? 30 : 100}>
+          <Panel maxSize={100} defaultSize={isFvShow ? 35 : 100}>
             <StreamTable />
           </Panel>
         }
