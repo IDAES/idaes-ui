@@ -21,6 +21,7 @@
  */
 
 declare var joint:any;
+import {labelStyleLabelOn, labelStyleLabelOff} from "./data/jjsLabelStyle";
 
 export class Toolbar { 
   _app: any;
@@ -181,39 +182,27 @@ export class Toolbar {
     });
   }
 
-  /**
-   * Toggle label show and hide
-   * @param LabelButtonElement the html element use to click to toggel label
-   */
-  registerEventToggleLabel(showLableBtn:HTMLElement){
-    showLableBtn.addEventListener("click", ()=>{
-      const isShowLable = showLableBtn.getAttribute("data-toggle");
-      if (isShowLable !== "true") {
-        this._paper._graph.getLinks().forEach(function (link:any) {
-            link.label(0, {
-                attrs: {
-                    text: {
-                        display: "block",
-                    },
-                    rect: { "fill-opacity": "1" }
-                }
-            });
-        });
-      }
-      else {
-          this._paper._graph.getLinks().forEach(function (link:any) {
-              link.label(0, {
-                  attrs: {
-                      text: {
-                          display: "none",
-                      },
-                      rect: { "fill-opacity": "0" }
-                  }
-              });
-          });
-      };
-    })
-  }
+    /**
+     * Toggle label show and hide
+     * @param LabelButtonElement the html element use to click to toggel label
+     */
+    registerEventToggleLabel(showLableBtn:HTMLElement){
+        showLableBtn.addEventListener("click", ()=>{
+            //read label show or hide from btn data attr
+            const isShowLable:string = showLableBtn.getAttribute("data-toggle")!;
+
+            if (isShowLable == "true") {
+                this._paper._graph.getLinks().forEach(function (link:any) {
+                    link.label(0, labelStyleLabelOn);
+                });
+            }
+            else{
+                this._paper._graph.getLinks().forEach(function (link:any) {
+                    link.label(0, labelStyleLabelOff);
+                });
+            };
+        })
+    }
 
   /**
    * Function register click event to #save_btn when initial class
