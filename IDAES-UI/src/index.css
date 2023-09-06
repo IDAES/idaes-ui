@@ -234,6 +234,7 @@ td:hover{
   width: 0;
 }
 
+/*export image to png image container size image size*/
 .joint-lightbox .fg {
   width: 80vw;
   height: 80vh;
@@ -245,4 +246,26 @@ td:hover{
 
 .joint-lightbox img {
   width: 80%;
+}
+
+/*
+jointjs label
+customized label style
+*/
+.linkLabel{
+  position: absolute;
+  padding: 20px;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background-color: white;
+  font-size: 22px;
+  line-height: 30px;
+  box-shadow: 1px 1px 15px rgb(234, 234, 234);
+  border: 1px solid red;
+}
+
+.linkLabel:hover{
+  cursor:grab;
+  box-shadow: 2px 2px 15px rgb(142, 142, 142);
 }
