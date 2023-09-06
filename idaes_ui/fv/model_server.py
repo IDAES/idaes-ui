@@ -70,7 +70,6 @@ class FlowsheetServer(http.server.HTTPServer):
     def __init__(self, port=None):
         """Create HTTP server"""
         #port for dev remove it to allow system get random port in production
-        port = 8099 #this port only use for dev env which has no need to switch port
         self._port = port or find_free_port()
         _log.info(f"Starting HTTP server on localhost, port {self._port}")
         super().__init__(("127.0.0.1", self._port), FlowsheetServerHandler)
@@ -87,8 +86,13 @@ class FlowsheetServer(http.server.HTTPServer):
         """Start the server, which will spawn a thread."""
         self._thr = threading.Thread(target=self._run, daemon=True)
         self._thr.start()
+
         #create shared JSON file
-        create_shared_JSON(self.port, "sample_visualization")
+        #define file path for shared_variable.json for React
+        root = "./shared_variable.json"
+        IDAES_UI_path = './IDAES-UI/src/context/shared_variable.json'
+        pathDic = [root, IDAES_UI_path]
+        create_shared_JSON(self.port, "sample_visualization", pathDic)
 
     def add_setting(self, key: str, value):
         """Add a setting to the flowsheet's settings block. Settings block is
@@ -471,29 +475,37 @@ def find_free_port():
     time.sleep(1)  # wait for socket cleanup!!!
     return port
 
-def create_shared_JSON(current_port, flowsheet_name):
+def create_shared_JSON(current_port, flowsheet_name, filePathDic):
     '''
     Description:
-        This function is used to create a file shared_variable.json:
-        This file contain shared data between JS and Python code:
+        This function is used to create files shared_variable.json:
+        file contain shared data between JS and Python code:
         {"url" : "http://localhose:portNumber/app?id=flowsheetName"} etc.
-
+        
+        File stored location depends on filePathDic
     Args:
         the avilable port number generate by find_free_port()
         the flowsheet name
+        list of relative file path, where you want to check or store the shared_variable.json file
         
     check shared_variable.json exists or not
     1. if not exists, create one and write the port number
     2. if does exist, update the port number
     '''
+    #assemble localhost_url
     localhost_url = 'http://localhost:' + str(current_port) + '/app?id=' + str(flowsheet_name)
-    
-    if not os.path.exists('shared_variable.json'):
-        with open('shared_variable.json', 'w') as f:
-            json.dump({"url" : localhost_url}, f)
-    else:
-        with open('shared_variable.json', 'r') as f:
-            data = json.load(f)
-            data["url"] = localhost_url
-        with open('shared_variable.json', 'w') as f:
-            json.dump(data, f)
+
+    #check shared_variable.json all path from filePathDic
+    #not have? create one.
+    #different? update it.
+    for path in filePathDic:
+        if not os.path.exists(path):
+            with open(path, 'w') as f:
+                json.dump({"url" : localhost_url, "port": current_port}, f)
+        else:
+            with open(path, 'r') as f:
+                data = json.load(f)
+                data["url"] = localhost_url
+                data["port"] = current_port
+            with open(path, 'w') as f:
+                json.dump(data, f)
