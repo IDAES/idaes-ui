@@ -6,6 +6,8 @@ import { context_parse_url } from "./contextFN_parse_url";
 export const AppContext = createContext<any>({});
 
 export function AppContextProvider({ children }: { children: ReactNode }){
+  //get which env app is running on
+  const currentENV = import.meta.env.VITE_MODE;
   //get python server running port;
   const {server_port, fv_id} = context_parse_url();
 
