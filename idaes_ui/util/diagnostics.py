@@ -14,6 +14,7 @@ from idaes.core.util import model_diagnostics as imd
 from idaes.core import FlowsheetBlock
 from pyomo.environ import Component
 
+
 class ModelStatistics(BaseModel):
     # variables
     dof: int = Field(default=0, alias="Degrees of Freedom")
