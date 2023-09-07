@@ -17,6 +17,7 @@
  * elements. The graph and its events and event handlers are built in this
  * class.
  */
+import {labelStyleLabelOn, labelStyleLabelOff, labelIndex, slinkLabelIndex} from "./data/jjsLabelStyle";
 declare var joint: any;
 declare var self: any;
 
@@ -268,35 +269,11 @@ export class Paper {
 
         // Link labels will appear and disappear on right click. Replaces browser context menu
         self._paper.on("link:contextmenu", function(linkView:any, evt:any) {
-            if (linkView.model.label(1)["attrs"]["text"]["display"] === 'none') {
-                linkView.model.label(1, {
-                    attrs: {
-                        text: {
-                            // "class" : "fvVarText",
-                            display: "block",
-                            padding: "20px",
-                            fill: "black",
-                            fontSize: "8"
-
-                        },
-                        rect: { 
-                            // "class" : "fvVarRect",
-                            "fill-opacity": "1",
-                            fill : "white",
-                            zIndex: "100"
-                        }
-                    } 
-                });
+            if (linkView.model.label(labelIndex)["attrs"]["text"]["display"] === 'none') {
+                linkView.model.label(labelIndex, labelStyleLabelOn);
             }
             else {
-                linkView.model.label(1, {
-                    attrs: {
-                        text: {
-                            display: "none",
-                        },
-                        rect: { "fill-opacity": "0" }
-                    } 
-                });
+                linkView.model.label(0, labelStyleLabelOff);
             }
         });
     }

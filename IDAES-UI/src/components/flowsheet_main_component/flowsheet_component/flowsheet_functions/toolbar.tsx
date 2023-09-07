@@ -21,7 +21,7 @@
  */
 
 declare var joint:any;
-import {labelStyleLabelOn, labelStyleLabelOff} from "./data/jjsLabelStyle";
+import {labelStyleLabelOn, labelStyleLabelOff, labelIndex, slinkLabelIndex} from "./data/jjsLabelStyle";
 
 export class Toolbar { 
   _app: any;
@@ -127,24 +127,12 @@ export class Toolbar {
         const isShowStreamNames = streamNameBtn.getAttribute("data-toggle") === "true" ? true : false;
         if (!isShowStreamNames) {
             this._paper._graph.getLinks().forEach(function (link:any) {
-                link.label(0, {
-                    attrs: {
-                        text: {
-                            display: "block",
-                        }
-                    }
-                });
+                link.label(slinkLabelIndex, labelStyleLabelOn);
             });
         }
         else {
             this._paper._graph.getLinks().forEach(function (link:any) {
-                link.label(0, {
-                    attrs: {
-                        text: {
-                            display: "none",
-                        }
-                    }
-                });
+                link.label(slinkLabelIndex, labelStyleLabelOff);
             });
         };
     });
@@ -193,12 +181,12 @@ export class Toolbar {
 
             if (isShowLable == "true") {
                 this._paper._graph.getLinks().forEach(function (link:any) {
-                    link.label(0, labelStyleLabelOn);
+                    link.label(labelIndex, labelStyleLabelOn);
                 });
             }
             else{
                 this._paper._graph.getLinks().forEach(function (link:any) {
-                    link.label(0, labelStyleLabelOff);
+                    link.label(labelIndex, labelStyleLabelOff);
                 });
             };
         })
