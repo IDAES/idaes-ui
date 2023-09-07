@@ -135,7 +135,7 @@ export class JointJsCellConfig {
          * TODO: this can be fix later in python server populate the json data in correct order.
          */
         this._model.cells.map((el:any)=>{
-            if(el.labels){
+            if(el.labels && el.labels[1].position){
                 el.labels.reverse();
                 return el;
             }
