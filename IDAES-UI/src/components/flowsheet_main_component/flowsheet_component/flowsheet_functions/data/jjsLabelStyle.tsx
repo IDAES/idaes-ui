@@ -3,7 +3,6 @@ const labelStyleLabelOn = {
     g:{
     },
     text:{
-      "transform" : "tranlate(30,30)",
       "display": "block",
       "font-size": "8",
       "text-anchor":"left"
@@ -34,4 +33,12 @@ const labelStyleLabelOff = {
   }
 }
 
-export {labelStyleLabelOn, labelStyleLabelOff}
+const labelIndex = 0;
+const slinkLabelIndex = 1;
+
+export {
+  labelStyleLabelOn, 
+  labelStyleLabelOff, 
+  labelIndex, 
+  slinkLabelIndex
+};
