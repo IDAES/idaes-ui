@@ -16,7 +16,7 @@ import { JointJsCellConfig } from './cell_config';
 import { StreamTable } from './stream_table';
 import { Toolbar } from './toolbar';
 import axios from 'axios';
-
+const VITE_MODE = import.meta.env.VITE_MODE;
 
 const isDevTest:Boolean = false;
 
@@ -54,7 +54,7 @@ export class MainFV {
 
     //Gerneate url for fetch data
     this.baseUrl = `http://localhost:${port}`
-    this.getFSUrl = `${this.baseUrl}/fs?id=${flowsheetId}`;
+    this.getFSUrl = VITE_MODE === "dev" ? `${this.baseUrl}/fs?id=${flowsheetId}` : `/fs?id=${flowsheetId}`;
     this.putFSUrl = `${this.baseUrl}/fs?id=${flowsheetId}`;
 
     //Define model
@@ -83,6 +83,7 @@ export class MainFV {
      */
     axios.get(this.getFSUrl)
     .then((response) => {
+        console.log(this.getFSUrl)
         //get data from python server /fs
         this.model = response.data;
         //debug when flowsheet has no position it should not stack on each other
