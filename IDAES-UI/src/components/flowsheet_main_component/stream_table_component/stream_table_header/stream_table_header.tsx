@@ -23,10 +23,13 @@ export default function StreamTableHeader(){
           <ul id="hide-fields-list" 
               className={`dropdown-menu checkbox-menu ${css.dropdownMenu}`}
               style={{display : showHideFiel ? "block" : "none"}}
-          ></ul>
+          >
+            {/* table cell is generate base on model */}
+          </ul>
         </div>
       </div>
       
+      {/* table cell is generate base on model */}
       <div id="existing-variable-types" className="pd-md streamtable-vartype-panel"></div>
     </div>
   )
