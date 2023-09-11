@@ -28,6 +28,7 @@ export class Toolbar {
   _paper: any;
   _stream_table: any;
   flowsheetId: string;
+  getFSUrl: string;
   putFSUrl:string;
   isFvShow:boolean;
 
@@ -38,12 +39,13 @@ export class Toolbar {
   zoomOutBtn:HTMLElement | undefined;
   zoomToFitBtn: HTMLElement | undefined;
 
-  constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string, putFSUrl:string, isFvShow:boolean) {
+  constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string, getFSUrl:string, putFSUrl:string, isFvShow:boolean) {
     //initial arguments
     this._app = app;
     this._paper = paper;
     this._stream_table = stream_table;
     this.flowsheetId = flowsheetId;
+    this.getFSUrl = getFSUrl;
     this.putFSUrl = putFSUrl;
     this.isFvShow = isFvShow;
     // this.setupPageToolbar();
@@ -52,6 +54,9 @@ export class Toolbar {
     //call & register click event to export flowsheet to png function
     //this is a header element its always there
     this.registerEventExportFlowsheetToPng();
+    
+    //call & register click event to refresh model
+    this.registerEventRefresh(this.getFSUrl, this.putFSUrl);
 
     //call & register click event to save flowsheet
     this.registerEventSave(this.putFSUrl)
@@ -192,17 +197,26 @@ export class Toolbar {
         })
     }
 
-  /**
-   * Function register click event to #save_btn when initial class
-   * 
-   * @param http_save_url The put url for http server
-   */
-  registerEventSave(save_url:string){
-    document.querySelector("#save_btn")!.addEventListener("click", () => {
-      this._app.saveModel(save_url, this._paper.graph);
-    });
-  }
-
+    /**
+     * Function register click event to refresh_btn to refresh model
+    */
+    registerEventRefresh(getUrl:string, putUrl:string){
+        // Refresh event listener
+        document.querySelector("#refresh_btn")!.addEventListener("click", () => {
+            this._app.refreshModel(getUrl, putUrl, this._paper)
+        });
+    }
+    
+    /**
+     * Function register click event to #save_btn when initial class
+     * 
+     * @param http_save_url The put url for http server
+     */
+    registerEventSave(save_url:string){
+        document.querySelector("#save_btn")!.addEventListener("click", () => {
+            this._app.saveModel(save_url, this._paper.graph);
+        });
+    }
   // setGrid(gridSize, color) {
   //     // Set grid size on the JointJS paper object (joint.dia.paper instance)
   //     self._paper.options.gridSize = gridSize;
@@ -268,7 +282,7 @@ export class Toolbar {
   //     });
 
   //     // Refresh event listener
-  //     document.querySelector("#refresh-btn").addEventListener("click", () => {
+  //     document.querySelector("#refresh_btn").addEventListener("click", () => {
   //         this._app.refreshModel(url, this._paper)
   //     });
 
