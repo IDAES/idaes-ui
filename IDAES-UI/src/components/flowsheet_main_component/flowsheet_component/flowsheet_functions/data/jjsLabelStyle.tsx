@@ -4,13 +4,13 @@ const labelStyleLabelOn = {
     },
     text:{
       "display": "block",
-      "font-size": "8",
+      "font-size": "7",
       "text-anchor":"left"
     },
     rect : {
       "width":"2000",
       "height":"2000",
-      "fill":"black",
+      "fill":"white",
       "rx":0,
       "ry":0,
       "fill-opacity" : "1",
