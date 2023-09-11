@@ -1,10 +1,10 @@
-import { useContext } from 'react';
+import { Dispatch, useContext } from 'react';
 import { AppContext } from '../../../../context/appMainContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlassPlus, faMagnifyingGlassMinus,faExpand, faUpRightAndDownLeftFromCenter, faMinus, faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons'
 
 import {fvHeaderStateInterface} from "../../../../interface/appMainContext_interface";
-import {panelStateInterface} from "../../../../interface/appMainContext_interface";
+import {minimizePanel, maxmizePanel} from "../flowsheet_functions/universal_functions";
 import css from "./flowsheet_header.module.css";
 
 export default function FlowsheetHeader(){
@@ -25,16 +25,6 @@ export default function FlowsheetHeader(){
     setFvHeaderState((prev:fvHeaderStateInterface)=>{
       let copyPrev = {...prev, isShowLabels : !prev.isShowLabels};
       return copyPrev;
-    })
-  }
-
-  //Minimize flowsheet panel
-  //setState fv.show = false to minimize fv panel
-  function minimizeFVpanel(){
-    setPanelState((prevState : any) =>{
-      const newState = {...prevState};
-      newState.fv.show = false;
-      return newState;
     })
   }
 
@@ -79,13 +69,16 @@ export default function FlowsheetHeader(){
         <span id="zoom-to-fit" className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_last_box_icon}`}>
           <FontAwesomeIcon icon={faExpand} />
         </span>
-        <span className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_small_icon}`}>
+        <span 
+          className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_small_icon}`}
+          onClick={()=>maxmizePanel('fv', setPanelState)}
+          >
           <FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
         </span>
         <span 
           className={`pd-sm ${css.flowsheet_header_icon_container} 
           ${css.flowsheetHeader_small_icon}`}
-          onClick={minimizeFVpanel}
+          onClick={()=>minimizePanel('fv', setPanelState)}
         >
           <FontAwesomeIcon icon={faMinus} />
         </span>
