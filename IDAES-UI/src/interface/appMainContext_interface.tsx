@@ -1,10 +1,14 @@
-export interface panelStateInterface{
+interface EachPanelState {
   panelName : string,
   show : boolean,
   size : {
     maxSize : number,
     defaultSize : number
   }
+}
+
+export interface panelStateInterface{
+  [key: string]: EachPanelState;
 }
 
 export interface fvHeaderStateInterface {
