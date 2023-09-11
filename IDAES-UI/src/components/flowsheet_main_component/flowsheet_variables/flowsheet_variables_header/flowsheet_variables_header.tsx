@@ -4,7 +4,7 @@ import { AppContext } from "../../../../context/appMainContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpRightAndDownLeftFromCenter, faMinus, faCaretUp} from '@fortawesome/free-solid-svg-icons';
 
-import { variablesExpandStateInterface } from "../../../../interface/appMainContext_interface";
+import { VariablesExpandStateInterface } from "../../../../interface/appMainContext_interface";
 
 import css from "./flowsheet_variables_header.module.css";
 
@@ -15,7 +15,7 @@ export default function FlowsheetVariablesHeader(){
   function expandVariablesHandler(){
     //when Click to toggle variable expand or collapse
     //click btn is in variable header
-    setVariablesExpandState((prev:variablesExpandStateInterface)=>{
+    setVariablesExpandState((prev:VariablesExpandStateInterface)=>{
       let copyPrev = {...prev, expand : !prev.expand};
       return copyPrev;
     })

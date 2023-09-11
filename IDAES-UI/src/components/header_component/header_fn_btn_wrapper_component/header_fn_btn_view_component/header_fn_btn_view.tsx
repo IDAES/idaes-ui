@@ -2,7 +2,6 @@ import { useContext } from "react";
 import {  AppContext } from "../../../../context/appMainContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTableColumns, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { panelStateInterface } from "../../../../interface/appMainContext_interface";
 
 import css from "./header_fn_btn_view.module.css"
 
