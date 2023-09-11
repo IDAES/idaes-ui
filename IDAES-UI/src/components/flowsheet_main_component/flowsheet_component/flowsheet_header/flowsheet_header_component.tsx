@@ -3,7 +3,7 @@ import { AppContext } from '../../../../context/appMainContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlassPlus, faMagnifyingGlassMinus,faExpand, faUpRightAndDownLeftFromCenter, faMinus, faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons'
 
-import {fvHeaderStateInterface} from "../../../../interface/appMainContext_interface";
+import {FvHeaderStateInterface} from "../../../../interface/appMainContext_interface";
 import {minimizePanel, maxmizePanel} from "../flowsheet_functions/universal_functions";
 import css from "./flowsheet_header.module.css";
 
@@ -14,7 +14,7 @@ export default function FlowsheetHeader(){
 
   //toggle show steam names
   function showSteamNameHandler(){
-    setFvHeaderState((prev:fvHeaderStateInterface)=>{
+    setFvHeaderState((prev:FvHeaderStateInterface)=>{
       let copyPrev = {...prev, isShowSteamName : !prev.isShowSteamName};
       return copyPrev;
     })
@@ -22,7 +22,7 @@ export default function FlowsheetHeader(){
 
   //toggle show labels
   function showLabelsHandler(){
-    setFvHeaderState((prev:fvHeaderStateInterface)=>{
+    setFvHeaderState((prev:FvHeaderStateInterface)=>{
       let copyPrev = {...prev, isShowLabels : !prev.isShowLabels};
       return copyPrev;
     })

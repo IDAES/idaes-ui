@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AppContext } from "../../../context/appMainContext";
 import css from "./minimized_bar.module.css"
 
-import { panelStateInterface } from "../../../interface/appMainContext_interface";
+import { PanelStateInterface} from "../../../interface/appMainContext_interface";
 
 export default function MinimizedBar(){
   const {panelState, setPanelState} = useContext(AppContext);
@@ -17,7 +17,7 @@ export default function MinimizedBar(){
    */
 
   function renderMinimizedTags(panelState:any, blackList:Array<string>){
-    const panelStateArr: Array<panelStateInterface> = [];
+    const panelStateArr: Array<PanelStateInterface> = [];
 
     Object.keys(panelState).forEach(el=>{
       panelStateArr.push(panelState[el])

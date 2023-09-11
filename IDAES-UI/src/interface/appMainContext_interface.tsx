@@ -7,16 +7,16 @@ interface EachPanelState {
   }
 }
 
-export interface panelStateInterface{
+export interface PanelStateInterface{
   [key: string]: EachPanelState;
 }
 
-export interface fvHeaderStateInterface {
+export interface FvHeaderStateInterface {
   isShowSteamName : boolean,
   isShowLabels : boolean
 }
 
-export interface variablesExpandStateInterface{
+export interface VariablesExpandStateInterface{
   expand : false,
   expandState : any
 }
