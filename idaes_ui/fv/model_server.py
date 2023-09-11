@@ -291,21 +291,9 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
           * `/path/to/file`: Retrieve file stored static directory
         """
 
-        #Enable CORS for react to fetch data or CORS error
-        #TODO: this directly return 200 and cypress will display cant visit site,
-        #      if disablethis react will show CORS issue, maybe put dist folder under fv can fix this?
-        self.send_response(200) 
-        self.send_header('Access-Control-Allow-Origin', '*')
-
         #Query url param
         u, queries = self._parse_flowsheet_url(self.path)
         id_ = queries.get("id", None) if queries else None
-
-        #TODO:define get old web or react app can enable old and new site in url
-        # print("#############")
-        # whichApp = queries.get("whichApp", None) if(queries) else None
-        # print(whichApp)
-        # print("#############")
 
         _log.debug(f"do_GET: path={self.path} id=={id_}")
         if u.path in ("/app", "/fs") and id_ is None:
@@ -378,12 +366,6 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
     # === PUT ===
     def do_PUT(self):
         """Process a request to store data."""
-        
-        # Enable CORS headers first
-        self.send_response(200)  
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
-
         u, queries = self._parse_flowsheet_url(self.path)
         id_ = queries.get("id", None) if queries else None
         _log.info(f"do_PUT: route={u} id={id_}")
@@ -416,7 +398,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
     def _write_text(self, code, message: str):
         value = utf8_encode(message)
         self.send_response(code)
-        self.send_header("Content-type", "application/text")
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Content-type', 'text/plain')
         self.send_header("Content-length", str(len(value)))
         self.end_headers()
         self.wfile.write(value)
@@ -427,6 +410,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
             _log.debug(f"Sending JSON data:\n---begin---\n{str_json}\n---end---")
         value = utf8_encode(str_json)
         self.send_response(code)
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header("Content-type", "application/json")
         self.send_header("Content-length", str(len(value)))
         self.end_headers()
@@ -435,6 +419,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
     def _write_html(self, code, page):
         value = utf8_encode(page)
         self.send_response(code)
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header("Content-type", "text/html")
         self.send_header("Content-length", str(len(value)))
         self.end_headers()
