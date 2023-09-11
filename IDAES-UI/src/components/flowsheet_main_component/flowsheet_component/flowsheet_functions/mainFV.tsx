@@ -55,7 +55,7 @@ export class MainFV {
     //Gerneate url for fetch data
     this.baseUrl = `http://localhost:${port}`
     this.getFSUrl = VITE_MODE === "dev" ? `${this.baseUrl}/fs?id=${flowsheetId}` : `/fs?id=${flowsheetId}`;
-    this.putFSUrl = `${this.baseUrl}/fs?id=${flowsheetId}`;
+    this.putFSUrl = VITE_MODE === "dev" ? `${this.baseUrl}/fs?id=${flowsheetId}` : `/fs?id=${flowsheetId}`;
 
     //Define model
     this.model = {}
@@ -93,7 +93,7 @@ export class MainFV {
         //render stream table
         //if statment control when stream table not show the stream table should not render
         if(isStreamTableShow) this.stream_table = new StreamTable(this, this.model);
-        this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId, this.putFSUrl, this.isFvShow);
+        this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId, this.getFSUrl,this.putFSUrl, this.isFvShow);
     })
     .catch((error) => {
         console.log(error.message);
@@ -189,47 +189,40 @@ export class MainFV {
    * @param url The HTTP server that is running in the Python process
    * @param paper Instance of Paper that has model in 'model' attribute.
    */
-  // refreshModel(url, paper) {
-  //   // Inform user of progress (1)
-  //   this.informUser(0, "Refresh: save current values from model");
-  //   // First save our version of the model
-  //   let clientModel = paper.graph;
-  //   let clientData = JSON.stringify(clientModel.toJSON());
-  //   $.ajax({url: url, type: 'PUT', contentType: "application/json", data: clientData})
-  //       // On failure inform user and stop
-  //       .fail(error => this.informUser(
-  //           2, "Fatal error: cannot save current model before refresh: " + error))
-  //       // On success, continue on to fetch new model
-  //       .done(() => {
-  //           // Inform user of progress (2)
-  //           this.informUser(0, "Refresh: load new model values from Python program");
-  //           $.ajax({url: url, dataType: "json"})
-  //               // If we got the model, save it
-  //               .done(data => {
-  //                   // Display views before refreshing
-  //                   const viewFlowsheet = document.querySelector("#view-flowsheet-btn");
-  //                   const viewStreamTable = document.querySelector("#view-stream-table-btn");
+  refreshModel(getUrl:string, putUrl:string, paper:any) {
+    // Inform user of progress (1)
+    this.informUser(0, "Refresh: save current values from model");
+    // First save our version of the model
+    let clientModel = paper.graph;
+    let clientData = JSON.stringify(clientModel.toJSON());
 
-  //                   const clickEvent = new MouseEvent('click');
-
-  //                   if (!viewFlowsheet.checked) {
-  //                       viewFlowsheet.dispatchEvent(clickEvent);
-  //                   }
-  //                   if (!viewStreamTable.checked) {
-  //                       viewStreamTable.dispatchEvent(clickEvent);
-  //                   }
-
-  //                   // Refresh
-  //                   this.renderModel(data);
-  //                   this.stream_table.initTable(data);
-  //               })
-  //               // Otherwise fail
-  //               .fail((jqXHR, textStatus, errorThrown) => {
-  //                   this.informUser(2, "Fatal error: Could not retrieve new model from Python program: " +
-  //                       textStatus + ", error=" + errorThrown);
-  //               });
-  //       });
-  // }
+    axios.put(putUrl, clientData, { headers: { 'Content-Type': 'application/json' } })
+    .then(() => {
+      this.informUser(0, "Refresh: load new model values from Python program");
+      return axios.get(getUrl, { responseType: 'json' });
+    })
+    .then(response => {
+      const data = response.data;
+      /**
+       * this clear hide file prevent error:
+       * Duplicate form field id in the same form
+       * it clean up html content in dropdown list, list contain input checkbox with id for ag-grid to read from table to toggle column on and off
+       * TODO: 
+       * fv off error cant read from graph
+       * table off error Could not retrieve new model from Python program: Cannot set properties of null
+       */
+      if(this.isStreamTableShow) document.getElementById("hide-fields-list")!.innerHTML = "";
+      this.renderModel(data);
+      this.stream_table.initTable(data);
+    })
+    .catch(error => {
+      if (error.response) {
+        this.informUser(2, "Fatal error: cannot save current model before refresh: " + error.response.data);
+      } else {
+        this.informUser(2, "Fatal error: Could not retrieve new model from Python program: " + error.message);
+      }
+    });
+  }
 
     /**
      * Get the save time interval value from the application's setting block.
