@@ -27,7 +27,7 @@ export default function FlowsheetWrapper(){
   },[isFvShow, isStreamTableShow])
 
   return(
-    <div id={fv_id} className={css.flowsheetWrapper}>
+    <div id="flowsheet-wrapper" className={css.flowsheetWrapper}>
       <PanelGroup direction="vertical" id="flowsheet-wrapper">
         {
           isFvShow &&
