@@ -11,6 +11,7 @@
 # for full copyright and license information.
 #################################################################################
 import copy
+from importlib import resources
 import json
 import numpy as np
 from pathlib import Path
@@ -96,8 +97,7 @@ def models():
     return models
 
 
-@pytest.fixture(scope="module")
-def demo_flowsheet():
+def _get_demo_flowsheet():
     """Semi-complicated demonstration flowsheet."""
     m = ConcreteModel()
     m.fs = FlowsheetBlock(dynamic=False)
@@ -148,8 +148,7 @@ def demo_flowsheet():
     return m.fs
 
 
-@pytest.fixture(scope="module")
-def flash_flowsheet():
+def _get_flash_flowsheet():
     # Model and flowsheet
     m = ConcreteModel()
     m.fs = FlowsheetBlock(dynamic=False)
@@ -173,25 +172,11 @@ def flash_flowsheet():
     return m.fs
 
 
-@pytest.fixture(scope="module")
-def demo_flowsheet_json():
-    json_file = test_dir / "demo_flowsheet.json"
-    s = json_file.open().read()
-    return s
+def _get_boiler_flowsheet():
+    import idaes.models_extra.power_generation.flowsheets.supercritical_power_plant.boiler_subflowsheet_build as blr
 
-
-@pytest.fixture(scope="module")
-def flash_flowsheet_json():
-    json_file = test_dir / "flash_flowsheet.json"
-    s = json_file.open().read()
-    return s
-
-
-@pytest.fixture(scope="module")
-def serialized_boiler_flowsheet_json():
-    json_file = test_dir / "serialized_boiler_flowsheet.json"
-    s = json_file.open().read()
-    return s
+    m, solver = blr.main()
+    return m.fs
 
 
 # === Tests ===
@@ -280,62 +265,35 @@ def test_validate_flowsheet(models):
     del m["arcs"]["A-FOO"]
 
 
-def _canonicalize(d):
+def _canonicalize(d: dict) -> dict:
+    d = json.loads(json.dumps(d, sort_keys=True))
     for cell in d["cells"]:
         if "ports" in cell:
             items = cell["ports"]["items"]
             cell["ports"]["items"] = sorted(items, key=lambda x: x["id"])
         if "position" in cell:
             cell.pop("position")
+    return d
 
 
-@pytest.mark.skipif(not helmholtz_available(), reason="General Helmholtz not available")
-@pytest.mark.component
-def test_flowsheet_serializer_demo(demo_flowsheet, demo_flowsheet_json):
-    """Simple regression test vs. stored data."""
-    test_dict = FlowsheetSerializer(demo_flowsheet, "demo").as_dict()
-    stored_dict = json.loads(demo_flowsheet_json)
-    _canonicalize(test_dict)
-    _canonicalize(stored_dict)
-    isJSONEqual = False if json.dumps(test_dict, sort_keys=True) != json.dumps(stored_dict, sort_keys=True) else True
-    assert isJSONEqual
+@pytest.mark.parametrize(
+    "id_,make_flowsheet,serialized_file_name",
+    [
+        ("demo", _get_demo_flowsheet, "demo_flowsheet.json"),
+        ("demo", _get_flash_flowsheet, "flash_flowsheet.json"),
+        ("boiler", _get_boiler_flowsheet, "serialized_boiler_flowsheet.json"),
+    ],
+    ids=lambda obj: getattr(obj, "__qualname__", str(obj)),
+)
+def test_flowsheet_serializer(id_: str, make_flowsheet: callable, serialized_file_name: str):
+    fs = make_flowsheet()
+    test_dict = FlowsheetSerializer(fs, id_).as_dict()
+    reference_dict = json.loads(resources.read_text(__package__, serialized_file_name))
 
-@pytest.mark.skipif(not helmholtz_available(), reason="General Helmholtz not available")
-@pytest.mark.component
-def test_boiler_demo(serialized_boiler_flowsheet_json):
-    import idaes.models_extra.power_generation.flowsheets.supercritical_power_plant.boiler_subflowsheet_build as blr
+    test_dict = _canonicalize(test_dict)
+    reference_dict = _canonicalize(reference_dict)
 
-    m, solver = blr.main()
-    test_dict = FlowsheetSerializer(m.fs, "boiler").as_dict()
-    stored_dict = json.loads(serialized_boiler_flowsheet_json)
-    _canonicalize(test_dict)
-    _canonicalize(stored_dict)
-    test_json = json.dumps(test_dict, sort_keys=True)
-    stored_json = json.dumps(stored_dict, sort_keys=True)
-    if test_json != stored_json:
-        report_failure(test_dict, stored_dict)
-        pytest.fail("Serialized flowsheet does not match expected")
-
-
-@pytest.mark.unit
-def test_flowsheet_serializer_flash(flash_flowsheet, flash_flowsheet_json):
-    """Simple regression test vs. stored data."""
-    test_dict = FlowsheetSerializer(flash_flowsheet, "demo").as_dict()
-    stored_dict = json.loads(flash_flowsheet_json)
-    _canonicalize(test_dict)
-    _canonicalize(stored_dict)
-    test_json = json.dumps(test_dict, sort_keys=True)
-    stored_json = json.dumps(stored_dict, sort_keys=True)
-    if test_json != stored_json:
-        report_failure(test_dict, stored_dict)
-        pytest.fail("Serialized flowsheet does not match expected")
-
-
-def report_failure(test_dict, stored_dict):
-    test_json, stored_json = (json.dumps(d, indent=2) for d in (test_dict, stored_dict))
-    diff = dict_diff(test_dict, stored_dict)
-    print("Diff between generated dict and expected dict:")
-    print(diff)
+    assert test_dict == reference_dict
 
 
 # print("---")
