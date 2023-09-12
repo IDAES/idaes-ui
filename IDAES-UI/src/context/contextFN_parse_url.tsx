@@ -14,7 +14,6 @@
  * @param none
  * @returns current port number
  */
-import shared_variable from "./shared_variable.json";
 
 const currentENV = import.meta.env.VITE_MODE;
 
@@ -29,18 +28,17 @@ export function context_parse_url(){
     const urlSearch = new URLSearchParams(window.location.search);
     const fv_id = urlSearch.get("id");
     return {server_port, fv_id};
-  }else{
+  }
+  
+  if(currentENV === "dev"){
     /*
-      When env is dev, read server port, fv id, from shared_variable.json, 
-      this file is create and update by python server, everytime when server start.
+      When env is dev, port and fv_id are fixed to 49999, 
+      the port and id are setup in example.py fv_example()
     */
-    //get server port
-    const server_port= shared_variable.port;
-
-    //base on url, get id
-    const url = new URL(shared_variable.url);
-    const urlSearch = new URLSearchParams(url.search);
-    const fv_id = urlSearch.get("id");
+    //fixed port when example
+    const server_port= "49999";
+    //fixed id when example
+    const fv_id = "sample_visualization";
     return {server_port, fv_id};
   }
 }
