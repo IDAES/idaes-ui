@@ -86,6 +86,8 @@ class FlowsheetServer(http.server.HTTPServer):
         """Start the server, which will spawn a thread."""
         self._thr = threading.Thread(target=self._run, daemon=True)
         self._thr.start()
+        #create shared JSON file
+        create_shared_JSON(self.port, "sample_visualization")
 
         #create shared JSON file
         #define file path for shared_variable.json for React

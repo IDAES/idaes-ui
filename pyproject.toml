@@ -7,13 +7,10 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-    ######
-    #temporary project name with "idaes-ui-test", when package please rename this with the final name!
-    ######
     name = "idaes-ui"
-    description = "IDAES Process Systems Engineering User Interface"
+    description = "IDAES PSE Platform UI"
     readme = "README.md"
-    version = "0.23.6" #Version format 0.YY.MM
+    version = "0.23.8" #Version format 0.YY.MM
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
@@ -46,7 +43,7 @@ build-backend = "setuptools.build_meta"
         # For running tests
         "pytest",
         # dependency 'requests' module for standalone idaes-ui package
-        "requests",
+        "requests"
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
@@ -54,9 +51,7 @@ build-backend = "setuptools.build_meta"
 # Just for developers (they should also add 'jb')
 dev = [
     # For adding copyright headers (see addheader.yml and the readme)
-    "addheader >= 0.3.0",
-    # Get IDAES from main branch in Github
-    #"idaes-pse @ git+https://github.com/IDAES/idaes-pse"
+    "addheader >= 0.3.0"
 ]
 # For packaging
 pkg = [
@@ -67,9 +62,6 @@ pkg = [
 [project.urls]
 github = "https://github.com/idaes/idaes-ui"
 issues = "https://github.com/idaes/idaes-ui/issues"
-
-[project.scripts]
-# idaesx = "idaes_examples.build:main"
 
 [tool.setuptools]
 include-package-data = true
@@ -105,7 +97,6 @@ addopts = "-ra"
 testpaths = [
     "idaes_ui"
 ]
-
 markers = [
     "component: between unit and integration test",
     "unit: test one small unit of functionality",
