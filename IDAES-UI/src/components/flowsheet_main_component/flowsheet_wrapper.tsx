@@ -20,6 +20,9 @@ export default function FlowsheetWrapper(){
   // const isVariablesShow:boolean = panelState.variables.show;
   const isStreamTableShow = panelState.streamTable.show;
 
+  const panelShow = {display:"block"};
+  const panelHide = {display:"none"};
+
   useEffect(()=>{
     //get server port base on UI port number, vite running on 5173 on dev
     server_port == "5173" ? server_port ="8099" : server_port = server_port;
@@ -32,8 +35,7 @@ export default function FlowsheetWrapper(){
       <MinimizedBar />
       <PanelGroup direction="vertical" id="flowsheet-wrapper">
         {
-          isFvShow &&
-          <Panel maxSize={100} defaultSize={65}>
+          <Panel maxSize={100} defaultSize={65} style={isFvShow ? panelShow : panelHide}>
             <PanelGroup direction="horizontal">
                 <Panel defaultSize={isFvShow ? 70 : 0} minSize={0}>
                   <FlowsheetHeader />
@@ -54,10 +56,9 @@ export default function FlowsheetWrapper(){
         }
             
         <PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
-
         {
           isStreamTableShow &&
-          <Panel maxSize={100} defaultSize={isFvShow ? 35 : 100}>
+          <Panel maxSize={100} defaultSize={isFvShow ? 35 : 100} style={isStreamTableShow ? panelShow : panelHide}>
             <StreamTable />
           </Panel>
         }
