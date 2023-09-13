@@ -49,10 +49,10 @@ _this_dir = Path(__file__).parent.absolute()
 _static_dir = _this_dir / "../../IDAES-UI/dist/"
 _template_dir = _this_dir / "../../IDAES-UI/dist/"
 
-#Dev switch between old site and new site
+# Dev switch between old site and new site
 enableOldSite = False
 # enableOldSite = True
-if(enableOldSite):
+if enableOldSite:
     _static_dir = _this_dir / "static"
     _template_dir = _this_dir / "templates"
 
@@ -69,7 +69,7 @@ class FlowsheetServer(http.server.HTTPServer):
 
     def __init__(self, port=None):
         """Create HTTP server"""
-        #port for dev remove it to allow system get random port in production
+        # port for dev remove it to allow system get random port in production
         self._port = port or find_free_port()
         _log.info(f"Starting HTTP server on localhost, port {self._port}")
         super().__init__(("127.0.0.1", self._port), FlowsheetServerHandler)
@@ -87,10 +87,10 @@ class FlowsheetServer(http.server.HTTPServer):
         self._thr = threading.Thread(target=self._run, daemon=True)
         self._thr.start()
 
-        #create shared JSON file
-        #define file path for shared_variable.json for React
+        # create shared JSON file
+        # define file path for shared_variable.json for React
         root = "./shared_variable.json"
-        IDAES_UI_path = './IDAES-UI/src/context/shared_variable.json'
+        IDAES_UI_path = "./IDAES-UI/src/context/shared_variable.json"
         pathDic = [root, IDAES_UI_path]
 
     def add_setting(self, key: str, value):
@@ -120,7 +120,7 @@ class FlowsheetServer(http.server.HTTPServer):
         if key not in self._settings_block:
             _log.warning(f"key '{key}' is not set in the flowsheet settings block")
             return None
-        return self._settings_block[key] #{'save_time_interval': 5000}
+        return self._settings_block[key]  # {'save_time_interval': 5000}
 
     def add_flowsheet(self, id_, flowsheet, store: persist.DataStore) -> str:
         """Add a flowsheet, and also the method of saving it.
@@ -274,8 +274,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
     # === OPTIONS ===
     def do_OPTIONS(self):
         self.send_response(200, "ok")
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS')
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
@@ -290,7 +290,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
           * `/path/to/file`: Retrieve file stored static directory
         """
 
-        #Query url param
+        # Query url param
         u, queries = self._parse_flowsheet_url(self.path)
         id_ = queries.get("id", None) if queries else None
 
@@ -301,7 +301,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
             )
             return
 
-        #From path get what to do
+        # From path get what to do
         if u.path == "/app":
             self._get_app(id_)
         elif u.path == "/fs":
@@ -369,7 +369,9 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         id_ = queries.get("id", None) if queries else None
         _log.info(f"do_PUT: route={u} id={id_}")
         if u.path in ("/fs",) and id_ is None:
-            self._write_text(400, message=f"Query parameter 'id' is required for '{u.path}'")
+            self._write_text(
+                400, message=f"Query parameter 'id' is required for '{u.path}'"
+            )
             return
 
         if u.path == "/fs":
@@ -379,7 +381,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         # Read flowsheet from request (read(LENGTH) is required to avoid hanging)
         read_len = int(self.headers.get("Content-Length", "-1"))
         data = utf8_decode(self.rfile.read(read_len))
-        
+
         # Save flowsheet
         try:
             self.server.save_flowsheet(id_, data)
@@ -389,7 +391,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         except Exception as err:  # pylint: disable=W0703
             self._write_text(500, message=str(err))
             return
-        
+
         self._write_text(200, message="success")
 
     # === Internal methods ===
@@ -397,8 +399,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
     def _write_text(self, code, message: str):
         value = utf8_encode(message)
         self.send_response(code)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Content-type', 'text/plain')
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Content-type", "text/plain")
         self.send_header("Content-length", str(len(value)))
         self.end_headers()
         self.wfile.write(value)
@@ -409,7 +411,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
             _log.debug(f"Sending JSON data:\n---begin---\n{str_json}\n---end---")
         value = utf8_encode(str_json)
         self.send_response(code)
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Content-type", "application/json")
         self.send_header("Content-length", str(len(value)))
         self.end_headers()
@@ -418,7 +420,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
     def _write_html(self, code, page):
         value = utf8_encode(page)
         self.send_response(code)
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Content-type", "text/html")
         self.send_header("Content-length", str(len(value)))
         self.end_headers()
@@ -428,7 +430,9 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         u, queries = urlparse(path), None
         # u = ParseResult(scheme='', netloc='', path='/app', params='', query='id=sample_visualization', fragment='')
         if u.query:
-            queries = dict([q.split("=") for q in u.query.split("&")]) #{'id': 'sample_visualization'}
+            queries = dict(
+                [q.split("=") for q in u.query.split("&")]
+            )  # {'id': 'sample_visualization'}
         return u, queries
 
     # === Logging ===
