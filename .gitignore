@@ -14,7 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -26,6 +25,9 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+node_modules/
+
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -50,6 +52,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+node_modules/
 
 # Translations
 *.mo
@@ -127,3 +130,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#For Mac
+.DS_Store
+
+# auto generated files
+sample_visualization.json
+shared_variable.json
