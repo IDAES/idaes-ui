@@ -6,12 +6,12 @@ for easier consumption and use by the UI layer.
 __author__ = "Dan Gunter"
 __created__ = "2023-09-05"
 
-import json
+import argparse
 import re
 import sys
-import tempfile
+from typing import Dict, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 
 # Import IDAES functionality (use shortened names, i=IDAES m=model)
 from idaes.core.util import model_statistics as ims
@@ -220,46 +220,72 @@ class ModelDiagnosticsRunner:
         )
 
 
-def get_diagnostics_data(flowsheet):
-    """Get the standard set of diagnostics data for a flowsheet.
+class DiagnosticsData(BaseModel):
+    """The standard set of diagnostics data for a flowsheet
     """
-    data = {
-        "meta": {
-            "statistics": statistics_index,
-            "diagnostics": diagnostics_index
-        }
+    meta: dict = {
+        "statistics": statistics_index,
+        "diagnostics": diagnostics_index
     }
 
-    stats = ModelStatistics(flowsheet)
-    data["statistics"] = stats.model_dump()
+    def __init__(self, block: _BlockData):
+        super().__init__()
+        self._ms = ModelStatistics(block)
+        self._md = ModelDiagnosticsRunner(block)
 
-    diag = ModelDiagnosticsRunner(flowsheet)
-    data["structural_issues"] = diag.structural_issues.model_dump()
-    data["numerical_issues"] = diag.numerical_issues.model_dump()
+    @computed_field
+    @property
+    def statistics(self) -> ModelStatistics:
+        return self._ms
 
-    return data
+    @computed_field
+    @property
+    def structural_issues(self) -> dict:
+        return self._md.structural_issues.model_dump()
+
+    @computed_field
+    @property
+    def numerical_issues(self) -> dict:
+        return self._md.numerical_issues.model_dump()
 
 
-def print_sample_output(ofile):
+def print_sample_output(output_file, indent=False, include_meta=False):
     from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
 
     flowsheet = idaes_demo_flowsheet()
-    data = get_diagnostics_data(flowsheet)
+    data = DiagnosticsData(flowsheet)
 
-    json.dump(data, ofile, indent=2)
+    kwargs: Dict[str, Union[str, int]] = {}
+    if indent:
+        kwargs["indent"] = 2
+    if not include_meta:
+        kwargs["exclude"] = "meta"
+
+    if output_file is sys.stdout:
+        json = data.model_dump_json(**kwargs)
+        print("-- OUTPUT --")
+        print(json)
+    else:
+        output_file.write(data.model_dump_json(**kwargs))
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        filename = sys.argv[1]
+    p = argparse.ArgumentParser()
+    p.add_argument("-f", "--file", help="Output file (default=stdout)")
+    p.add_argument("-i", "--indent", help="indent JSON", action="store_true")
+    p.add_argument("-m", "--meta", help="Include metadata", action="store_true")
+    args = p.parse_args()
+    # choose output stream
+    if args.file:
         try:
-            ofile = open(filename, "w")
+            ofile = open(args.file, "w")
         except IOError as e:
-            print(f"Failed to open output file '{filename}': {e}")
+            print(f"Failed to open output file '{args.file}': {e}")
             sys.exit(-1)
-        print(f"Writing output to file: {filename}")
     else:
-        print("Writing output to standard output")
         ofile = sys.stdout
-    print_sample_output(ofile)
-    ofile.close()
+
+    # create output
+    print_sample_output(ofile, indent=args.indent, include_meta=args.meta)
+    if ofile is not sys.stdout:
+        print(f"\nWrote output to file: {args.file}")

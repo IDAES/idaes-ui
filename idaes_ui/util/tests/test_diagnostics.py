@@ -31,4 +31,3 @@ def test_numerical(flowsheet):
     diag = ModelDiagnosticsRunner(block=flowsheet)
     data = diag.numerical_issues
     print(f"numerical json: {data.model_dump_json()}")
-    #assert len(data.warnings) == 0
