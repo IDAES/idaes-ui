@@ -9,7 +9,7 @@ __created__ = "2023-09-05"
 import argparse
 import re
 import sys
-from typing import Dict, Union
+from typing import Dict, Union, List
 
 from pydantic import BaseModel, computed_field
 
@@ -146,15 +146,15 @@ class DiagnosticsError(Exception):
 class StructuralIssues(BaseModel):
     """Structural issues with a model."""
 
-    warnings: list[str]
-    cautions: list[str]
-    next_steps: list[str]
+    warnings: List[str]
+    cautions: List[str]
+    next_steps: List[str]
 
 
 class NumericalIssues(BaseModel):
-    warnings: list[str]
-    cautions: list[str]
-    next_steps: list[str]
+    warnings: List[str]
+    cautions: List[str]
+    next_steps: List[str]
     jacobian_cond: float
 
 
