@@ -12,6 +12,7 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
     BTXParameterBlock,
 )
 from idaes.models.unit_models import Flash, Mixer
+from idaes.models.flowsheets import demo_flowsheet as demo
 
 
 def demo_flowsheet():
@@ -75,10 +76,11 @@ def flash_flowsheet():
     )
     # Flash unit
     m.fs.flash = Flash(property_package=m.fs.properties)
-    # TODO: move this to fix(np.NINF, skip_validation=True) once
+    # TODO: move this to
+    m.fs.flash.inlet.flow_mol.fix(np.NINF, skip_validation=True)
     # Pyomo#2180 is merged
-    m.fs.flash.inlet.flow_mol[:].set_value(np.NINF, True)
-    m.fs.flash.inlet.flow_mol.fix()
+    #m.fs.flash.inlet.flow_mol[:].set_value(np.NINF, True)
+    #m.fs.flash.inlet.flow_mol.fix()
     m.fs.flash.inlet.temperature.fix(np.inf)
     m.fs.flash.inlet.pressure[:].set_value(np.nan, True)
     m.fs.flash.inlet.pressure.fix()
@@ -87,3 +89,34 @@ def flash_flowsheet():
     m.fs.flash.heat_duty.fix(0)
     m.fs.flash.deltaP.fix(0)
     return m.fs
+
+# ----------------------
+# Used for diagnostics
+# ---------------------
+
+
+def idaes_demo_flowsheet():
+    """Get a demo flowsheet that works with diagnostics.
+    """
+    m = demo.build_flowsheet()
+    demo.set_scaling(m)
+    demo.set_dof(m)
+    demo.initialize_flowsheet(m)
+    # add a 'solve()' method
+    m.fs.solve = solve_flowsheet(m)
+    return m.fs
+
+
+def solve_flowsheet(m):
+    """Solve flowsheet function.
+
+    Args:
+        m: Model
+
+    Returns:
+        a `solve()` method for the model
+    """
+    def _solve():
+        solver = demo.get_solver()
+        solver.solve(m, tee=False)
+    return _solve

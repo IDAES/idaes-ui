@@ -6,7 +6,10 @@ for easier consumption and use by the UI layer.
 __author__ = "Dan Gunter"
 __created__ = "2023-09-05"
 
+import json
 import re
+import sys
+import tempfile
 
 from pydantic import BaseModel
 
@@ -16,8 +19,6 @@ from idaes.core.util import model_diagnostics as imd
 from idaes.core.util.scaling import get_jacobian, jacobian_cond
 
 # Import other needed IDAES types
-from idaes.core import FlowsheetBlock
-from pyomo.environ import Component
 from pyomo.core.base.block import _BlockData
 
 
@@ -35,27 +36,39 @@ class StatisticsUpdateError(Exception):
 
 # List of (attribute-name, display-name) for model statistics
 statistics_index = (
-    ("dof", "Degrees of Freedom"),
-    ("num_var", "Total No. of Variables"),
-    ("num_var_fixed", "No. Fixed Variables"),
-    ("num_var_unused", "No. Unused Variables"),
-    ("num_var_fixed_unused", "No. Unused Variables (Fixed)"),
-    ("num_var_ineq", "No. Variables only in Inequalities"),
-    ("num_var_fixed_ineq", "No. Variables only in Inequalities (Fixed)"),
-    ("num_constr", "Total No. Constraints"),
-    ("num_constr_eq", "No. Equality Constraints"),
-    ("num_constr_deact_eq", "No. Equality Constraints (Deactivated)"),
-    ("num_obj", "No. Objectives"),
-    ("num_obj_deact", "No. Objectives (Deactivated)"),
-    ("num_block", "No. Blocks"),
-    ("num_block_deact", "No. Blocks (Deactivated)"),
-    ("num_expr", "No. Expressions"),
+    ("dof", "Degrees of Freedom", "Number of degrees of freedom"),
+    ("num_var", "Num Var", "Total number of variables"),
+    ("num_var_fixed", "Num Fixed Var", "Number of fixed variables"),
+    ("num_var_unused", "Num Unused Var", "Number of unused variables"),
+    (
+        "num_var_fixed_unused",
+        "Num Unused Fixed Var",
+        "Number of unused fixed variables",
+    ),
+    ("num_var_ineq", "Num Var Ineq", "Number of variables used only in inequalities"),
+    (
+        "num_var_fixed_ineq",
+        "Num Fixed Var Ineq",
+        "Number of fixed variables used only in inequalities",
+    ),
+    ("num_constr", "Num Constr", "Total number of constraints"),
+    ("num_constr_eq", "Num Eq Constr", "Number of equality constraints"),
+    (
+        "num_constr_deact_eq",
+        "Num Eq Constr Deact",
+        "Number of equality constraints (deactivated)",
+    ),
+    ("num_obj", "Num Obj", "Number of objectives"),
+    ("num_obj_deact", "Num Obj Deact", "Number of objectives (deactivated)"),
+    ("num_block", "Num Block", "Number of blocks"),
+    ("num_block_deact", "Num Block Deact", "Number of blocks (deactivated)"),
+    ("num_expr", "Num Expr", "Number of expressions"),
 )
 
 
 class ModelStatistics(BaseModel):
-    """Interface to the IDAES `model_statistics` module.
-    """
+    """Interface to the IDAES `model_statistics` module."""
+
     # variables
     dof: int = 0  # degrees of freedom
     num_var: int = 0
@@ -84,8 +97,7 @@ class ModelStatistics(BaseModel):
         self.update()
 
     def update(self):
-        """Update values in report.
-        """
+        """Update values in report."""
         b = self._block
         try:
             # variables
@@ -118,10 +130,8 @@ class ModelStatistics(BaseModel):
 
 # List of (attribute-name, display-name, description) for diagnostics
 diagnostics_index = (
-    ("structural_issues", "Structural issues",
-     "List of structural issues with model"),
-    ("numerical_issues", "Numerical issues",
-     "List of numerical issues with model"),
+    ("structural_issues", "Structural issues", "List of structural issues with model"),
+    ("numerical_issues", "Numerical issues", "List of numerical issues with model"),
 )
 
 
@@ -134,8 +144,8 @@ class DiagnosticsError(Exception):
 
 
 class StructuralIssues(BaseModel):
-    """Structural issues with a model.
-    """
+    """Structural issues with a model."""
+
     warnings: list[str]
     cautions: list[str]
     next_steps: list[str]
@@ -147,9 +157,10 @@ class NumericalIssues(BaseModel):
     next_steps: list[str]
     jacobian_cond: float
 
+
 class ModelDiagnosticsRunner:
-    """Interface to the IDAES `model_diagnostics` module.
-    """
+    """Interface to the IDAES `model_diagnostics` module."""
+
     def __init__(self, block: _BlockData, **kwargs):
         self.block = block
         self.tb = imd.DiagnosticsToolbox(block, **kwargs)
@@ -158,6 +169,7 @@ class ModelDiagnosticsRunner:
     _cautions_expr = re.compile(r"Caution:\s+(.*)")
 
     def _clean_messages(self, warnings, cautions):
+        """Remove useless prefixes from messages"""
         cleaned_warnings = []
         for item in warnings:
             m = self._warnings_expr.match(item)
@@ -170,35 +182,84 @@ class ModelDiagnosticsRunner:
 
     @property
     def structural_issues(self) -> StructuralIssues:
-        """Compute and return structural issues with the model.
-        """
+        """Compute and return structural issues with the model."""
         try:
             warnings, next_steps = self.tb._collect_structural_warnings()
             cautions = self.tb._collect_structural_cautions()
         except Exception as e:
-            raise DiagnosticsError("structural_issues",
-                                   details=f"while getting warnings and cautions: {e}")
+            raise DiagnosticsError(
+                "structural_issues", details=f"while getting warnings and cautions: {e}"
+            )
         warnings, cautions = self._clean_messages(warnings, cautions)
-        return StructuralIssues(warnings=warnings, cautions=cautions,
-                                next_steps=next_steps)
+        return StructuralIssues(
+            warnings=warnings, cautions=cautions, next_steps=next_steps
+        )
 
     @property
     def numerical_issues(self) -> NumericalIssues:
-        """Compute and return numerical issues with the model.
-        """
+        """Compute and return numerical issues with the model."""
         try:
             jac, nlp = get_jacobian(self.block, scaled=False)
         except Exception as e:
-            raise DiagnosticsError("numerical_issues",
-                                   details=f"from get_jacobian(): {e}")
+            raise DiagnosticsError(
+                "numerical_issues", details=f"while getting jacobian: {e}"
+            )
         try:
             warnings, next_steps = self.tb._collect_numerical_warnings(jac=jac, nlp=nlp)
             cautions = self.tb._collect_numerical_cautions(jac=jac, nlp=nlp)
         except Exception as e:
-            raise DiagnosticsError("numerical_issues",
-                                   details=f"while getting warnings and cautions: {e}")
+            raise DiagnosticsError(
+                "numerical_issues", details=f"while getting warnings and cautions: {e}"
+            )
         warnings, cautions = self._clean_messages(warnings, cautions)
-        return NumericalIssues(warnings=warnings, cautions=cautions,
-                                next_steps=next_steps,
-                               jacobian_cond=jacobian_cond(jac=jac, scaled=False))
+        return NumericalIssues(
+            warnings=warnings,
+            cautions=cautions,
+            next_steps=next_steps,
+            jacobian_cond=jacobian_cond(jac=jac, scaled=False),
+        )
 
+
+def get_diagnostics_data(flowsheet):
+    """Get the standard set of diagnostics data for a flowsheet.
+    """
+    data = {
+        "meta": {
+            "statistics": statistics_index,
+            "diagnostics": diagnostics_index
+        }
+    }
+
+    stats = ModelStatistics(flowsheet)
+    data["statistics"] = stats.model_dump()
+
+    diag = ModelDiagnosticsRunner(flowsheet)
+    data["structural_issues"] = diag.structural_issues.model_dump()
+    data["numerical_issues"] = diag.numerical_issues.model_dump()
+
+    return data
+
+
+def print_sample_output(ofile):
+    from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
+
+    flowsheet = idaes_demo_flowsheet()
+    data = get_diagnostics_data(flowsheet)
+
+    json.dump(data, ofile, indent=2)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+        try:
+            ofile = open(filename, "w")
+        except IOError as e:
+            print(f"Failed to open output file '{filename}': {e}")
+            sys.exit(-1)
+        print(f"Writing output to file: {filename}")
+    else:
+        print("Writing output to standard output")
+        ofile = sys.stdout
+    print_sample_output(ofile)
+    ofile.close()
