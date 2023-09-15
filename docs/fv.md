@@ -1,8 +1,11 @@
 # Flowsheet Visualizer
+The main UI for IDAES is the Flowsheet Visualizer (FV).
 
 ## Overview
 
-The IDAES Flowsheet Visualizer (FV) is a graphical user interface that displays IDAES *flowsheets* (connected components representing a system or sub-system to be optimized). The FV uses web technologies (HTML, CSS, JavaScript) so is cross-platform.
+The FV displays IDAES *flowsheets* (connected components representing a system or 
+sub-system to be optimized). 
+The FV uses web technologies (HTML, CSS, JavaScript).
 
 ![Screenshot of the Flowsheet Visualizer](_static/sample_fv.png)
 
