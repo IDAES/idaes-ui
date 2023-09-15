@@ -253,6 +253,7 @@ def print_sample_output(output_file, indent=False, include_meta=False):
     from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
 
     flowsheet = idaes_demo_flowsheet()
+    flowsheet.solve()
     data = DiagnosticsData(flowsheet)
 
     kwargs: Dict[str, Union[str, int]] = {}
