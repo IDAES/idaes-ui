@@ -23,6 +23,6 @@ For example: `pip install idaes[ui]`
 
 ## More information
 
-Please refer to the [online documentation](idaes-ui.readthedocs.io) for  more information about the capabilities of this package.
+Please refer to the [online documentation](https://idaes-ui.readthedocs.io) for  more information about the capabilities of this package.
 
 If you have cloned this repository from [GitHub](https://github.com/IDAES/idaes-ui/), you can find the source files for the Sphinx-generated HTML documentation in the `docs` subdirectory.
