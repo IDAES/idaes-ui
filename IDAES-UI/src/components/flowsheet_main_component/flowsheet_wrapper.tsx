@@ -58,7 +58,7 @@ export default function FlowsheetWrapper(){
         <PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
         {
           isStreamTableShow &&
-          <Panel maxSize={100} defaultSize={isFvShow ? 35 : 100} style={isStreamTableShow ? panelShow : panelHide}>
+          <Panel maxSize={100} defaultSize={35} style={isStreamTableShow ? panelShow : panelHide}>
             <StreamTable />
           </Panel>
         }
