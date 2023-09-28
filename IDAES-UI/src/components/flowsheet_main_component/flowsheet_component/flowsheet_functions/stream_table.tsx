@@ -276,6 +276,7 @@ export class StreamTable {
         let streamTable = document.querySelector('#stream-table-data');
         let idaesCanvas = document.querySelector('#fv');
 
+        if(!streamTable || !idaesCanvas) return;
         // Function to highlight a stream table column
         this.highlightFn = (event:any) => {
             var streamGridCells = streamTable!.querySelectorAll(

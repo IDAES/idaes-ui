@@ -217,6 +217,11 @@ export class Paper {
         self._paper.on("link:mouseenter", function(linkView:any) {
             // Adds link tools (adding vertices, moving segments) to links when your
             // mouse over
+            //1. check if streamTable and idaesCanvas are exist if not should not assign event to them
+            let streamTable = document.querySelector('#stream-table-data');
+            let idaesCanvas = document.querySelector('#fv');
+            if(!streamTable || !idaesCanvas) return;
+            
             var verticesTool = new joint.linkTools.Vertices({
                 focusOpacity: 0.5,
                 redundancyRemoval: true,
@@ -243,9 +248,7 @@ export class Paper {
                 }
             );
             idaesCanvas!.dispatchEvent(highlightStreamEvent);
-            // if (document.querySelector("#view-stream-highlight-btn").checked) {
                 streamTable!.dispatchEvent(highlightStreamEvent);
-            // }
         });
 
         // Setup event when the hovering over link ends
