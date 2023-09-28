@@ -1,3 +1,7 @@
+/**
+ * This file here is setup a universal style for jointjs labels
+ * In other file's event handler which will toggle labels, just import this file
+ */
 const labelStyleLabelOn = {
   attrs:{
     g:{

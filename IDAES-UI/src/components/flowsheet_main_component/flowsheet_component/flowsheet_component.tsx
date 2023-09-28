@@ -1,6 +1,4 @@
-import { MainFV } from "./flowsheet_functions/mainFV";
-
-import { useContext, useRef, useEffect } from "react";
+import { useContext, useRef } from "react";
 import { AppContext } from "../../../context/appMainContext";
 
 import css from "./flowsheet.module.css";
@@ -11,11 +9,6 @@ declare var paper: any;
 export default function Flowsheet(){
   const {panelState, cells} = useContext(AppContext);
   const isShowFlowsheet = panelState["fv"].show;
-
-  useEffect(()=>{
-    console.log(window.location.href + "fv?id=sample_visualization")
-    // new MainFV("sample_visualization", "53781")
-  },[]);
 
   return(
     <>

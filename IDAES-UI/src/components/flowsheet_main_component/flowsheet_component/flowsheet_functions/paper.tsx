@@ -127,11 +127,6 @@ export class Paper {
      * Register Events before the graph model is loaded
      */
     preSetupRegisterEvents() {
-        ////debug log check self value vs this value
-        // console.log(this) //same as self
-        // console.log(self) //same as this
-        // console.log(this===self) //true
-
         // Save model every time the graph changes
         this._graph.on('change:position change:angle change:vertices', () => {
             this._app.graphChanged();
@@ -338,10 +333,17 @@ export class Paper {
         model.cells[vapIndex] = holder;
         
         model.cells[liqIndex]
+        return
     }
 
     /**
      * render customized label on screen base on the position of jjs label.
+     * 
+     * keep for reference
+     * 
+     * This label here is stand alone from joint js, better style,
+     * but not lack on zoom in and zoom out functions
+     * 
      * @param model
      */
     // renderLabelOnScreen(model:any){
@@ -494,6 +496,8 @@ export class Paper {
     /**
      * Setup the graph model. The jointjs graph loads the model as Json object
      * and then this setup() function registers the post setup events.
+     * 
+     * @param model the flowsheet model
      */
     setup(model:any) {
         const iconDir = "/assets/image/flowsheet_icons/";

@@ -317,23 +317,5 @@ export class MainFV {
       .catch((error) => {
         this.informUser(2, "Fatal error: cannot save current model: " + error);
       });
-
-      //old ajax request save for reference, clean up later
-      // this.informUser(0, "Save current values from model");
-      // $.ajax({url: url, type: 'PUT', contentType: "application/json", data: clientData})
-      //     // On failure inform user and stop
-      //     .fail(error => this.informUser(
-      //         2, "Fatal error: cannot save current model: " + error))
-      //     .done(() => {
-      //         this.informUser(0, "Saved new model values");
-      //     });
     }
 }
-
-// =====================
-//    Main function
-// =====================
-// $( document ).ready(function() {
-//     let flowsheetId = $("#idaes-fs-name").data("flowsheetId");
-    // globalThis.app = new App(flowsheetId);
-// });
