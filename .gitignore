@@ -25,6 +25,9 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+node_modules/
+
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -49,6 +52,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+node_modules/
 
 # Translations
 *.mo
@@ -132,3 +136,4 @@ dmypy.json
 
 # auto generated files
 sample_visualization.json
+shared_variable.json
