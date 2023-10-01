@@ -22,8 +22,8 @@ from idaes.core.util.scaling import get_jacobian, jacobian_cond
 from pyomo.core.base.block import _BlockData
 
 
-# model_statistics module
-# -----------------------
+# Wrap model_statistics module
+# ============================
 
 
 class StatisticsUpdateError(Exception):
@@ -33,63 +33,54 @@ class StatisticsUpdateError(Exception):
             msg += f": {details}"
         super().__init__(msg)
 
-
-# List of (attribute-name, display-name) for model statistics
-statistics_index = (
-    ("dof", "Degrees of Freedom", "Number of degrees of freedom"),
-    ("num_var", "Num Var", "Total number of variables"),
-    ("num_var_fixed", "Num Fixed Var", "Number of fixed variables"),
-    ("num_var_unused", "Num Unused Var", "Number of unused variables"),
-    (
-        "num_var_fixed_unused",
-        "Num Unused Fixed Var",
-        "Number of unused fixed variables",
-    ),
-    ("num_var_ineq", "Num Var Ineq", "Number of variables used only in inequalities"),
-    (
-        "num_var_fixed_ineq",
-        "Num Fixed Var Ineq",
-        "Number of fixed variables used only in inequalities",
-    ),
-    ("num_constr", "Num Constr", "Total number of constraints"),
-    ("num_constr_eq", "Num Eq Constr", "Number of equality constraints"),
-    (
-        "num_constr_deact_eq",
-        "Num Eq Constr Deact",
-        "Number of equality constraints (deactivated)",
-    ),
-    ("num_obj", "Num Obj", "Number of objectives"),
-    ("num_obj_deact", "Num Obj Deact", "Number of objectives (deactivated)"),
-    ("num_block", "Num Block", "Number of blocks"),
-    ("num_block_deact", "Num Block Deact", "Number of blocks (deactivated)"),
-    ("num_expr", "Num Expr", "Number of expressions"),
-)
+# Pydantic model for statistics
+# -----------------------------
 
 
-class ModelStatistics(BaseModel):
-    """Interface to the IDAES `model_statistics` module."""
+class StatsCount(BaseModel):
+    # Value
+    value: int = 0
 
-    # variables
-    dof: int = 0  # degrees of freedom
-    num_var: int = 0
-    num_var_fixed: int = 0
-    num_var_unused: int = 0
-    num_var_fixed_unused: int = 0
-    num_var_ineq: int = 0
-    num_var_fixed_ineq: int = 0
-    # constraints/objectives
-    num_constr: int = 0
-    num_constr_eq: int = 0
-    num_constr_deact_eq: int = 0
-    num_constr_ineq: int = 0
-    num_constr_deact_ineq: int = 0
-    num_obj: int = 0
-    num_obj_deact: int = 0
-    # blocks
-    num_block: int = 0
-    num_block_deact: int = 0
-    # expressions
-    num_expr: int = 0
+
+class StatsCountDeactType(StatsCount):
+    deact: StatsCount = StatsCount()
+
+
+class StatsCountVarFixed(StatsCount):
+    unused: StatsCount = StatsCount()
+
+
+class StatsCountVarIneq(StatsCount):
+    fixed: StatsCount = StatsCount()
+
+
+class StatsCountConstraints(StatsCount):
+    eq: StatsCountDeactType = StatsCountDeactType()
+    ineq: StatsCountDeactType = StatsCountDeactType()
+
+
+class StatsCountVar(StatsCount):
+    unused: StatsCount = StatsCount()
+    fixed: StatsCountVarFixed = StatsCountVarFixed()
+    ineq: StatsCountVarIneq = StatsCountVarIneq()
+
+
+class ModelStats(BaseModel):
+    """Model Statistics API
+
+    For each named item (or sub item), access the value as ".value"::
+
+        m = ModelStats()
+        m.dof.value = 3
+        m.var.fixed.ineq.value = 5
+    """
+    dof: StatsCount = StatsCount()
+    var: StatsCountVar = StatsCountVar()
+    ineq: StatsCount = StatsCount()
+    constr: StatsCountConstraints = StatsCountConstraints()
+    obj: StatsCountDeactType = StatsCountDeactType()
+    block: StatsCountDeactType = StatsCountDeactType()
+    expr: StatsCount = StatsCount()
 
     def __init__(self, block: _BlockData):
         super().__init__()
@@ -101,32 +92,32 @@ class ModelStatistics(BaseModel):
         b = self._block
         try:
             # variables
-            self.dof = ims.degrees_of_freedom(b)
-            self.num_var = ims.number_variables(b)
-            self.num_var_fixed = ims.number_fixed_variables(b)
-            self.num_var_unused = ims.number_unused_variables(b)
-            self.num_var_fixed_unused = ims.number_fixed_unused_variables(b)
-            self.num_var_ineq = ims.number_variables_only_in_inequalities(b)
-            self.num_var_fixed_ineq = ims.number_fixed_variables_only_in_inequalities(b)
+            self.dof.value = ims.degrees_of_freedom(b)
+            self.var.value = ims.number_variables(b)
+            self.var.fixed.value = ims.number_fixed_variables(b)
+            self.var.unused.value = ims.number_unused_variables(b)
+            self.var.fixed.unused.value = ims.number_fixed_unused_variables(b)
+            self.var.ineq.value = ims.number_variables_only_in_inequalities(b)
+            self.var.ineq.fixed.value = ims.number_fixed_variables_only_in_inequalities(b)
             # constraints / objectives
-            self.num_constr = ims.number_total_constraints(b)
-            self.num_constr_ineq = ims.number_total_equalities(b)
-            self.num_constr_deact_eq = ims.number_deactivated_equalities(b)
-            self.num_constr_ineq = ims.number_total_inequalities(b)
-            self.num_constr_deact_ineq = ims.number_deactivated_inequalities(b)
-            self.num_obj = ims.number_total_objectives(b)
-            self.num_obj_deact = ims.number_deactivated_objectives(b)
+            self.constr.value = ims.number_total_constraints(b)
+            self.constr.ineq.value = ims.number_total_equalities(b)
+            self.constr.eq.deact.value = ims.number_deactivated_equalities(b)
+            self.constr.ineq.value = ims.number_total_inequalities(b)
+            self.constr.ineq.deact.value = ims.number_deactivated_inequalities(b)
+            self.obj.value = ims.number_total_objectives(b)
+            self.obj.deact.value = ims.number_deactivated_objectives(b)
             # blocks
-            self.num_block = ims.number_total_blocks(b)
-            self.num_block_deact = ims.number_deactivated_blocks(b)
+            self.block.value = ims.number_total_blocks(b)
+            self.block.deact.value = ims.number_deactivated_blocks(b)
             # expressions
-            self.num_expr = ims.number_expressions(b)
+            self.expr.value = ims.number_expressions(b)
         except Exception as e:
             raise StatisticsUpdateError()
 
 
-# model_diagnostics module
-# ------------------------
+# Wrap model_diagnostics module
+# =============================
 
 # List of (attribute-name, display-name, description) for diagnostics
 diagnostics_index = (
@@ -224,18 +215,18 @@ class DiagnosticsData(BaseModel):
     """The standard set of diagnostics data for a flowsheet
     """
     meta: dict = {
-        "statistics": statistics_index,
+    #    "statistics": statistics_index,
         "diagnostics": diagnostics_index
     }
 
     def __init__(self, block: _BlockData):
         super().__init__()
-        self._ms = ModelStatistics(block)
+        self._ms = ModelStats(block)
         self._md = ModelDiagnosticsRunner(block)
 
     @computed_field
     @property
-    def statistics(self) -> ModelStatistics:
+    def statistics(self) -> ModelStats:
         return self._ms
 
     @computed_field

@@ -2,7 +2,7 @@
 Tests for the diagnostics wrapper
 """
 import pytest
-from idaes_ui.util.diagnostics import ModelStatistics, ModelDiagnosticsRunner
+from idaes_ui.util.diagnostics import ModelStats, ModelDiagnosticsRunner
 from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
 
 
@@ -13,8 +13,8 @@ def flowsheet():
 
 @pytest.mark.unit
 def test_flash_stats(flowsheet):
-    stats = ModelStatistics(block=flowsheet)
-    assert stats.num_var > 100
+    stats = ModelStats(block=flowsheet)
+    assert stats.var.value > 100
 
 
 @pytest.mark.unit
