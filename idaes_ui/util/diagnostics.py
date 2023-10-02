@@ -6,13 +6,16 @@ for easier consumption and use by the UI layer.
 __author__ = "Dan Gunter"
 __created__ = "2023-09-05"
 
+# stdlib
 import argparse
 from enum import Enum
-import re
+import json
 import sys
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Tuple
 
+# third-party
 from pydantic import BaseModel, computed_field
+from pandas import DataFrame
 
 # Import IDAES functionality (use shortened names, i=IDAES m=model)
 from idaes.core.util import model_statistics as ims
@@ -22,6 +25,7 @@ from idaes.core.util.scaling import get_jacobian, jacobian_cond
 # Import other needed IDAES types
 from pyomo.core.base.block import _BlockData
 from pyomo.environ import value
+from pyomo.util.check_units import identify_inconsistent_units
 
 
 # Wrap model_statistics module
@@ -107,7 +111,7 @@ class ModelStats(BaseModel):
             )
             # constraints / objectives
             self.constr.value = ims.number_total_constraints(b)
-            self.constr.ineq.value = ims.number_total_equalities(b)
+            self.constr.eq.value = ims.number_total_equalities(b)
             self.constr.eq.deact.value = ims.number_deactivated_equalities(b)
             self.constr.ineq.value = ims.number_total_inequalities(b)
             self.constr.ineq.deact.value = ims.number_deactivated_inequalities(b)
@@ -120,6 +124,36 @@ class ModelStats(BaseModel):
             self.expr.value = ims.number_expressions(b)
         except Exception as e:
             raise StatisticsUpdateError()
+
+    def as_table(self) -> DataFrame:
+        """Transform model information into a table.
+
+        Returns:
+            DataFrame: Pandas DataFrame with the following columns:
+
+                1. type = Main type, e.g. 'var' for variables
+                2. subtypes = Comma-separated list of subtypes, e.g. 'fixed,unused'.
+                   If empty, this is the total for the type.
+                3. attr = For convenience, the type + subtypes as a dot-separated attribute.
+                   Simply add ".value" to fetch value
+                4. value = Count for this combination of type and subtype(s)
+        """
+        a = []
+        for type_, info in self.model_dump().items():
+            for subtypes, val in self._as_table_subtypes(info, ()):
+                attr_name = ".".join([type_] + list(subtypes))
+                a.append((type_, ",".join(subtypes), attr_name, val))
+        return DataFrame(data=a, columns=("type", "subtypes", "attr", "value"))
+
+    @classmethod
+    def _as_table_subtypes(cls, info, subtypes) -> Tuple[Tuple[str], float]:
+        result = []
+        for key in info:
+            if key == "value":
+                result.append((subtypes, info[key]))
+            else:
+                result.extend(cls._as_table_subtypes(info[key], subtypes + (key,)))
+        return result
 
 
 # Wrap model_diagnostics module
@@ -147,6 +181,7 @@ class Severity(str, Enum):
 
 
 class ModelObjectType(str, Enum):
+    component = "component"
     constraint = "constraint"
     var = "var"
     bounded_var = "var+bounds"
@@ -162,20 +197,28 @@ class ModelIssueType(str, Enum):
 
 # Objects in a list for a given issue
 
+
 class ModelIssueBase(BaseModel):
     """Base type for individual objects in an issue."""
+
     type: ModelObjectType
     name: str  # usually path to model object
 
 
+class ModelIssueComponent(ModelIssueBase):
+    type: ModelObjectType = ModelObjectType.component
+
+
 class ModelIssueVariable(ModelIssueBase):
     """Variable object in an issue."""
+
     type: ModelObjectType = ModelObjectType.var
     value: float = 0.0
 
 
 class ModelIssueVariableBounded(ModelIssueBase):
     """Variable and its bounds in an issue."""
+
     type: ModelObjectType = ModelObjectType.bounded_var
     value: float = 0.0
     lower: float = 0.0
@@ -192,9 +235,7 @@ class ModelIssue(BaseModel):
     severity: Severity
     name: str = ""
     description: str = ""
-    objects: List[
-        Union[ModelIssueVariable, ModelIssueVariableBounded]
-    ] = []
+    objects: List[Union[ModelIssueVariable, ModelIssueVariableBounded]] = []
 
 
 # Container for list of model issues
@@ -226,7 +267,7 @@ class ModelIssues(BaseModel):
         ]
         if objs:
             issue = ModelIssue(
-                type=ModelIssueType.structural,
+                type=ModelIssueType.numerical,
                 severity=Severity.caution,
                 name="extreme_values",
                 description="variables with extreme values",
@@ -242,28 +283,51 @@ class ModelIssues(BaseModel):
             abs_tol=c.variable_bounds_absolute_tolerance,
             rel_tol=c.variable_bounds_relative_tolerance,
         )
-        objs = [
-            ModelIssueVariableBounded(
+        if len(cs) == 0:
+            return
+        issue = ModelIssue(
+            type=ModelIssueType.numerical,
+            name="var_near_bounds",
+            severity=Severity.caution,
+            description="variables close to their bounds",
+        )
+        for v in cs:
+            vb = ModelIssueVariableBounded(
                 name=v.name,
                 type=ModelObjectType.bounded_var,
                 value=value(v),
                 **self._bounds_kwargs(v.bounds),
             )
-            for v in cs
-        ]
-        if objs:
-            issue = ModelIssue(
-                type=ModelIssueType.structural,
-                name="var_near_bounds",
-                severity=Severity.caution,
-                description="variables close to their bounds",
-            )
-            issue.objects = objs
-            self.issues.append(issue)
+            issue.objects.append(vb)
+        self.issues.append(issue)
 
     @staticmethod
     def _bounds_kwargs(bounds) -> Dict:
-        return {"lower": 0, "upper": 1}
+        d = {}
+        try:
+            d["lower"], d["has_lower"] = bounds[0], True
+        except Exception:
+            d["has_lower"] = False
+        try:
+            d["upper"], d["has_upper"] = bounds[1], True
+        except Exception:
+            d["has_upper"] = False
+        return d
+
+    def _add_inconsistent_units(self):
+        cs = identify_inconsistent_units(self._block)
+        if len(cs) == 0:
+            return
+        issue = ModelIssue(
+            type=ModelIssueType.structural,
+            name="inconsistent-units",
+            severity=Severity.warning,
+            description="components with inconsistent units",
+        )
+        for comp in cs:
+            obj = ModelIssueComponent(name=comp.name)
+            issue.issues.append(obj)
+        self.issues.append(issue)
 
 
 # class StructuralIssues_orig(BaseModel):
@@ -334,75 +398,67 @@ class ModelIssues(BaseModel):
 #             next_steps=next_steps,
 #             jacobian_cond=jacobian_cond(jac=jac, scaled=False),
 #         )
-#
-#
-# class DiagnosticsData(BaseModel):
-#     """The standard set of diagnostics data for a flowsheet"""
-#
-#     meta: dict = {
-#         #    "statistics": statistics_index,
-#         "diagnostics": diagnostics_index
-#     }
-#
-#     def __init__(self, block: _BlockData):
-#         super().__init__()
-#         self._ms = ModelStats(block)
-#         self._md = ModelDiagnosticsRunner(block)
-#
-#     @computed_field
-#     @property
-#     def statistics(self) -> ModelStats:
-#         return self._ms
-#
-#     @computed_field
-#     @property
-#     def structural_issues(self) -> dict:
-#         return self._md.structural_issues.model_dump()
-#
-#     @computed_field
-#     @property
-#     def numerical_issues(self) -> dict:
-#         return self._md.numerical_issues.model_dump()
-#
-#
-# def print_sample_output(output_file, indent=False, include_meta=False):
-#     from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
-#
-#     flowsheet = idaes_demo_flowsheet()
-#     flowsheet.solve()
-#     data = DiagnosticsData(flowsheet)
-#
-#     kwargs: Dict[str, Union[str, int]] = {}
-#     if indent:
-#         kwargs["indent"] = 2
-#     if not include_meta:
-#         kwargs["exclude"] = "meta"
-#
-#     if output_file is sys.stdout:
-#         json = data.model_dump_json(**kwargs)
-#         print("-- OUTPUT --")
-#         print(json)
-#     else:
-#         output_file.write(data.model_dump_json(**kwargs))
-#
-#
-# if __name__ == "__main__":
-#     p = argparse.ArgumentParser()
-#     p.add_argument("-f", "--file", help="Output file (default=stdout)")
-#     p.add_argument("-i", "--indent", help="indent JSON", action="store_true")
-#     p.add_argument("-m", "--meta", help="Include metadata", action="store_true")
-#     args = p.parse_args()
-#     # choose output stream
-#     if args.file:
-#         try:
-#             ofile = open(args.file, "w")
-#         except IOError as e:
-#             print(f"Failed to open output file '{args.file}': {e}")
-#             sys.exit(-1)
-#     else:
-#         ofile = sys.stdout
-#
-#     # create output
-#     print_sample_output(ofile, indent=args.indent, include_meta=args.meta)
-#     if ofile is not sys.stdout:
-#         print(f"\nWrote output to file: {args.file}")
+
+
+class DiagnosticsData(BaseModel):
+    """The standard set of diagnostics data for a flowsheet"""
+
+    config: dict = dict(imd.CONFIG)
+
+    def __init__(self, block: _BlockData):
+        super().__init__()
+        self._ms = ModelStats(block)
+        self._mi = ModelIssues(block)
+
+    @computed_field
+    @property
+    def statistics(self) -> ModelStats:
+        return self._ms
+
+    @computed_field
+    @property
+    def issues(self) -> ModelIssues:
+        self._mi.update()
+        return self._mi
+
+
+def print_sample_output(output_file, indent=False, solve=True, schema=False):
+    from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
+
+    flowsheet = idaes_demo_flowsheet()
+    if solve:
+        flowsheet.solve()
+    data = DiagnosticsData(flowsheet)
+
+    output_file.write(data.model_dump_json(indent=indent))
+
+    if schema:
+        output_file.write("\n----\n")
+        json.dump(
+            data.model_json_schema(mode="serialization"), output_file, indent=indent
+        )
+
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser()
+    p.add_argument("-f", "--file", help="Output file (default=stdout)")
+    p.add_argument("-i", "--indent", help="indent JSON", action="store_true")
+    p.add_argument("-n", "--no-solve", help="do not solve model", action="store_true")
+    p.add_argument("-s", "--schema", help="also print JSON schema", action="store_true")
+    args = p.parse_args()
+    # choose output stream
+    if args.file:
+        try:
+            ofile = open(args.file, "w")
+        except IOError as e:
+            print(f"Failed to open output file '{args.file}': {e}")
+            sys.exit(-1)
+    else:
+        ofile = sys.stdout
+
+    # create output
+    print_sample_output(
+        ofile, indent=args.indent, solve=not args.no_solve, schema=args.schema
+    )
+    if ofile is not sys.stdout:
+        print(f"\nWrote output to file: {args.file}")
