@@ -7,6 +7,7 @@ __author__ = "Dan Gunter"
 __created__ = "2023-09-05"
 
 import argparse
+from enum import Enum
 import re
 import sys
 from typing import Dict, Union, List
@@ -20,6 +21,7 @@ from idaes.core.util.scaling import get_jacobian, jacobian_cond
 
 # Import other needed IDAES types
 from pyomo.core.base.block import _BlockData
+from pyomo.environ import value
 
 
 # Wrap model_statistics module
@@ -32,6 +34,7 @@ class StatisticsUpdateError(Exception):
         if details:
             msg += f": {details}"
         super().__init__(msg)
+
 
 # Pydantic model for statistics
 # -----------------------------
@@ -74,6 +77,7 @@ class ModelStats(BaseModel):
         m.dof.value = 3
         m.var.fixed.ineq.value = 5
     """
+
     dof: StatsCount = StatsCount()
     var: StatsCountVar = StatsCountVar()
     ineq: StatsCount = StatsCount()
@@ -98,7 +102,9 @@ class ModelStats(BaseModel):
             self.var.unused.value = ims.number_unused_variables(b)
             self.var.fixed.unused.value = ims.number_fixed_unused_variables(b)
             self.var.ineq.value = ims.number_variables_only_in_inequalities(b)
-            self.var.ineq.fixed.value = ims.number_fixed_variables_only_in_inequalities(b)
+            self.var.ineq.fixed.value = ims.number_fixed_variables_only_in_inequalities(
+                b
+            )
             # constraints / objectives
             self.constr.value = ims.number_total_constraints(b)
             self.constr.ineq.value = ims.number_total_equalities(b)
@@ -134,150 +140,269 @@ class DiagnosticsError(Exception):
         super().__init__(msg)
 
 
-class StructuralIssues(BaseModel):
-    """Structural issues with a model."""
-
-    warnings: List[str]
-    cautions: List[str]
-    next_steps: List[str]
+class Severity(str, Enum):
+    warning = "warning"
+    error = "error"
+    caution = "caution"
 
 
-class NumericalIssues(BaseModel):
-    warnings: List[str]
-    cautions: List[str]
-    next_steps: List[str]
-    jacobian_cond: float
+class ModelObjectType(str, Enum):
+    constraint = "constraint"
+    var = "var"
+    bounded_var = "var+bounds"
+    param = "param"
+    objective = "objective"
+    set = "set"
 
 
-class ModelDiagnosticsRunner:
-    """Interface to the IDAES `model_diagnostics` module."""
+class ModelIssueType(str, Enum):
+    numerical = "numerical"
+    structural = "structural"
+
+
+# Objects in a list for a given issue
+
+class ModelIssueBase(BaseModel):
+    """Base type for individual objects in an issue."""
+    type: ModelObjectType
+    name: str  # usually path to model object
+
+
+class ModelIssueVariable(ModelIssueBase):
+    """Variable object in an issue."""
+    type: ModelObjectType = ModelObjectType.var
+    value: float = 0.0
+
+
+class ModelIssueVariableBounded(ModelIssueBase):
+    """Variable and its bounds in an issue."""
+    type: ModelObjectType = ModelObjectType.bounded_var
+    value: float = 0.0
+    lower: float = 0.0
+    has_lower: bool = True
+    upper: float = 0.0
+    has_upper: bool = True
+
+
+# Model issue
+
+
+class ModelIssue(BaseModel):
+    type: ModelIssueType
+    severity: Severity
+    name: str = ""
+    description: str = ""
+    objects: List[
+        Union[ModelIssueVariable, ModelIssueVariableBounded]
+    ] = []
+
+
+# Container for list of model issues
+
+
+class ModelIssues(BaseModel):
+    issues: List[ModelIssue] = []
 
     def __init__(self, block: _BlockData, **kwargs):
-        self.block = block
-        self.tb = imd.DiagnosticsToolbox(block, **kwargs)
-
-    _warnings_expr = re.compile(r"WARNING:\s+(.*)")
-    _cautions_expr = re.compile(r"Caution:\s+(.*)")
-
-    def _clean_messages(self, warnings, cautions):
-        """Remove useless prefixes from messages"""
-        cleaned_warnings = []
-        for item in warnings:
-            m = self._warnings_expr.match(item)
-            cleaned_warnings.append(m.group(1) if m else item)
-        cleaned_cautions = []
-        for item in cautions:
-            m = self._cautions_expr.match(item)
-            cleaned_cautions.append(m.group(1) if m else item)
-        return cleaned_warnings, cleaned_cautions
-
-    @property
-    def structural_issues(self) -> StructuralIssues:
-        """Compute and return structural issues with the model."""
-        try:
-            warnings, next_steps = self.tb._collect_structural_warnings()
-            cautions = self.tb._collect_structural_cautions()
-        except Exception as e:
-            raise DiagnosticsError(
-                "structural_issues", details=f"while getting warnings and cautions: {e}"
-            )
-        warnings, cautions = self._clean_messages(warnings, cautions)
-        return StructuralIssues(
-            warnings=warnings, cautions=cautions, next_steps=next_steps
-        )
-
-    @property
-    def numerical_issues(self) -> NumericalIssues:
-        """Compute and return numerical issues with the model."""
-        try:
-            jac, nlp = get_jacobian(self.block, scaled=False)
-        except Exception as e:
-            raise DiagnosticsError(
-                "numerical_issues", details=f"while getting jacobian: {e}"
-            )
-        try:
-            warnings, next_steps = self.tb._collect_numerical_warnings(jac=jac, nlp=nlp)
-            cautions = self.tb._collect_numerical_cautions(jac=jac, nlp=nlp)
-        except Exception as e:
-            raise DiagnosticsError(
-                "numerical_issues", details=f"while getting warnings and cautions: {e}"
-            )
-        warnings, cautions = self._clean_messages(warnings, cautions)
-        return NumericalIssues(
-            warnings=warnings,
-            cautions=cautions,
-            next_steps=next_steps,
-            jacobian_cond=jacobian_cond(jac=jac, scaled=False),
-        )
-
-
-class DiagnosticsData(BaseModel):
-    """The standard set of diagnostics data for a flowsheet
-    """
-    meta: dict = {
-    #    "statistics": statistics_index,
-        "diagnostics": diagnostics_index
-    }
-
-    def __init__(self, block: _BlockData):
         super().__init__()
-        self._ms = ModelStats(block)
-        self._md = ModelDiagnosticsRunner(block)
+        self._block = block
+        self._config = imd.CONFIG(**kwargs)
 
-    @computed_field
-    @property
-    def statistics(self) -> ModelStats:
-        return self._ms
+    def update(self):
+        self.issues = []  # clear old
+        self._add_extreme_values()
+        self._add_variables_near_bounds()
 
-    @computed_field
-    @property
-    def structural_issues(self) -> dict:
-        return self._md.structural_issues.model_dump()
+    def _add_extreme_values(self):
+        c = self._config
+        objs = [
+            ModelIssueVariable(name=v.name, value=v.value)
+            for v in imd._vars_with_extreme_values(
+                model=self._block,
+                large=c.variable_large_value_tolerance,
+                small=c.variable_small_value_tolerance,
+                zero=c.variable_zero_value_tolerance,
+            )
+        ]
+        if objs:
+            issue = ModelIssue(
+                type=ModelIssueType.structural,
+                severity=Severity.caution,
+                name="extreme_values",
+                description="variables with extreme values",
+            )
+            issue.objects = objs
+            self.issues.append(issue)
 
-    @computed_field
-    @property
-    def numerical_issues(self) -> dict:
-        return self._md.numerical_issues.model_dump()
+    def _add_variables_near_bounds(self):
+        c = self._config
+        # get ComponentSet of variables near their bounds
+        cs = ims.variables_near_bounds_set(
+            self._block,
+            abs_tol=c.variable_bounds_absolute_tolerance,
+            rel_tol=c.variable_bounds_relative_tolerance,
+        )
+        objs = [
+            ModelIssueVariableBounded(
+                name=v.name,
+                type=ModelObjectType.bounded_var,
+                value=value(v),
+                **self._bounds_kwargs(v.bounds),
+            )
+            for v in cs
+        ]
+        if objs:
+            issue = ModelIssue(
+                type=ModelIssueType.structural,
+                name="var_near_bounds",
+                severity=Severity.caution,
+                description="variables close to their bounds",
+            )
+            issue.objects = objs
+            self.issues.append(issue)
+
+    @staticmethod
+    def _bounds_kwargs(bounds) -> Dict:
+        return {"lower": 0, "upper": 1}
 
 
-def print_sample_output(output_file, indent=False, include_meta=False):
-    from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
-
-    flowsheet = idaes_demo_flowsheet()
-    flowsheet.solve()
-    data = DiagnosticsData(flowsheet)
-
-    kwargs: Dict[str, Union[str, int]] = {}
-    if indent:
-        kwargs["indent"] = 2
-    if not include_meta:
-        kwargs["exclude"] = "meta"
-
-    if output_file is sys.stdout:
-        json = data.model_dump_json(**kwargs)
-        print("-- OUTPUT --")
-        print(json)
-    else:
-        output_file.write(data.model_dump_json(**kwargs))
-
-
-if __name__ == "__main__":
-    p = argparse.ArgumentParser()
-    p.add_argument("-f", "--file", help="Output file (default=stdout)")
-    p.add_argument("-i", "--indent", help="indent JSON", action="store_true")
-    p.add_argument("-m", "--meta", help="Include metadata", action="store_true")
-    args = p.parse_args()
-    # choose output stream
-    if args.file:
-        try:
-            ofile = open(args.file, "w")
-        except IOError as e:
-            print(f"Failed to open output file '{args.file}': {e}")
-            sys.exit(-1)
-    else:
-        ofile = sys.stdout
-
-    # create output
-    print_sample_output(ofile, indent=args.indent, include_meta=args.meta)
-    if ofile is not sys.stdout:
-        print(f"\nWrote output to file: {args.file}")
+# class StructuralIssues_orig(BaseModel):
+#     """Structural issues with a model."""
+#
+#     warnings: List[str]
+#     cautions: List[str]
+#     next_steps: List[str]
+#
+#
+# class ModelDiagnosticsRunner:
+#     """Interface to the IDAES `model_diagnostics` module."""
+#
+#     def __init__(self, block: _BlockData, **kwargs):
+#         self.block = block
+#         self.tb = imd.DiagnosticsToolbox(block, **kwargs)
+#
+#     _warnings_expr = re.compile(r"WARNING:\s+(.*)")
+#     _cautions_expr = re.compile(r"Caution:\s+(.*)")
+#
+#     def _clean_messages(self, warnings, cautions):
+#         """Remove useless prefixes from messages"""
+#         cleaned_warnings = []
+#         for item in warnings:
+#             m = self._warnings_expr.match(item)
+#             cleaned_warnings.append(m.group(1) if m else item)
+#         cleaned_cautions = []
+#         for item in cautions:
+#             m = self._cautions_expr.match(item)
+#             cleaned_cautions.append(m.group(1) if m else item)
+#         return cleaned_warnings, cleaned_cautions
+#
+#     @property
+#     def structural_issues(self) -> StructuralIssues:
+#         """Compute and return structural issues with the model."""
+#         try:
+#             warnings, next_steps = self.tb._collect_structural_warnings()
+#             cautions = self.tb._collect_structural_cautions()
+#         except Exception as e:
+#             raise DiagnosticsError(
+#                 "structural_issues", details=f"while getting warnings and cautions: {e}"
+#             )
+#         warnings, cautions = self._clean_messages(warnings, cautions)
+#         return StructuralIssues(
+#             warnings=warnings, cautions=cautions, next_steps=next_steps
+#         )
+#
+#     @property
+#     def numerical_issues(self) -> NumericalIssues:
+#         """Compute and return numerical issues with the model."""
+#         try:
+#             jac, nlp = get_jacobian(self.block, scaled=False)
+#         except Exception as e:
+#             raise DiagnosticsError(
+#                 "numerical_issues", details=f"while getting jacobian: {e}"
+#             )
+#         try:
+#             warnings, next_steps = self.tb._collect_numerical_warnings(jac=jac, nlp=nlp)
+#             cautions = self.tb._collect_numerical_cautions(jac=jac, nlp=nlp)
+#         except Exception as e:
+#             raise DiagnosticsError(
+#                 "numerical_issues", details=f"while getting warnings and cautions: {e}"
+#             )
+#         warnings, cautions = self._clean_messages(warnings, cautions)
+#         return NumericalIssues(
+#             warnings=warnings,
+#             cautions=cautions,
+#             next_steps=next_steps,
+#             jacobian_cond=jacobian_cond(jac=jac, scaled=False),
+#         )
+#
+#
+# class DiagnosticsData(BaseModel):
+#     """The standard set of diagnostics data for a flowsheet"""
+#
+#     meta: dict = {
+#         #    "statistics": statistics_index,
+#         "diagnostics": diagnostics_index
+#     }
+#
+#     def __init__(self, block: _BlockData):
+#         super().__init__()
+#         self._ms = ModelStats(block)
+#         self._md = ModelDiagnosticsRunner(block)
+#
+#     @computed_field
+#     @property
+#     def statistics(self) -> ModelStats:
+#         return self._ms
+#
+#     @computed_field
+#     @property
+#     def structural_issues(self) -> dict:
+#         return self._md.structural_issues.model_dump()
+#
+#     @computed_field
+#     @property
+#     def numerical_issues(self) -> dict:
+#         return self._md.numerical_issues.model_dump()
+#
+#
+# def print_sample_output(output_file, indent=False, include_meta=False):
+#     from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
+#
+#     flowsheet = idaes_demo_flowsheet()
+#     flowsheet.solve()
+#     data = DiagnosticsData(flowsheet)
+#
+#     kwargs: Dict[str, Union[str, int]] = {}
+#     if indent:
+#         kwargs["indent"] = 2
+#     if not include_meta:
+#         kwargs["exclude"] = "meta"
+#
+#     if output_file is sys.stdout:
+#         json = data.model_dump_json(**kwargs)
+#         print("-- OUTPUT --")
+#         print(json)
+#     else:
+#         output_file.write(data.model_dump_json(**kwargs))
+#
+#
+# if __name__ == "__main__":
+#     p = argparse.ArgumentParser()
+#     p.add_argument("-f", "--file", help="Output file (default=stdout)")
+#     p.add_argument("-i", "--indent", help="indent JSON", action="store_true")
+#     p.add_argument("-m", "--meta", help="Include metadata", action="store_true")
+#     args = p.parse_args()
+#     # choose output stream
+#     if args.file:
+#         try:
+#             ofile = open(args.file, "w")
+#         except IOError as e:
+#             print(f"Failed to open output file '{args.file}': {e}")
+#             sys.exit(-1)
+#     else:
+#         ofile = sys.stdout
+#
+#     # create output
+#     print_sample_output(ofile, indent=args.indent, include_meta=args.meta)
+#     if ofile is not sys.stdout:
+#         print(f"\nWrote output to file: {args.file}")
