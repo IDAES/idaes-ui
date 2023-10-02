@@ -5,8 +5,7 @@ import { PanelGroup, Panel, PanelResizeHandle} from "react-resizable-panels";
 import FlowsheetHeader from "./flowsheet_component/flowsheet_header/flowsheet_header_component";
 import MinimizedBar from "./minimized_bar_component/minimized_bar_component";
 import Flowsheet from "./flowsheet_component/flowsheet_component";
-import FlowsheetVariablesHeader from "./flowsheet_variables/flowsheet_variables_header/flowsheet_variables_header";
-import Flowsheet_variable from "./flowsheet_variables/flowsheet_variable_component";
+import FlowsheetDiagnostics from "./flowsheet_diagnostics_component/flowsheet_diagnostics_component";
 import StreamTable from "./stream_table_component/stream_table";
 
 import { MainFV } from "./flowsheet_component/flowsheet_functions/mainFV";
@@ -51,8 +50,7 @@ export default function FlowsheetWrapper(){
               {
                 isDiagnosticsShow && 
                 <Panel defaultSize={30} minSize={0}>
-                  {/* <FlowsheetVariablesHeader />
-                  <Flowsheet_variable /> */}
+                  <FlowsheetDiagnostics />
                 </Panel>
               }
             </PanelGroup>
