@@ -64,7 +64,7 @@ export class JointJsCellConfig {
     routerGapFnFactory(gap:sourceDestinatio) {
         // Link router functions in JointJS execute automatically when their
         // elements that they are connected to rotate.
-        var router_fn = (vertices:any, opt:any, linkView:any) => {
+        let router_fn = (vertices:any, opt:any, linkView:any) => {
 
             const src = linkView.getEndAnchor('source');
             const tgt = linkView.getEndAnchor('target');

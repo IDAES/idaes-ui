@@ -18,8 +18,8 @@
  * class.
  */
 import {labelStyleLabelOn, labelStyleLabelOff, labelIndex, slinkLabelIndex} from "./data/jjsLabelStyle";
-declare var joint: any;
-declare var self: any;
+declare let joint: any;
+declare let self: any;
 
 export class Paper {
     _app:any;
@@ -217,15 +217,15 @@ export class Paper {
             let idaesCanvas = document.querySelector('#fv');
             if(!streamTable || !idaesCanvas) return;
             
-            var verticesTool = new joint.linkTools.Vertices({
+            let verticesTool = new joint.linkTools.Vertices({
                 focusOpacity: 0.5,
                 redundancyRemoval: true,
                 snapRadius: 20,
                 vertexAdding: true,
             });
-            var segmentsTool = new joint.linkTools.Segments();
+            let segmentsTool = new joint.linkTools.Segments();
 
-            var toolsView = new joint.dia.ToolsView({
+            let toolsView = new joint.dia.ToolsView({
                 tools: [
                     verticesTool, segmentsTool
                 ]

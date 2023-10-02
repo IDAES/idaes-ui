@@ -24,7 +24,7 @@ export default function TableRow() {
         isFlowsheetDataLoaded = true
     }
   }
-
+  var a = 22
   function renderModelToTable(isFlowsheetDataLoaded:boolean){
     if(!isFlowsheetDataLoaded){
       return

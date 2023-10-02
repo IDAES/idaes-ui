@@ -18,7 +18,7 @@
  * the data filling and data styling for each cell in the grid.
  */
 type EventHandler = (event: MouseEvent) => void;
-declare var agGrid: any;
+declare let agGrid: any;
 
 type StreamTableMouseEvent = MouseEvent & {
     detail: CustomDetail;
@@ -279,7 +279,7 @@ export class StreamTable {
         if(!streamTable || !idaesCanvas) return;
         // Function to highlight a stream table column
         this.highlightFn = (event:any) => {
-            var streamGridCells = streamTable!.querySelectorAll(
+            let streamGridCells = streamTable!.querySelectorAll(
                 `[col-id=${event.detail.streamId}]`
             );
             
@@ -299,7 +299,7 @@ export class StreamTable {
         // Function to undo the highlighting of a stream table column
         this.removeHighlightFn = (event: StreamTableMouseEvent) => {
             console.log(`remove hight light`)
-            var streamGridCells = streamTable!.querySelectorAll(
+            let streamGridCells = streamTable!.querySelectorAll(
                 `[col-id=${event.detail.streamId}]`
             );
             streamGridCells.forEach((gridCell) => {

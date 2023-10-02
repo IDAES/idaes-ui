@@ -20,7 +20,7 @@
  * graph.
  */
 
-declare var joint:any;
+declare let joint:any;
 import {labelStyleLabelOn, labelStyleLabelOff, labelIndex, slinkLabelIndex} from "./data/jjsLabelStyle";
 
 export class Toolbar { 
