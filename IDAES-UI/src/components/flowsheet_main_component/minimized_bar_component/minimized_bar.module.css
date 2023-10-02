@@ -1,5 +1,6 @@
 .minimized_bar_container{
   width: 100%;
+  border-bottom: 1px solid black;
 }
 
 .minimized_bar_ul{
