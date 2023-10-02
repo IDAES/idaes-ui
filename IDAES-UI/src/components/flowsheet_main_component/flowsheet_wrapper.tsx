@@ -17,7 +17,7 @@ export default function FlowsheetWrapper(){
 
   let {server_port, fv_id, panelState} = useContext(AppContext);
   const isFvShow:boolean = panelState.fv.show;
-  // const isVariablesShow:boolean = panelState.variables.show;
+  const isDiagnosticsShow:boolean = panelState.diagnostics.show;
   const isStreamTableShow = panelState.streamTable.show;
 
   const panelShow = {display:"block"};
@@ -47,13 +47,13 @@ export default function FlowsheetWrapper(){
                 </Panel>
               
               {/*this part closed because the variable part is not in this round of release*/}
-              {/* <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/> */}
+              <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
               {
-                // isVariablesShow && 
-                // <Panel defaultSize={30} minSize={0}>
-                //   <FlowsheetVariablesHeader />
-                //   <Flowsheet_variable />
-                // </Panel>
+                isDiagnosticsShow && 
+                <Panel defaultSize={30} minSize={0}>
+                  {/* <FlowsheetVariablesHeader />
+                  <Flowsheet_variable /> */}
+                </Panel>
               }
             </PanelGroup>
           </Panel>
