@@ -57,7 +57,7 @@ export default function MinimizedBar(){
   const minimizedTags = renderMinimizedTags(panelState, blackList);
 
   return(
-      <div className={`${css.minimized_bar_container} pd-sm`}>
+      <div className={`${css.minimized_bar_container}`}>
         <ul className={`${css.minimized_bar_ul}`}>
           {minimizedTags}
         </ul>
