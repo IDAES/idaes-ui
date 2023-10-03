@@ -46,7 +46,9 @@ export default function FlowsheetWrapper(){
                 </Panel>
               
               {/*this part closed because the variable part is not in this round of release*/}
-              <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
+              {
+                isDiagnosticsShow && <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
+              }
               {
                 isDiagnosticsShow && 
                 <Panel defaultSize={30} minSize={0}>
