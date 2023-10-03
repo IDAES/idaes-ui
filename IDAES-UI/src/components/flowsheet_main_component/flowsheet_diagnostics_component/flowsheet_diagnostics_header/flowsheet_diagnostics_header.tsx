@@ -9,7 +9,7 @@ import { VariablesExpandStateInterface } from "../../../../interface/appMainCont
 import css from "./flowsheet_diagnostics_header.module.css";
 
 export default function DiagnosticsHeader(){
-    const {panelState} = useContext(AppContext);
+    const {panelState, setPanelState} = useContext(AppContext);
     const isFvShow = panelState.fv.show;
     //if flowsheet, read it's height assign to variable.
     let flowsheetHeaderHeight = getFlowSheetHeaderHeight(isFvShow);
@@ -30,14 +30,52 @@ export default function DiagnosticsHeader(){
         }
     }
 
+    /**
+     * @description handle btn click full screen diagnostics panel
+     */
+    function diagnosticsPanelMaxmizeHandler(){
+        setPanelState((prev:any)=>{
+            const copyState = {...prev};
+            Object.keys(copyState).forEach(el=>{
+                if(el !== "diagnostics"){
+                    copyState[el].show = false;
+                }
+            })
+
+            return copyState;
+        })
+    }
+
+    /**
+     * @description handle btn click minimize diagnostics panel
+     */
+    function diagnosticsPanelMinimizeHandler(){
+        setPanelState((prev:any)=>{
+            const copyState = {...prev};
+            Object.keys(copyState).forEach(el=>{
+                if(el === "diagnostics"){
+                    copyState[el].show = false;
+                }
+            })
+
+            return copyState;
+        })
+    }
+
     return(
         <div className={`pd-md ${css.diagnosticsHeader_main_container}`} style={{height: flowsheetHeaderHeight}}>
             <p className={`${css.diagnostics_title}`}>DIAGNOSTICS</p>
             <div className={css.diagnosticsHeader_icon_container}>
-                <span className={`pd-sm ${css.diagnosticsHeader_icon} ${css.diagnosticsHeader_small_icon}`}>
+                <span className={`pd-sm ${css.diagnosticsHeader_icon} 
+                    ${css.diagnosticsHeader_small_icon}`}
+                    onClick={diagnosticsPanelMaxmizeHandler}
+                >
                 <FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
                 </span>
-                <span className={`pd-sm ${css.diagnosticsHeader_icon} ${css.diagnosticsHeader_small_icon}`}>
+                <span className={`pd-sm ${css.diagnosticsHeader_icon} 
+                    ${css.diagnosticsHeader_small_icon}`}
+                    onClick={diagnosticsPanelMinimizeHandler}
+                >
                 <FontAwesomeIcon icon={faMinus} />
                 </span>
             </div>
