@@ -9,19 +9,21 @@ import { VariablesExpandStateInterface } from "../../../../interface/appMainCont
 import css from "./flowsheet_diagnostics_header.module.css";
 
 export default function DiagnosticsHeader(){
+    const {panelState} = useContext(AppContext);
+    const isFvShow = panelState.fv.show;
     //if flowsheet, read it's height assign to variable.
-    let flowsheetHeaderHeight = getFlowSheetHeaderHeight();
+    let flowsheetHeaderHeight = getFlowSheetHeaderHeight(isFvShow);
 
     /**
      * @description: Check if flowsheet exist then read its height and assign to a variable to return. this function prevent the diagnostics header is shorter than the flowsheet header.
      * @returns string of flowsheet height with px -> eg. 60px 
      */
-    function getFlowSheetHeaderHeight(){
+    function getFlowSheetHeaderHeight(isFvShow:boolean){
         const flowsheetHeader:HTMLElement | null = document.getElementById("flowsheetHeader");
         let flowsheetHeight = "auto";
 
-        if(flowsheetHeader){
-            flowsheetHeight = flowsheetHeader.clientHeight + "px";
+        if(flowsheetHeader && isFvShow){
+            flowsheetHeight = Math.ceil(flowsheetHeader.clientHeight) + .5 + "px";
             return flowsheetHeight;
         }else{
             return flowsheetHeight;
