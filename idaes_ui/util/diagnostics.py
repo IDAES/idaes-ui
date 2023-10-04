@@ -159,6 +159,7 @@ class ModelStats(BaseModel):
 # Wrap model_diagnostics module
 # =============================
 
+
 class DiagnosticsError(Exception):
     def __init__(self, name, details=None):
         msg = f"Diagnostic '{name}' failed"
@@ -207,6 +208,7 @@ class ModelIssueVariable(ModelIssueBase):
 
     type: ModelObjectType = ModelObjectType.var
     value: float = 0.0
+    fixed: bool = False
 
 
 class ModelIssueVariableBounded(ModelIssueBase):
@@ -227,6 +229,7 @@ class ModelIssueConstraint(ModelIssueBase):
     body: str  # string-ized version of the constraint
     # TODO: Add more information about the constraint
 
+
 # Model issue
 
 
@@ -235,7 +238,9 @@ class ModelIssue(BaseModel):
     severity: Severity
     name: str = ""
     description: str = ""
-    objects: List[Union[ModelIssueVariable, ModelIssueVariableBounded, ModelIssueConstraint]] = []
+    objects: List[
+        Union[ModelIssueVariable, ModelIssueVariableBounded, ModelIssueConstraint]
+    ] = []
 
 
 # Container for list of model issues
@@ -256,11 +261,12 @@ class ModelIssues(BaseModel):
         self._add_structural_singularities()
         self._add_extreme_values()
         self._add_variables_near_bounds()
+        self._add_not_in_act_constr()
 
     def _add_extreme_values(self):
         c = self._config
         objs = [
-            ModelIssueVariable(name=v.name, value=v.value)
+            ModelIssueVariable(name=v.name, value=v.value, fixed=v.fixed)
             for v in imd._vars_with_extreme_values(
                 model=self._block,
                 large=c.variable_large_value_tolerance,
@@ -299,7 +305,7 @@ class ModelIssues(BaseModel):
                 name=v.name,
                 type=ModelObjectType.bounded_var,
                 value=value(v),
-                **self._bounds_kwargs(v.bounds)
+                **self._bounds_kwargs(v.bounds),
             )
             issue.objects.append(vb)
         self.issues.append(issue)
@@ -310,7 +316,7 @@ class ModelIssues(BaseModel):
             "lower": bounds[0],
             "upper": bounds[1],
             "has_lower": bounds[0] is not None,
-            "has_upper": bounds[1] is not None
+            "has_upper": bounds[1] is not None,
         }
 
     def _add_inconsistent_units(self):
@@ -331,34 +337,66 @@ class ModelIssues(BaseModel):
     def _add_structural_singularities(self):
         items = self._tbx.get_dulmage_mendelsohn_partition()
         if sum(map(bool, items)) == 0:
-            print("@@ no singularities!!")
             return
-        issue = ModelIssue(
-            type=ModelIssueType.structural,
-            name="structural-signularity",
-            severity=Severity.warning,
-            description="Structural singularity"
-        )
         n = ("under", "over") * 2
         t = ("variable", "constraint") * 2
         for i, name, thing in zip(range(4), n, t):
             obj_set = items[i]
             if len(obj_set) == 0:
                 continue
-            full_type = f"{name}-constrained {thing}"
+            plural = "" if len(obj_set) == 1 else "s"
+            full_type = f"{name}-constrained-{thing}"
+            issue = ModelIssue(
+                type=ModelIssueType.structural,
+                name=full_type,
+                severity=Severity.warning,
+                description=f"Structural singularity: {name}-constrained {thing}{plural}",
+            )
             for obj in obj_set:
                 obj_list = []
                 if thing == "variable":
                     if hasattr(thing, "value"):
-                        obj_list = [ModelIssueVariable(name=f"{full_type} {obj.name}", value=obj.value)]
+                        obj_list = [
+                            ModelIssueVariable(
+                                name=f"{full_type} {obj.name}", value=obj.value, fixed=obj.fixed
+                            )
+                        ]
                     else:
-                        obj_list = [ModelIssueVariable(name=f"{full_type} {o.name}", value=o.value) for o in obj]
+                        obj_list = [
+                            ModelIssueVariable(
+                                name=f"{full_type} {o.name}", value=o.value, fixed=o.fixed
+                            )
+                            for o in obj
+                        ]
                 elif thing == "constraint":
                     if hasattr(thing, "body"):
-                        obj_list = [ModelIssueConstraint(name=f"{full_type}", body=obj.body)]
+                        obj_list = [
+                            ModelIssueConstraint(name=f"{full_type}", body=obj.body)
+                        ]
                     else:
-                        obj_list = [ModelIssueConstraint(name=f"{full_type} [{i}]", body=str(o.body)) for i, o in enumerate(obj)]
+                        obj_list = [
+                            ModelIssueConstraint(
+                                name=f"{full_type} [{i}]", body=str(o.body)
+                            )
+                            for i, o in enumerate(obj)
+                        ]
                 issue.objects.extend(obj_list)
+
+            self.issues.append(issue)
+
+    def _add_not_in_act_constr(self):
+        unused = imd.variables_not_in_activated_constraints_set(self._block)
+        if not unused:
+            return
+        issue = ModelIssue(
+            type=ModelIssueType.structural,
+            severity=Severity.warning,
+            name="var-not-in-act-constr",
+            description="variables not in active constraints",
+        )
+        for v in unused:
+            obj = ModelIssueVariable(name=v.name, value=v.value, fixed=v.fixed)
+            issue.objects.append(obj)
         self.issues.append(issue)
 
 
