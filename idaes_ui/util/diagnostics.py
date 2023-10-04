@@ -236,6 +236,7 @@ class ModelIssueConstraint(ModelIssueBase):
 class ModelIssue(BaseModel):
     type: ModelIssueType
     severity: Severity
+    modifiers: Dict[str, str] = {}  # additional semi-structured info
     name: str = ""
     description: str = ""
     objects: List[
@@ -350,6 +351,7 @@ class ModelIssues(BaseModel):
                 type=ModelIssueType.structural,
                 name=full_type,
                 severity=Severity.warning,
+                modifiers={"constrained": name, "object-type": thing},
                 description=f"Structural singularity: {name}-constrained {thing}{plural}",
             )
             for obj in obj_set:
