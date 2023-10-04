@@ -98,7 +98,16 @@ export class Diagnostic_main{
      * @param data diagnosticsData
      */
     generateEachCategoryForDOM(sections:Array<string>, data:any){
+        //define known section to make sure when new section shows and not render has an error show.
+        const knownSection = ["config", "statistics", "issues"];
         sections.forEach((section)=>{
+            if(!knownSection.includes(section)){
+                //log error not throw error to prevent render block
+                console.log(`Warrning:`)
+                console.log(`The diagnostics section ${section} is now a known section, please check diagnostics_main.tsx generateEachCategoryForDOM()`);
+            }
+
+            //base on section name generate section.
             //generate DOM for config content
             if(section === 'config'){
                this.generateDOMForConfig(data);
@@ -217,7 +226,8 @@ export class Diagnostic_main{
 
 
     /**
-     * 
+     * @description generate issue content
+     * @param data the diagnostics JSON
      */
     generateDOMForIssues(data:any){
         //get where to generate DOM
@@ -265,15 +275,6 @@ export class Diagnostic_main{
                 })
                 categoryWrapper.append(issueDetailContainer);
             })
-            // //warpper
-            // const issueDetailWrapper = document.createElement("div");
-            // issueDetailWrapper.classList.add("diagnostics-issues_detail_wrapper");
-            // //issue name
-            // const issueDetailName = document.createElement("p");
-            // issueDetailName.classList.add("diagnostics-issue_detail_name");
-            // //issue value
-            // const issueDetailValue = document.createElement("p");
-            // issueDetailValue.classList.add("diagnostics-issue_detail_value");
         })
 
     }
