@@ -116,7 +116,6 @@
 .diagnostics-each_issue_detail{
     font-size: 15px;
     padding: 5px;
-    /* border: 1px solid #bcbcbc; */
 }
 
 .diagnostics-each_issue_name{
@@ -129,6 +128,14 @@
 
 .diagnostics-each_issue_detail{
     border-left: none;
+    overflow-x: scroll;
+}
+
+.diagnostics-each_issue_detail::-webkit-scrollbar{
+    display: none;;
+}
+.diagnostics-each_issue_detail::-moz-scrollbar{
+    display: none;;
 }
 
 .issue_serverity_caution{
