@@ -146,13 +146,23 @@ export class Diagnostic_main{
         const diagnosticConfigContentContainer = document.createElement("div");
         diagnosticConfigContentContainer.classList.add("diagnostics-section_content_container");
         configSection.appendChild(diagnosticConfigContentContainer);
-
+        
         //base on data.conf data create <p> insert to diagnosticConfigContentContainer
         Object.keys(data.config).forEach((eachConfig)=>{
+            let formatConfigKey = eachConfig.replace(/_/g, ' ');
             diagnosticConfigContentContainer.innerHTML += `
-                <p class="diagnostics_config_content">${eachConfig} : ${data.config[eachConfig]}</p>
+                <div class="diagnostics_config_each_container">
+                    <p class="diagnostics_config_key">${formatConfigKey}</p>
+                    <div class="diagnostics_config_value_container">
+                        <p class="diagnostics_config_tag_container">Value</p>
+                        <p class="diagnostics_config_content">${data.config[eachConfig]}</p>
+                    </div>
+                </div>
             `
         })
+
+        this.makeElementWithEqual(".diagnostics_config_key");
+        this.makeElementWithEqual(".diagnostics_config_key");
     }
 
     /**
@@ -176,7 +186,7 @@ export class Diagnostic_main{
 
         //define data key name map
         const rowNameMap = {
-            dof : "dof",
+            dof : "DoF",
             var : "variables",
             ineq : "inequalities",
             constr : "constraints",
@@ -279,4 +289,35 @@ export class Diagnostic_main{
 
     }
     //each DOM element generator end
+
+
+    /**
+     * @description this function can make all elememts with same css class selector have a same with, the longest with
+     * @param classSelector css class selector to select what elements you want to make their width equal
+     * @returns 
+     */
+    makeElementWithEqual(classSelector:string){
+        //read key's container length find longest one assign to all
+        const elements = document.querySelectorAll(classSelector) as NodeListOf<HTMLElement>;
+
+        //when no elements selected return
+        if(!elements){
+            console.log(`not find any element by "makeElementEqual(classSelector)"`);
+            return;
+        }
+
+        //get longestKeyContainer with
+        let longestKeyContainerWidth = 0;
+        elements.forEach(el=>{
+            if(el.clientWidth > longestKeyContainerWidth){
+                console.log(el.style.padding) 
+                longestKeyContainerWidth = el.clientWidth + 2;
+            }
+        });
+        
+        //assign longest key container with to all
+        elements.forEach((el:HTMLElement)=>{
+            el.style.width = `${longestKeyContainerWidth}px`;
+        });
+    }
 }
