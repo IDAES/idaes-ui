@@ -3,7 +3,8 @@
     flex-direction: column;
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 98%;
+    margin-bottom: 100px;
     overflow: scroll !important;
 }
 
@@ -125,7 +126,7 @@
 }
 
 /*issues*/
-.diagnpstics-issues_category{
+.diagnostics-issues_category{
     position: relative;
     margin-bottom: 20px;
     padding: 10px;
@@ -133,13 +134,26 @@
     border: 1px solid #bcbcbc;
 }
 
+.diagnostics-issues_category:hover{
+    cursor: pointer;
+}
+
+.diagnostics-issues_category:hover .diagnostics-issue_click_detail{
+    font-size: 16px;
+    color: #6d6d6d;
+    font-weight: bold;
+}
+
 .diagnostics-issue_title{
     text-transform: capitalize;
     margin-bottom: 4px;
 }
 
-.diagnostics-issues_detail_wrapper{
-
+.diagnostics-issue_click_detail{
+    width: 100%;
+    padding-top: 5px;
+    text-align: center;
+    transition: .3s ease-in-out;
 }
 
 .diagnostics-each_issue_detail_container{
@@ -148,8 +162,6 @@
     justify-content: flex-start;
     gap: 3px;
     margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #bcbcbc;
 }
 
 .diagnostics_each_issue_detail_row{
