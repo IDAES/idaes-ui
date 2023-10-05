@@ -360,25 +360,25 @@ class ModelIssues(BaseModel):
                     if hasattr(thing, "value"):
                         obj_list = [
                             ModelIssueVariable(
-                                name=f"{full_type} {obj.name}", value=obj.value, fixed=obj.fixed
+                                name=obj.name, value=obj.value, fixed=obj.fixed
                             )
                         ]
                     else:
                         obj_list = [
                             ModelIssueVariable(
-                                name=f"{full_type} {o.name}", value=o.value, fixed=o.fixed
+                                name=o.name, value=o.value, fixed=o.fixed
                             )
                             for o in obj
                         ]
                 elif thing == "constraint":
                     if hasattr(thing, "body"):
                         obj_list = [
-                            ModelIssueConstraint(name=f"{full_type}", body=obj.body)
+                            ModelIssueConstraint(name=obj.name, body=obj.body)
                         ]
                     else:
                         obj_list = [
                             ModelIssueConstraint(
-                                name=f"{full_type} [{i}]", body=str(o.body)
+                                name=f"{o.name}[{i}]", body=str(o.body)
                             )
                             for i, o in enumerate(obj)
                         ]
