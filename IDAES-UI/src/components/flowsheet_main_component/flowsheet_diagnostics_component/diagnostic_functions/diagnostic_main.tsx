@@ -236,7 +236,7 @@ export class Diagnostic_main{
 
 
     /**
-     * @description generate issue content
+     * @description generate issue overview content, the detail issue content is generate with the click event
      * @param data the diagnostics JSON
      */
     generateDOMForIssues(data:any){
@@ -258,35 +258,49 @@ export class Diagnostic_main{
         //get issues data
         const issuesData = data.issues.issues;
         //generate issues category
-        issuesData.forEach((eachIssue:any)=>{
+        issuesData.forEach((eachIssue:any,index:string)=>{
             //create serverity title and description
             const categoryWrapper = document.createElement("div");
-            categoryWrapper.classList.add("diagnpstics-issues_category");
+            categoryWrapper.classList.add("diagnostics-issues_category");
+            categoryWrapper.setAttribute("index", index)
+            //wrapper is <div class="diagnostics-issues_category"></div>
             categoryWrapper.innerHTML = `
-                <p class="diagnostics-issue_title issue_serverity_caution">${eachIssue["severity"]}:</p>
-                <p class="diagnostics-issue_title">Issue type: ${eachIssue["type"]}</p>
-                <p class="diagnostics-issue_title issue_description">Description: ${eachIssue["description"]}</p>
+            <p class="diagnostics-issue_title issue_serverity_caution">${eachIssue["severity"]}:</p>
+            <p class="diagnostics-issue_title">Issue type: ${eachIssue["type"]}</p>
+            <p class="diagnostics-issue_title issue_description">Description: ${eachIssue["description"]}</p>
+            <p class="diagnostics-issue_title">Type: ${eachIssue["objects"][0]["type"]}</p>
+            <div class="diagnostics-issue_click_detail">View Detail</div>
             `;
             diagnosticIssuesContentContainer.append(categoryWrapper);
-
-            //create issue detail
-            eachIssue["objects"].forEach((issueDetailObj:any)=>{
-                const issueDetailContainer = document.createElement("div");
-                issueDetailContainer.classList.add("diagnostics-each_issue_detail_container");
-
-                Object.keys(issueDetailObj).forEach((eachContent:string)=>{
-                    const dom = `
-                        <div class="diagnostics_each_issue_detail_row">
-                            <p class="diagnostics-each_issue_name">${eachContent}</p>
-                            <p class="diagnostics-each_issue_detail">${issueDetailObj[eachContent]}</p>
-                        </div>
-                    `;
-                    issueDetailContainer.innerHTML += dom;
-                })
-                categoryWrapper.append(issueDetailContainer);
+            diagnosticIssuesContentContainer.addEventListener("click", (event:MouseEvent)=>{
+                this.clickGenerateDetailForIssue(event)
             })
+            
+            // //create issue detail
+            // eachIssue["objects"].forEach((issueDetailObj:any)=>{
+            //     const issueDetailContainer = document.createElement("div");
+            //     issueDetailContainer.classList.add("diagnostics-each_issue_detail_container");
+                
+            //     //wrapper is <div class="diagnostics-each_issue_detail_container"></div>
+            //     Object.keys(issueDetailObj).forEach((eachContent:string)=>{
+            //         if(eachContent != "type"){
+            //             const dom = `
+            //                 <div class="diagnostics_each_issue_detail_row">
+            //                     <p class="diagnostics-each_issue_name">${eachContent}</p>
+            //                     <p class="diagnostics-each_issue_detail">${issueDetailObj[eachContent]}</p>
+            //                 </div>
+            //             `;
+            //             issueDetailContainer.innerHTML += dom;
+            //         }
+            //     })
+            //     categoryWrapper.append(issueDetailContainer);
+            // })
         })
 
+    }
+
+    clickGenerateDetailForIssue(event:MouseEvent){
+        console.log(`clicked ${event.target}`)
     }
     //each DOM element generator end
 
