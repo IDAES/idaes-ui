@@ -1,0 +1,1869 @@
+{
+  "model": {
+      "stream_table": {
+          "index": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+          ],
+          "columns": [
+              "Variable",
+              "Units",
+              "s01",
+              "s02",
+              "s03",
+              "s04",
+              "s05",
+              "s06"
+          ],
+          "data": [
+              [
+                  "Total Molar Flowrate",
+                  {
+                      "raw": "mole / second",
+                      "html": "mol/s",
+                      "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                  },
+                  [
+                      75,
+                      "unfixed"
+                  ],
+                  [
+                      234,
+                      "unfixed"
+                  ],
+                  [
+                      309.01236,
+                      "unfixed"
+                  ],
+                  [
+                      309.01236,
+                      "unfixed"
+                  ],
+                  [
+                      309.01236,
+                      "unfixed"
+                  ],
+                  [
+                      444.01657,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Total Mole Fraction CH4",
+                  {
+                      "raw": "dimensionless",
+                      "html": "",
+                      "latex": ""
+                  },
+                  [
+                      1,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.24272,
+                      "unfixed"
+                  ],
+                  [
+                      0.24272,
+                      "unfixed"
+                  ],
+                  [
+                      0.24272,
+                      "unfixed"
+                  ],
+                  [
+                      0.01689,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Total Mole Fraction H2O",
+                  {
+                      "raw": "dimensionless",
+                      "html": "",
+                      "latex": ""
+                  },
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      1,
+                      "unfixed"
+                  ],
+                  [
+                      0.75725,
+                      "unfixed"
+                  ],
+                  [
+                      0.75725,
+                      "unfixed"
+                  ],
+                  [
+                      0.75725,
+                      "unfixed"
+                  ],
+                  [
+                      0.29075,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Total Mole Fraction H2",
+                  {
+                      "raw": "dimensionless",
+                      "html": "",
+                      "latex": ""
+                  },
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.54032,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Total Mole Fraction CO",
+                  {
+                      "raw": "dimensionless",
+                      "html": "",
+                      "latex": ""
+                  },
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.0678,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Total Mole Fraction CO2",
+                  {
+                      "raw": "dimensionless",
+                      "html": "",
+                      "latex": ""
+                  },
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      0.08424,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Temperature",
+                  {
+                      "raw": "kelvin",
+                      "html": "K",
+                      "latex": "\\mathrm{K}"
+                  },
+                  [
+                      298.15,
+                      "unfixed"
+                  ],
+                  [
+                      373.15,
+                      "unfixed"
+                  ],
+                  [
+                      353.80161,
+                      "unfixed"
+                  ],
+                  [
+                      423.34453,
+                      "unfixed"
+                  ],
+                  [
+                      423.34453,
+                      "unfixed"
+                  ],
+                  [
+                      910.04371,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Pressure",
+                  {
+                      "raw": "pascal",
+                      "html": "Pa",
+                      "latex": "\\mathrm{Pa}"
+                  },
+                  [
+                      100000,
+                      "unfixed"
+                  ],
+                  [
+                      100000,
+                      "unfixed"
+                  ],
+                  [
+                      99999.9995,
+                      "unfixed"
+                  ],
+                  [
+                      199999.998,
+                      "unfixed"
+                  ],
+                  [
+                      199999.998,
+                      "unfixed"
+                  ],
+                  [
+                      199999.998,
+                      "unfixed"
+                  ]
+              ]
+          ]
+      },
+      "id": "Flowsheet-Name",
+      "unit_models": {
+          "CH4": {
+              "type": "feed",
+              "image": "/images/icons/feed.svg",
+              "performance_contents": {},
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Total Molar Flowrate",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 75
+                  },
+                  "1": {
+                      "Variable": "Total Mole Fraction CH4",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 1
+                  },
+                  "2": {
+                      "Variable": "Total Mole Fraction H2O",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "3": {
+                      "Variable": "Total Mole Fraction H2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "4": {
+                      "Variable": "Total Mole Fraction CO",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "5": {
+                      "Variable": "Total Mole Fraction CO2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "6": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Outlet": 298.15
+                  },
+                  "7": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Outlet": 100000
+                  }
+              }
+          },
+          "H2O": {
+              "type": "feed",
+              "image": "/images/icons/feed.svg",
+              "performance_contents": {},
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Total Molar Flowrate",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 234
+                  },
+                  "1": {
+                      "Variable": "Total Mole Fraction CH4",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "2": {
+                      "Variable": "Total Mole Fraction H2O",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 1
+                  },
+                  "3": {
+                      "Variable": "Total Mole Fraction H2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "4": {
+                      "Variable": "Total Mole Fraction CO",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "5": {
+                      "Variable": "Total Mole Fraction CO2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "6": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Outlet": 373.15
+                  },
+                  "7": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Outlet": 100000
+                  }
+              }
+          },
+          "PROD": {
+              "type": "product",
+              "image": "/images/icons/product.svg",
+              "performance_contents": {},
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Total Molar Flowrate",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 444.01657
+                  },
+                  "1": {
+                      "Variable": "Total Mole Fraction CH4",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.01689
+                  },
+                  "2": {
+                      "Variable": "Total Mole Fraction H2O",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.29075
+                  },
+                  "3": {
+                      "Variable": "Total Mole Fraction H2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.54032
+                  },
+                  "4": {
+                      "Variable": "Total Mole Fraction CO",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.0678
+                  },
+                  "5": {
+                      "Variable": "Total Mole Fraction CO2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.08424
+                  },
+                  "6": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Inlet": 910.04371
+                  },
+                  "7": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Inlet": 199999.998
+                  }
+              }
+          },
+          "M101": {
+              "type": "mixer",
+              "image": "/images/icons/mixer.svg",
+              "performance_contents": {},
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Total Molar Flowrate",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "methane_feed": 75,
+                      "steam_feed": 234,
+                      "Outlet": 309.01236
+                  },
+                  "1": {
+                      "Variable": "Total Mole Fraction CH4",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "methane_feed": 1,
+                      "steam_feed": 0.00001,
+                      "Outlet": 0.24272
+                  },
+                  "2": {
+                      "Variable": "Total Mole Fraction H2O",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "methane_feed": 0.00001,
+                      "steam_feed": 1,
+                      "Outlet": 0.75725
+                  },
+                  "3": {
+                      "Variable": "Total Mole Fraction H2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "methane_feed": 0.00001,
+                      "steam_feed": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "4": {
+                      "Variable": "Total Mole Fraction CO",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "methane_feed": 0.00001,
+                      "steam_feed": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "5": {
+                      "Variable": "Total Mole Fraction CO2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "methane_feed": 0.00001,
+                      "steam_feed": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "6": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "methane_feed": 298.15,
+                      "steam_feed": 373.15,
+                      "Outlet": 353.80161
+                  },
+                  "7": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "methane_feed": 100000,
+                      "steam_feed": 100000,
+                      "Outlet": 99999.9995
+                  }
+              }
+          },
+          "H101": {
+              "type": "heater",
+              "image": "/images/icons/heater_2.svg",
+              "performance_contents": {
+                  "0": {
+                      "Variable": "Heat Duty",
+                      "Value": 0
+                  }
+              },
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Total Molar Flowrate",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 309.01236,
+                      "Outlet": 309.01236
+                  },
+                  "1": {
+                      "Variable": "Total Mole Fraction CH4",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.24272,
+                      "Outlet": 0.24272
+                  },
+                  "2": {
+                      "Variable": "Total Mole Fraction H2O",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.75725,
+                      "Outlet": 0.75725
+                  },
+                  "3": {
+                      "Variable": "Total Mole Fraction H2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "4": {
+                      "Variable": "Total Mole Fraction CO",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "5": {
+                      "Variable": "Total Mole Fraction CO2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "6": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Inlet": 423.34453,
+                      "Outlet": 423.34453
+                  },
+                  "7": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Inlet": 199999.998,
+                      "Outlet": 199999.998
+                  }
+              }
+          },
+          "C101": {
+              "type": "pressure_changer",
+              "image": "/images/icons/compressor.svg",
+              "performance_contents": {
+                  "0": {
+                      "Variable": "Mechanical Work",
+                      "Value": 754713.83983
+                  },
+                  "1": {
+                      "Variable": "Pressure Change",
+                      "Value": 99999.9985
+                  },
+                  "2": {
+                      "Variable": "Pressure Ratio",
+                      "Value": 2
+                  },
+                  "3": {
+                      "Variable": "Isentropic Efficiency",
+                      "Value": 0.9
+                  }
+              },
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Total Molar Flowrate",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 309.01236,
+                      "Outlet": 309.01236
+                  },
+                  "1": {
+                      "Variable": "Total Mole Fraction CH4",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.24272,
+                      "Outlet": 0.24272
+                  },
+                  "2": {
+                      "Variable": "Total Mole Fraction H2O",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.75725,
+                      "Outlet": 0.75725
+                  },
+                  "3": {
+                      "Variable": "Total Mole Fraction H2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "4": {
+                      "Variable": "Total Mole Fraction CO",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "5": {
+                      "Variable": "Total Mole Fraction CO2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.00001
+                  },
+                  "6": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Inlet": 353.80161,
+                      "Outlet": 423.34453
+                  },
+                  "7": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Inlet": 99999.9995,
+                      "Outlet": 200000
+                  }
+              }
+          },
+          "R101": {
+              "type": "equilibrium_reactor",
+              "image": "/images/icons/reactor_e.svg",
+              "performance_contents": {
+                  "0": {
+                      "Variable": "Heat Duty",
+                      "Value": 32485769.75327
+                  }
+              },
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Total Molar Flowrate",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 309.01236,
+                      "Outlet": 444.01657
+                  },
+                  "1": {
+                      "Variable": "Total Mole Fraction CH4",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.24272,
+                      "Outlet": 0.01689
+                  },
+                  "2": {
+                      "Variable": "Total Mole Fraction H2O",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.75725,
+                      "Outlet": 0.29075
+                  },
+                  "3": {
+                      "Variable": "Total Mole Fraction H2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.54032
+                  },
+                  "4": {
+                      "Variable": "Total Mole Fraction CO",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.0678
+                  },
+                  "5": {
+                      "Variable": "Total Mole Fraction CO2",
+                      "Units": {
+                          "raw": "dimensionless",
+                          "html": "",
+                          "latex": ""
+                      },
+                      "Inlet": 0.00001,
+                      "Outlet": 0.08424
+                  },
+                  "6": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Inlet": 423.34453,
+                      "Outlet": 910.04371
+                  },
+                  "7": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Inlet": 199999.998,
+                      "Outlet": 199999.998
+                  }
+              }
+          }
+      },
+      "arcs": {
+          "s01": {
+              "source": "CH4",
+              "dest": "M101",
+              "label": "Total molar flowrate 75.0\nTotal mole fraction CH4 1.0\nTotal mole fraction H2O 1e-05\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 298.15\nPressure 100000."
+          },
+          "s02": {
+              "source": "H2O",
+              "dest": "M101",
+              "label": "Total molar flowrate 234.0\nTotal mole fraction CH4 1e-05\nTotal mole fraction H2O 1.0\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 373.15\nPressure 100000."
+          },
+          "s03": {
+              "source": "M101",
+              "dest": "C101",
+              "label": "Total molar flowrate 309.01236\nTotal mole fraction CH4 0.24272\nTotal mole fraction H2O 0.75725\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 353.80161\nPressure 99999.999"
+          },
+          "s04": {
+              "source": "C101",
+              "dest": "H101",
+              "label": "Total molar flowrate 309.01236\nTotal mole fraction CH4 0.24272\nTotal mole fraction H2O 0.75725\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 423.34453\nPressure 199999.99"
+          },
+          "s05": {
+              "source": "H101",
+              "dest": "R101",
+              "label": "Total molar flowrate 309.01236\nTotal mole fraction CH4 0.24272\nTotal mole fraction H2O 0.75725\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 423.34453\nPressure 199999.99"
+          },
+          "s06": {
+              "source": "R101",
+              "dest": "PROD",
+              "label": "Total molar flowrate 444.01657\nTotal mole fraction CH4 0.01689\nTotal mole fraction H2O 0.29075\nTotal mole fraction H2 0.54032\nTotal mole fraction CO 0.0678\nTotal mole fraction CO2 0.08424\nTemperature 910.04371\nPressure 199999.99"
+          }
+      }
+  },
+  "cells": [
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 0,
+              "y": -120
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "CH4",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 48,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "out",
+                      "id": 0
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/feed.svg"
+              },
+              "label": {
+                  "text": "CH4"
+              },
+              "root": {
+                  "title": "feed"
+              }
+          }
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 150,
+              "y": 0
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "M101",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {}
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  },
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 48,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 1
+                  },
+                  {
+                      "group": "in",
+                      "id": 3
+                  },
+                  {
+                      "group": "out",
+                      "id": 4
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/mixer.svg"
+              },
+              "label": {
+                  "text": "M101"
+              },
+              "root": {
+                  "title": "mixer"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "CH4",
+              "port": 0
+          },
+          "target": {
+              "id": "M101",
+              "port": 1
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s01",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Total molar flowrate 75.0\nTotal mole fraction CH4 1.0\nTotal mole fraction H2O 1e-05\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 298.15\nPressure 100000.",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s01"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 0,
+              "y": 120
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "H2O",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 48,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "out",
+                      "id": 2
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/feed.svg"
+              },
+              "label": {
+                  "text": "H2O"
+              },
+              "root": {
+                  "title": "feed"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "H2O",
+              "port": 2
+          },
+          "target": {
+              "id": "M101",
+              "port": 3
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s02",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Total molar flowrate 234.0\nTotal mole fraction CH4 1e-05\nTotal mole fraction H2O 1.0\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 373.15\nPressure 100000.",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s02"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 300,
+              "y": 0
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "C101",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": -1,
+                              "y": 25
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  },
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 49,
+                              "y": 25
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 5
+                  },
+                  {
+                      "group": "out",
+                      "id": 6
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/compressor.svg"
+              },
+              "label": {
+                  "text": "C101"
+              },
+              "root": {
+                  "title": "pressure_changer"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "M101",
+              "port": 4
+          },
+          "target": {
+              "id": "C101",
+              "port": 5
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s03",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Total molar flowrate 309.01236\nTotal mole fraction CH4 0.24272\nTotal mole fraction H2O 0.75725\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 353.80161\nPressure 99999.999",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s03"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 303,
+              "y": 105
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "H101",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 6,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  },
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 43,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 7
+                  },
+                  {
+                      "group": "out",
+                      "id": 8
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/heater_2.svg"
+              },
+              "label": {
+                  "text": "H101"
+              },
+              "root": {
+                  "title": "heater"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "C101",
+              "port": 6
+          },
+          "target": {
+              "id": "H101",
+              "port": 7
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s04",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Total molar flowrate 309.01236\nTotal mole fraction CH4 0.24272\nTotal mole fraction H2O 0.75725\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 423.34453\nPressure 199999.99",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s04"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 458,
+              "y": 13
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "R101",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 5,
+                              "y": 10,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  },
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 45,
+                              "y": 45,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 9
+                  },
+                  {
+                      "group": "out",
+                      "id": 10
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/reactor_e.svg"
+              },
+              "label": {
+                  "text": "R101"
+              },
+              "root": {
+                  "title": "equilibrium_reactor"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "H101",
+              "port": 8
+          },
+          "target": {
+              "id": "R101",
+              "port": 9
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s05",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Total molar flowrate 309.01236\nTotal mole fraction CH4 0.24272\nTotal mole fraction H2O 0.75725\nTotal mole fraction H2 1e-05\nTotal mole fraction CO 1e-05\nTotal mole fraction CO2 1e-05\nTemperature 423.34453\nPressure 199999.99",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s05"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 590,
+              "y": -2
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "PROD",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 2,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 11
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/product.svg"
+              },
+              "label": {
+                  "text": "PROD"
+              },
+              "root": {
+                  "title": "product"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "R101",
+              "port": 10
+          },
+          "target": {
+              "id": "PROD",
+              "port": 11
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s06",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Total molar flowrate 444.01657\nTotal mole fraction CH4 0.01689\nTotal mole fraction H2O 0.29075\nTotal mole fraction H2 0.54032\nTotal mole fraction CO 0.0678\nTotal mole fraction CO2 0.08424\nTemperature 910.04371\nPressure 199999.99",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s06"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      }
+  ],
+  "routing_config": {
+      "s01": {
+          "cell_index": 2,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s02": {
+          "cell_index": 4,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s03": {
+          "cell_index": 6,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s04": {
+          "cell_index": 8,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s05": {
+          "cell_index": 10,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s06": {
+          "cell_index": 12,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      }
+  }
+}

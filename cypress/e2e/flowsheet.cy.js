@@ -4,6 +4,6 @@ describe('flowsheet visualizer spec', () => {
   });
   it('has jointjs diagram', () => {
     cy.visit(Cypress.config('baseUrl'));
-    cy.get('#idaes-canvas div.joint-paper svg');
+    cy.get('#fv div.joint-paper svg');
   });
 })

@@ -11,6 +11,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+!IDAES-UI/dist/
 downloads/
 eggs/
 .eggs/
@@ -137,3 +138,6 @@ dmypy.json
 # auto generated files
 sample_visualization.json
 shared_variable.json
+
+# cypress
+screenshots
