@@ -122,8 +122,8 @@ class ModelStats(BaseModel):
             self.block.deact.value = ims.number_deactivated_blocks(b)
             # expressions
             self.expr.value = ims.number_expressions(b)
-        except Exception as e:
-            raise StatisticsUpdateError()
+        except Exception as err:
+            raise StatisticsUpdateError(details=str(err))
 
     def as_table(self) -> DataFrame:
         """Transform model information into a table.
@@ -134,8 +134,8 @@ class ModelStats(BaseModel):
                 1. type = Main type, e.g. 'var' for variables
                 2. subtypes = Comma-separated list of subtypes, e.g. 'fixed,unused'.
                    If empty, this is the total for the type.
-                3. attr = For convenience, the type + subtypes as a dot-separated attribute.
-                   Simply add ".value" to fetch value
+                3. attr = For convenience, the type + subtypes as a dot-separated
+                   attribute. Simply add ".value" to fetch value
                 4. value = Count for this combination of type and subtype(s)
         """
         a = []
@@ -143,16 +143,20 @@ class ModelStats(BaseModel):
             for subtypes, val in self._as_table_subtypes(info, ()):
                 attr_name = ".".join([type_] + list(subtypes))
                 a.append((type_, ",".join(subtypes), attr_name, val))
-        return DataFrame(data=a, columns=("type", "subtypes", "attr", "value"))
+        return DataFrame(data=a, columns=["type", "subtypes", "attr", "value"])
 
     @classmethod
-    def _as_table_subtypes(cls, info, subtypes) -> Tuple[Tuple[str], float]:
+    def _as_table_subtypes(
+        cls, info: Dict[str, Union[Dict, float]], subtypes: Tuple[str] | Tuple
+    ) -> List[Tuple[Tuple[str], float]]:
         result = []
         for key in info:
             if key == "value":
                 result.append((subtypes, info[key]))
             else:
-                result.extend(cls._as_table_subtypes(info[key], subtypes + (key,)))
+                nested_types = tuple(list(subtypes) + [key])  # for type-checker
+                nested_result = cls._as_table_subtypes(info[key], nested_types)
+                result.extend(nested_result)
         return result
 
 
@@ -372,9 +376,7 @@ class ModelIssues(BaseModel):
                         ]
                 elif thing == "constraint":
                     if hasattr(thing, "body"):
-                        obj_list = [
-                            ModelIssueConstraint(name=obj.name, body=obj.body)
-                        ]
+                        obj_list = [ModelIssueConstraint(name=obj.name, body=obj.body)]
                     else:
                         obj_list = [
                             ModelIssueConstraint(
