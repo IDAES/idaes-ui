@@ -20,7 +20,6 @@ from pandas import DataFrame
 # Import IDAES functionality (use shortened names, i=IDAES m=model)
 from idaes.core.util import model_statistics as ims
 from idaes.core.util import model_diagnostics as imd
-from idaes.core.util.scaling import get_jacobian, jacobian_cond
 
 # Import other needed IDAES types
 from pyomo.core.base.block import _BlockData
@@ -356,7 +355,8 @@ class ModelIssues(BaseModel):
                 name=full_type,
                 severity=Severity.warning,
                 modifiers={"constrained": name, "object-type": thing},
-                description=f"Structural singularity: {name}-constrained {thing}{plural}",
+                description=f"Structural singularity: "
+                            f"{name}-constrained {thing}{plural}",
             )
             for obj in obj_set:
                 obj_list = []
@@ -402,76 +402,6 @@ class ModelIssues(BaseModel):
             obj = ModelIssueVariable(name=v.name, value=v.value, fixed=v.fixed)
             issue.objects.append(obj)
         self.issues.append(issue)
-
-
-# class StructuralIssues_orig(BaseModel):
-#     """Structural issues with a model."""
-#
-#     warnings: List[str]
-#     cautions: List[str]
-#     next_steps: List[str]
-#
-#
-# class ModelDiagnosticsRunner:
-#     """Interface to the IDAES `model_diagnostics` module."""
-#
-#     def __init__(self, block: _BlockData, **kwargs):
-#         self.block = block
-#         self.tb = imd.DiagnosticsToolbox(block, **kwargs)
-#
-#     _warnings_expr = re.compile(r"WARNING:\s+(.*)")
-#     _cautions_expr = re.compile(r"Caution:\s+(.*)")
-#
-#     def _clean_messages(self, warnings, cautions):
-#         """Remove useless prefixes from messages"""
-#         cleaned_warnings = []
-#         for item in warnings:
-#             m = self._warnings_expr.match(item)
-#             cleaned_warnings.append(m.group(1) if m else item)
-#         cleaned_cautions = []
-#         for item in cautions:
-#             m = self._cautions_expr.match(item)
-#             cleaned_cautions.append(m.group(1) if m else item)
-#         return cleaned_warnings, cleaned_cautions
-#
-#     @property
-#     def structural_issues(self) -> StructuralIssues:
-#         """Compute and return structural issues with the model."""
-#         try:
-#             warnings, next_steps = self.tb._collect_structural_warnings()
-#             cautions = self.tb._collect_structural_cautions()
-#         except Exception as e:
-#             raise DiagnosticsError(
-#                 "structural_issues", details=f"while getting warnings and cautions: {e}"
-#             )
-#         warnings, cautions = self._clean_messages(warnings, cautions)
-#         return StructuralIssues(
-#             warnings=warnings, cautions=cautions, next_steps=next_steps
-#         )
-#
-#     @property
-#     def numerical_issues(self) -> NumericalIssues:
-#         """Compute and return numerical issues with the model."""
-#         try:
-#             jac, nlp = get_jacobian(self.block, scaled=False)
-#         except Exception as e:
-#             raise DiagnosticsError(
-#                 "numerical_issues", details=f"while getting jacobian: {e}"
-#             )
-#         try:
-#             warnings, next_steps = self.tb._collect_numerical_warnings(jac=jac, nlp=nlp)
-#             cautions = self.tb._collect_numerical_cautions(jac=jac, nlp=nlp)
-#         except Exception as e:
-#             raise DiagnosticsError(
-#                 "numerical_issues", details=f"while getting warnings and cautions: {e}"
-#             )
-#         warnings, cautions = self._clean_messages(warnings, cautions)
-#         return NumericalIssues(
-#             warnings=warnings,
-#             cautions=cautions,
-#             next_steps=next_steps,
-#             jacobian_cond=jacobian_cond(jac=jac, scaled=False),
-#         )
 
 
 class DiagnosticsData(BaseModel):

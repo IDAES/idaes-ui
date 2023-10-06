@@ -2,7 +2,7 @@
 Tests for the diagnostics wrapper
 """
 import pytest
-from idaes_ui.util.diagnostics import ModelStats, ModelIssues
+from idaes_ui.fv.api.diag_models import ModelStats, ModelIssues
 from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
 
 
