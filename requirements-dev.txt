@@ -1,4 +1,6 @@
 --editable .[dev]
 idaes-pse @ git+https://github.com/IDAES/idaes-pse@main
 pydantic~=2.0
+fastapi
+uvicorn
 pytest-icdiff >= 0.7  # readable dict diffs for test_flowsheet and others
