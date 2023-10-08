@@ -4,23 +4,22 @@ import uvicorn
 
 from pathlib import Path
 
-_root_dir = Path(__file__).parent.parent.absolute()
-_static_dir = _root_dir / "static"
 
 from idaes_ui.fv.api import DiagnosticsData, DiagnosticsError
 
 
-def start_server(flowsheet, port: int = 8000) -> FastAPI:
+class FlowsheetServer:
+    _root_dir = Path(__file__).parent.parent.absolute()
+    _static_dir = _root_dir / "static"
 
-    app = FastAPI()
-    app.mount("/static", StaticFiles(directory=_static_dir), name="static")
+    def __init__(self, flowsheet):
+        self.app = FastAPI()
+        self.app.mount("/static", StaticFiles(directory=self._static_dir), name="static")
+        self.diag_data = DiagnosticsData(flowsheet)
 
-    diag_data = DiagnosticsData(flowsheet)
+        @self.app.get("/diagnostics/")
+        async def get_diagnostics() -> DiagnosticsData:
+            return self.diag_data
 
-    @app.get("/diagnostics/")
-    async def get_diagnostics() -> DiagnosticsData:
-        return diag_data
-
-    uvicorn.run(app, host="127.0.0.1", port=port)
-
-    return app
+    def start_server(self, port: int = 8000):
+        uvicorn.run(self.app, host="127.0.0.1", port=port)
