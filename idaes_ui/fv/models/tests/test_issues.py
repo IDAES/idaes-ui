@@ -1,9 +1,9 @@
 """
-Tests for the diagnostics wrapper
+Tests for issues module
 """
 import pytest
-from idaes_ui.fv.api.diag_models import ModelStats, ModelIssues
 from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
+from ..issues import *
 
 
 @pytest.fixture
@@ -12,9 +12,19 @@ def flowsheet():
 
 
 @pytest.mark.unit
-def test_stats(flowsheet):
-    stats = ModelStats(block=flowsheet)
-    assert stats.var.value > 100
+def test_exc():
+    try:
+        raise DiagnosticsException(name="foo", details="hello")
+    except DiagnosticsException as err:
+        assert err.name == "foo"
+        assert err.details == "hello"
+
+
+@pytest.mark.unit
+def test_issues(flowsheet):
+    iss = ModelIssues(block=flowsheet)
+    iss.update()
+    assert len(iss.issues) > 0
 
 
 @pytest.mark.unit
@@ -31,3 +41,5 @@ def test_issues_singularity(flowsheet):
     iss.update()
     print(f"\nISSUES: {iss.model_dump_json()}\n")
     assert len(iss.issues) > 0
+
+
