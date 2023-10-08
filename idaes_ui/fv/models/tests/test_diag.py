@@ -2,13 +2,8 @@
 Tests for the diagnostics models
 """
 import pytest
-from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
 from ..diag import DiagnosticsData
-
-
-@pytest.fixture
-def flowsheet():
-    return idaes_demo_flowsheet()
+from . import flowsheet
 
 
 @pytest.mark.unit

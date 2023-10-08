@@ -2,7 +2,6 @@
 Wraps the functions of the IDAES core model diagnostics
 for easier consumption and use by the UI layer.
 """
-
 __author__ = "Dan Gunter"
 __created__ = "2023-10-08"
 
@@ -34,3 +33,4 @@ class DiagnosticsError(BaseModel):
     @classmethod
     def from_exception(cls, exc: DiagnosticsException):
         return cls(error_type=exc.name, error_message=exc.message, error_details=(exc.details or ""))
+
