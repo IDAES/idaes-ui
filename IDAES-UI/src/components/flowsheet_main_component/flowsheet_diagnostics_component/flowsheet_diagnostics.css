@@ -132,6 +132,7 @@
     padding: 10px;
     font-size: 14px;
     border: 1px solid #bcbcbc;
+    overflow-x: scroll;
 }
 
 .diagnostics-issues_category:hover{
@@ -156,15 +157,29 @@
     transition: .3s ease-in-out;
 }
 
-.diagnostics-each_issue_detail_container{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 3px;
-    margin-bottom: 20px;
+/*diagnostics issue table*/
+.diagnostics-issue_table{
+    width: 100%;
+    overflow-x: scroll;
 }
 
-.diagnostics_each_issue_detail_row{
+.diagnostics-issue_table_head > tr > th{
+    padding: 5px 15px;
+    background-color: #E2EFF7;
+    text-align: left;
+}
+
+.diagnostics-issue_table_body > tr > td{
+    border: 1px solid #c5c5c5;
+}
+
+.diagnostics-issue_table_body > tr > td{
+    padding: 5px 15px;
+    border-bottom: 1px solid #c5c5c5;
+}
+
+
+/* .diagnostics_each_issue_detail_row{
     display: flex;
     flex-direction: row;
 }
@@ -205,4 +220,4 @@
 
 .issue_serverity_next{
     color: #53A892;
-}
+} */
