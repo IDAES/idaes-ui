@@ -76,7 +76,7 @@ class ModelIssueVariable(ModelIssueBase):
     """Variable object in an issue."""
 
     type: ModelObjectType = ModelObjectType.var
-    value: float = 0.0
+    value: float | None = 0.0
     fixed: bool = False
 
 
@@ -201,7 +201,7 @@ class ModelIssues(BaseModel):
         )
         for comp in cs:
             obj = ModelIssueComponent(name=comp.name)
-            issue.issues.append(obj)
+            issue.objects.append(obj)
         self.issues.append(issue)
 
     def _add_structural_singularities(self):
