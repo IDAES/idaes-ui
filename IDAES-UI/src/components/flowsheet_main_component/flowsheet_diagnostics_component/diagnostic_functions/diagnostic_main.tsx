@@ -258,12 +258,12 @@ export class Diagnostic_main{
         //get issues data
         const issuesData = data.issues.issues;
         //generate issues category
-        issuesData.forEach((eachIssue:any,index:string)=>{
+        issuesData.forEach((eachIssue:any,issueDataIndex:string)=>{
             //create serverity title and description
             const categoryWrapper = document.createElement("div");
             categoryWrapper.classList.add("diagnostics-issues_category");
             //index to identify which target been clicked then use that index in issues data objects[i] to read data.
-            categoryWrapper.setAttribute("index", index)
+            categoryWrapper.setAttribute("index", issueDataIndex)
             //wrapper is <div class="diagnostics-issues_category"></div>
             categoryWrapper.innerHTML = `
             <p class="diagnostics-issue_title issue_serverity_caution">${eachIssue["severity"]}:</p>
@@ -271,31 +271,46 @@ export class Diagnostic_main{
             <p class="diagnostics-issue_title issue_description">Description: ${eachIssue["description"]}</p>
             <p class="diagnostics-issue_title">Type: ${eachIssue["objects"][0]["type"]}</p>
             <div class="diagnostics-issue_click_detail">View Detail</div>
+            <table class="diagnostics-issue_table">
+                <thead class="diagnostics-issue_table_head">
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody class="diagnostics-issue_table_body">
+                </tbody>
+            </table>
             `;
+
+            
+            //loop through each issue's objects create tr for each table body
+            //result store in variable tableTr
+            let tableTr = "";
+            eachIssue["objects"].forEach((issueDetailObj:any)=>{
+                if(issueDetailObj.name.includes("fs.M01.inlet_1_state[0.0]")){
+
+                    tableTr += `
+                    <tr>
+                        <td>${issueDetailObj.name}</td>
+                        <td>${issueDetailObj.value}</td>
+                    </tr>
+                    `
+                }
+            });
+            
+            //find current table's table body insert table tr init.
+            const currentIssueTable = categoryWrapper.querySelector(".diagnostics-issue_table_body");
+            if(currentIssueTable){
+                currentIssueTable.innerHTML = tableTr;
+            }
+
+            //append categoryWrapper to dom
             diagnosticIssuesContentContainer.append(categoryWrapper);
+            //each wrapper add a event click to expand it
             diagnosticIssuesContentContainer.addEventListener("click", (event:MouseEvent)=>{
                 this.clickGenerateDetailForIssue(event, issuesData)
-            })
-            
-            // //create issue detail
-            // eachIssue["objects"].forEach((issueDetailObj:any)=>{
-            //     const issueDetailContainer = document.createElement("div");
-            //     issueDetailContainer.classList.add("diagnostics-each_issue_detail_container");
-                
-            //     //wrapper is <div class="diagnostics-each_issue_detail_container"></div>
-            //     Object.keys(issueDetailObj).forEach((eachContent:string)=>{
-            //         if(eachContent != "type"){
-            //             const dom = `
-            //                 <div class="diagnostics_each_issue_detail_row">
-            //                     <p class="diagnostics-each_issue_name">${eachContent}</p>
-            //                     <p class="diagnostics-each_issue_detail">${issueDetailObj[eachContent]}</p>
-            //                 </div>
-            //             `;
-            //             issueDetailContainer.innerHTML += dom;
-            //         }
-            //     })
-            //     categoryWrapper.append(issueDetailContainer);
-            // })
+            });
         })
 
     }
@@ -337,3 +352,9 @@ export class Diagnostic_main{
         });
     }
 }
+
+
+// <div class="diagnostics_each_issue_detail_row">
+//     <p class="diagnostics-each_issue_name">${eachContent}</p>
+//     <p class="diagnostics-each_issue_detail">${issueDetailObj[eachContent]}</p>
+// </div>
