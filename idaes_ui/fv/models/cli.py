@@ -1,5 +1,12 @@
 """
-CLI utility
+CLI utility for looking at sample output from the models.
+
+# to see options:
+python -m idaes_ui.fv.models.cli -h
+
+# to run:
+python -m idaes_ui.fv.models.cli [..options..]
+
 """
 __author__ = "Dan Gunter"
 __created__ = "2023-10-08"
