@@ -236,7 +236,7 @@ export class Diagnostic_main{
 
 
     /**
-     * @description generate issue overview content, the detail issue content is generate with the click event
+     * @description generate issue overview content, the detail issue content will generate when trigger click event
      * @param data the diagnostics JSON
      */
     generateDOMForIssues(data:any){
@@ -262,6 +262,7 @@ export class Diagnostic_main{
             //create serverity title and description
             const categoryWrapper = document.createElement("div");
             categoryWrapper.classList.add("diagnostics-issues_category");
+            //index to identify which target been clicked then use that index in issues data objects[i] to read data.
             categoryWrapper.setAttribute("index", index)
             //wrapper is <div class="diagnostics-issues_category"></div>
             categoryWrapper.innerHTML = `
@@ -273,7 +274,7 @@ export class Diagnostic_main{
             `;
             diagnosticIssuesContentContainer.append(categoryWrapper);
             diagnosticIssuesContentContainer.addEventListener("click", (event:MouseEvent)=>{
-                this.clickGenerateDetailForIssue(event)
+                this.clickGenerateDetailForIssue(event, issuesData)
             })
             
             // //create issue detail
@@ -299,8 +300,9 @@ export class Diagnostic_main{
 
     }
 
-    clickGenerateDetailForIssue(event:MouseEvent){
-        console.log(`clicked ${event.target}`)
+    clickGenerateDetailForIssue(event:MouseEvent, issueObj:any){
+        const current = event.target;
+        console.log(current)
     }
     //each DOM element generator end
 
