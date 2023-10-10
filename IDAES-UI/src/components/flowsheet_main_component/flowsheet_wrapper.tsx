@@ -35,41 +35,91 @@ export default function FlowsheetWrapper(){
 
 	return(
 		<div id="flowsheet-wrapper" className={css.flowsheetWrapper}>
-		<MinimizedBar />
-		<PanelGroup direction="vertical" id="flowsheet-wrapper">
-			{
-			<Panel maxSize={100} defaultSize={65}>
-				<PanelGroup direction="horizontal">
+			<MinimizedBar />
+			<PanelGroup direction="horizontal">
+				<Panel defaultSize={65}>
+					<PanelGroup direction="vertical">
+						{
+							isFvShow && 
+							<Panel defaultSize={isFvShow ? 65 : 0} maxSize={100} >
+								<FlowsheetHeader />
+								<Flowsheet />
+							</Panel>
+						}
+						<PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
+						{
+							isStreamTableShow &&
+							<Panel maxSize={100} defaultSize={35} style={isStreamTableShow ? panelShow : panelHide}>
+								<StreamTable />
+							</Panel>
+						}
+					</PanelGroup>
+				</Panel>
+				<PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
 					{
-					isFvShow && 
-					<Panel defaultSize={isFvShow ? 70 : 0} minSize={0} >
-						<FlowsheetHeader />
-						<Flowsheet />
-					</Panel>
+						isDiagnosticsShow && 
+						<Panel defaultSize={isFvShow ? 35 : 100} minSize={0}>
+						<FlowsheetDiagnostics />
+						</Panel>
 					}
-				
-				{/*this part closed because the variable part is not in this round of release*/}
-				{
-					isDiagnosticsShow && <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
-				}
-				{
-					isDiagnosticsShow && 
-					<Panel defaultSize={isFvShow ? 30 : 100} minSize={0}>
-					<FlowsheetDiagnostics />
-					</Panel>
-				}
-				</PanelGroup>
-			</Panel>
-			}
-				
-			<PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
-			{
-			isStreamTableShow &&
-			<Panel maxSize={100} defaultSize={35} style={isStreamTableShow ? panelShow : panelHide}>
-				<StreamTable />
-			</Panel>
-			}
-		</PanelGroup>
+			</PanelGroup>
 		</div>
 	)
 }
+
+
+
+{/*below are old panel reference*/}
+
+{/* <PanelGroup direction="vertical" id="flowsheet-wrapper">
+	{
+		isFvShow && 
+		<Panel defaultSize={isFvShow ? 65 : 0} minSize={0} style={{width: "500px"}}>
+			<FlowsheetHeader />
+			<Flowsheet />
+		</Panel>
+	}
+	<PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
+	{
+	isStreamTableShow &&
+		<Panel maxSize={100} defaultSize={35} style={isStreamTableShow ? panelShow : panelHide}>
+			<StreamTable />
+		</Panel>
+	}
+</PanelGroup> */}
+
+
+// 	<PanelGroup direction="vertical" id="flowsheet-wrapper">
+// 	{
+// 	<Panel maxSize={100} defaultSize={65}>
+// 		<PanelGroup direction="horizontal">
+// 			{
+// 				isFvShow && 
+// 				<Panel defaultSize={isFvShow ? 70 : 0} minSize={0} >
+// 					<FlowsheetHeader />
+// 					<Flowsheet />
+// 				</Panel>
+// 			}
+		
+// 		{/*this part closed because the variable part is not in this round of release*/}
+// 		{
+// 			isDiagnosticsShow && <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
+// 		}
+// 		{
+// 			isDiagnosticsShow && 
+// 			<Panel defaultSize={isFvShow ? 30 : 100} minSize={0}>
+// 			<FlowsheetDiagnostics />
+// 			</Panel>
+// 		}
+// 		</PanelGroup>
+// 	</Panel>
+// 	}
+		
+// 	<PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
+// 		{
+// 			isStreamTableShow &&
+// 			<Panel maxSize={100} defaultSize={35} style={isStreamTableShow ? panelShow : panelHide}>
+// 				<StreamTable />
+// 			</Panel>
+// 		}
+// </PanelGroup>
