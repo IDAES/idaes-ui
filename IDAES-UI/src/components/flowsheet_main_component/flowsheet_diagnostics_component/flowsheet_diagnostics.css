@@ -1,3 +1,11 @@
+.flex-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+
 #diagnosticsContainer{
     display: flex;
     flex-direction: column;
@@ -12,18 +20,33 @@
     margin-bottom: 10px;
 }
 
+.diagnostics-section_title_container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.diagnostics-section_title_container:hover{
+    cursor: pointer;
+    box-shadow: 1px 2px 5px #c5c5c5;
+    transition: .3s ease-in-out;
+}
+
 .diagnostics-section_title{
     padding: 10px;
-    margin-bottom: 15px;
     font-size: 16px;
     font-weight: bold;
     text-transform:uppercase;
 }
 
-.diagnostics-section_title:hover{
-    cursor: pointer;
-    box-shadow: 1px 2px 5px #c5c5c5;
-    transition: .3s ease-in-out;
+
+.diagnostics-section_title_expand_icon{
+    width: 10px;
+}
+
+.diagnostics-section_title_expand_icon_open{
+    transform: rotate(180deg);
 }
 
 .diagnostics-statistic_title_content{
@@ -46,6 +69,22 @@
     align-items: center;
     margin-bottom: 3px;
     gap: 3px;
+}
+
+.diagnostics-config_table{
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.diagnostics-config_table_head > tr > th{
+    text-align: left;
+    padding: 5px 15px;
+    background-color: #E2EFF7;
+}
+
+.diagnostics-config_table_body > tr > td{
+    padding: 5px 15px;
+    border:1px solid #c5c5c5
 }
 
 .diagnostics_config_key{
@@ -126,98 +165,92 @@
 }
 
 /*issues*/
-.diagnostics-issues_category{
-    position: relative;
-    margin-bottom: 20px;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #bcbcbc;
-    overflow-x: scroll;
+.diagnostics-issues_sections{
+    display: flex;
+    flex-direction: column;
 }
 
-.diagnostics-issues_category:hover{
-    cursor: pointer;
+.diagnostics-issue_category_container{
+    margin-bottom: 5px;
 }
 
-.diagnostics-issues_category:hover .diagnostics-issue_click_detail{
-    font-size: 16px;
-    color: #6d6d6d;
-    font-weight: bold;
+.diagnostics-severity_title_container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
 }
 
-.diagnostics-issue_title{
+.diagnostics-issue_expand_icon{
+    width: 10px;
+    height: 10px;
+}
+
+.diagnostics-issue_expand_icon_open{
+    width: 10px;
+    height: 10px;
+    transform: rotate(180deg);
+}
+.diagnostics-issue_expand_icon_close{
+    width: 10px;
+    height: 10px;
+    transform: rotate(90deg);
+}
+
+.diagnostics-issue_severity_title_severity{
     text-transform: capitalize;
-    margin-bottom: 4px;
 }
 
-.diagnostics-issue_click_detail{
+.diagnostics_issue_detail_content_container{
+    padding: 5px 20px;
+}
+
+.diagnostics_issue_each_detail{
+    margin-bottom:5px;
+}
+
+.diagnostics_issue_each_detail_severity{
+    text-transform: capitalize;
+}
+
+.diagnostics_issue_each_detail_content_container{
+    padding: 5px;
+    margin-left: 30px;
+    margin-bottom: 10px;
+}
+
+.diagnostics-issue_search_bar_container{
+    margin-left: 50px;
+    margin-bottom: 5px;
+}
+
+.diagnostics-issue_search_bar_icon{
+    width: 20px;
+}
+
+.diagnostics-issue_search_bar{
     width: 100%;
-    padding-top: 5px;
-    text-align: center;
-    transition: .3s ease-in-out;
+    height: 30px;
 }
 
-/*diagnostics issue table*/
-.diagnostics-issue_table{
-    width: 100%;
-    overflow-x: scroll;
+.diagnostics-issue_each_detail_final{
+    padding: 10px;
+    margin-left: 50px;
 }
 
-.diagnostics-issue_table_head > tr > th{
-    padding: 5px 15px;
-    background-color: #E2EFF7;
-    text-align: left;
-}
-
-.diagnostics-issue_table_body > tr > td{
+.diagnostics-issue_each_detail_final_title{
+    padding: 5px;
     border: 1px solid #c5c5c5;
 }
 
-.diagnostics-issue_table_body > tr > td{
-    padding: 5px 15px;
-    border-bottom: 1px solid #c5c5c5;
-}
-
-
-/* .diagnostics_each_issue_detail_row{
-    display: flex;
-    flex-direction: row;
-}
-
-.diagnostics-each_issue_name,
-.diagnostics-each_issue_detail{
-    font-size: 15px;
-    padding: 5px;
-}
-
-.diagnostics-each_issue_name{
-    min-width: 110px;
-    background-color:#E2EFF7 ;
-    text-align: center;
-    text-transform: capitalize;
-    border-right: none;
-}
-
-.diagnostics-each_issue_detail{
-    border-left: none;
-    overflow-x: scroll;
-}
-
-.diagnostics-each_issue_detail::-webkit-scrollbar{
-    display: none;;
-}
-.diagnostics-each_issue_detail::-moz-scrollbar{
-    display: none;;
-}
 
 .issue_serverity_caution{
-    color: #EA7600;
+    color: #de8730;
 }
-
 .issue_serverity_warning{
-    color: #FF7171;
+    color: #ff0505;
 }
 
 .issue_serverity_next{
     color: #53A892;
-} */
+} 
