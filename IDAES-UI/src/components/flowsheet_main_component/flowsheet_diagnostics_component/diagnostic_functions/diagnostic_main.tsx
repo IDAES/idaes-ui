@@ -63,8 +63,27 @@ export class Diagnostic_main{
      * @returns Array of sections name
      */
     generateBasicDOMStructure(diagnosticsData:any){
+        //read keys from JSON data
+        const allSectionKey = Object.keys(diagnosticsData);
+        
+        //Base on the section order defind in array below, we filter out if any not in the JSON data
+        let sectionOrder:Array<string> = ["issues", "config", "statistics"];
+        sectionOrder.forEach((el:string)=>{
+            if(!allSectionKey.includes(el)){
+                el = "";
+            }
+        });
+        sectionOrder = sectionOrder.filter((el:string)=> el != "" && el);
+
+        //check if some all section not in section orders if so push into section order
+        allSectionKey.forEach((el:string) => {
+            if(!sectionOrder.includes(el)){
+                sectionOrder.push(el)
+            }
+        })
+
         //loop through diagnostics data push key to diagnosticsDOMSection
-        Object.keys(diagnosticsData).forEach((el:string)=>{
+        sectionOrder.forEach((el:string)=>{
             this.diagnosticsDOMSections.push(el);
         })
 
@@ -84,9 +103,12 @@ export class Diagnostic_main{
         for(let i = 0; i < this.diagnosticsDOMSections.length; i++){
             diagnosticsContainer.innerHTML += `
                 <div id="diagnostics-${this.diagnosticsDOMSections[i]}" class="diagnostic-each_section">
-                    <p class="diagnostics-section_title">
-                        ${this.diagnosticsDOMSections[i]}
-                    </p>
+                    <div class="diagnostics-section_title_container">
+                        <p class="diagnostics-section_title">
+                            ${this.diagnosticsDOMSections[i]}
+                        </p>
+                        <img src="/public/assets/image/normal_icon/triangle.png" class="diagnostics-section_title_expand_icon diagnostics-section_title_expand_icon_open">
+                    </div>
                 </div>
             `
         }
@@ -100,6 +122,16 @@ export class Diagnostic_main{
     generateEachCategoryForDOM(sections:Array<string>, data:any){
         //define known section to make sure when new section shows and not render has an error show.
         const knownSection = ["config", "statistics", "issues"];
+        const sectionsOrder = {
+            issues: 1,
+            config: 2,
+            statistics: 3,
+        }
+
+        sections = sections.sort((a:any, b:any)=> {
+            return a - b;
+        })
+
         sections.forEach((section)=>{
             if(!knownSection.includes(section)){
                 //log error not throw error to prevent render block
@@ -146,18 +178,29 @@ export class Diagnostic_main{
         const diagnosticConfigContentContainer = document.createElement("div");
         diagnosticConfigContentContainer.classList.add("diagnostics-section_content_container");
         configSection.appendChild(diagnosticConfigContentContainer);
+        diagnosticConfigContentContainer.innerHTML += `
+        <table class="diagnostics-config_table">
+            <thead class="diagnostics-config_table_head">
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody id="diagnostics_config_table_body" class="diagnostics-config_table_body">
+            </tbody>
+        </table>
+        `
         
+        //get config table body
+        const configTableBody = document.getElementById("diagnostics_config_table_body")
         //base on data.conf data create <p> insert to diagnosticConfigContentContainer
         Object.keys(data.config).forEach((eachConfig)=>{
             let formatConfigKey = eachConfig.replace(/_/g, ' ');
-            diagnosticConfigContentContainer.innerHTML += `
-                <div class="diagnostics_config_each_container">
-                    <p class="diagnostics_config_key">${formatConfigKey}</p>
-                    <div class="diagnostics_config_value_container">
-                        <p class="diagnostics_config_tag_container">Value</p>
-                        <p class="diagnostics_config_content">${data.config[eachConfig]}</p>
-                    </div>
-                </div>
+            configTableBody!.innerHTML += `
+                <tr>
+                    <td>${formatConfigKey}</td>
+                    <td>${data.config[eachConfig]}</td>
+                </tr>
             `
         })
 
@@ -256,63 +299,104 @@ export class Diagnostic_main{
         issuesSection.appendChild(diagnosticIssuesContentContainer);
 
         //get issues data
-        const issuesData = data.issues.issues;
-        //generate issues category
-        issuesData.forEach((eachIssue:any,issueDataIndex:string)=>{
-            //create serverity title and description
-            const categoryWrapper = document.createElement("div");
-            categoryWrapper.classList.add("diagnostics-issues_category");
-            //index to identify which target been clicked then use that index in issues data objects[i] to read data.
-            categoryWrapper.setAttribute("index", issueDataIndex)
-            //wrapper is <div class="diagnostics-issues_category"></div>
-            categoryWrapper.innerHTML = `
-            <p class="diagnostics-issue_title issue_serverity_caution">${eachIssue["severity"]}:</p>
-            <p class="diagnostics-issue_title">Issue type: ${eachIssue["type"]}</p>
-            <p class="diagnostics-issue_title issue_description">Description: ${eachIssue["description"]}</p>
-            <p class="diagnostics-issue_title">Type: ${eachIssue["objects"][0]["type"]}</p>
-            <div class="diagnostics-issue_click_detail">View Detail</div>
-            <table class="diagnostics-issue_table">
-                <thead class="diagnostics-issue_table_head">
-                    <tr>
-                        <th>Name</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody class="diagnostics-issue_table_body">
-                </tbody>
-            </table>
+        //sort warning order
+        interface Issue {
+            type: string;
+            severity: string;
+            // other properties...
+        }
+
+        const severityOrder: { [key: string]: number } = {
+            "warning": 1,
+            "caution": 2,
+            "next": 3
+        };
+          
+        const issuesData = data.issues.issues.sort((a: Issue, b: Issue) => {
+            return severityOrder[a.severity] - severityOrder[b.severity]
+        });
+
+        //generate quantity of severity
+        const severity: { [key: string]: number } = {};
+        issuesData.forEach((el:any)=>{
+            if(severity[el.severity]){
+                severity[el.severity] = severity[el.severity] + 1;
+            }else{
+                severity[el.severity] = 1
+            }
+        });
+
+        //base on serverity key and quantity to generate different category
+        // > 55 Warning
+        // > 2 Caustion
+        Object.keys(severity).forEach((el:string, index:number)=>{
+            diagnosticIssuesContentContainer.innerHTML += `
+                <div id="diagnostics-issue_${el}" class="diagnostics-issue_category_container">
+                    <div class="diagnostics-severity_title_container">
+                        <img src="/public/assets/image/normal_icon/triangle.png" class="diagnostics-issue_expand_icon diagnostics-issue_expand_icon_open">
+                        <p class="issue_serverity_${el}">${severity[el]} <span class="diagnostics-issue_severity_title_severity">${el}</span></p>
+                    </div>
+                    <div id="diagnostics-${el}_content_container" class="diagnostics_issue_detail_content_container"></div>
+                </div>
+            `
+        });
+
+        issuesData.forEach((eachIssue:any,issueDataIndex:number)=>{
+            //base on eachIssue's severity to find which container to add content warning caution next or others
+            //the id defines in diagnosticIssuesContentContainer.innerHTM > div#diagnostics-${el}_content_container
+            const currentCategoryContainer = document.getElementById(`diagnostics-${eachIssue["severity"]}_content_container`);
+        });
+
+        //loop through issues base on it severity to add content into different #diagnostics-${severity}_content_container
+        issuesData.forEach((eachIssue:any,issueDataIndex:number)=>{
+            //base on eachIssue's severity to find which container to add content warning caution next or others
+            //the id defines in diagnosticIssuesContentContainer.innerHTM > div#diagnostics-${el}_content_container
+            const currentCategoryContainer = document.getElementById(`diagnostics-${eachIssue["severity"]}_content_container`);
+            //create template
+            const dom = `
+                <div class="diagnostics_issue_each_detail">
+                    <div class="diagnostics_issue_each_detail_title_container">
+                        <img src="/public/assets/image/normal_icon/triangle.png" class="diagnostics-issue_expand_icon ${issueDataIndex < 2 ? "diagnostics-issue_expand_icon_open" : "diagnostics-issue_expand_icon_open"}">
+                        <span class="diagnostics_issue_each_detail_severity">${eachIssue["severity"]}</span> ${issueDataIndex+1}:  ${eachIssue["description"]}
+                    </div>
+                    <div class="diagnostics_issue_each_detail_content_container flex-row">
+                        <img src="/public/assets/image/normal_icon/triangle.png" class="diagnostics-issue_expand_icon ${issueDataIndex < 1 ? "diagnostics-issue_expand_icon_open" : "diagnostics-issue_expand_icon_close"}">
+                        <p>${eachIssue['name']} :  ${issueDataIndex < 100 ? eachIssue['objects'].length : ""}</p>
+                    </div>
+                    <div class="diagnostics-issue_search_bar_container flex-row" style="display : ${issueDataIndex < 2 ? "flex" : "none"}">
+                        <img src="/public/assets/image/normal_icon/filter.png" class="diagnostics-issue_search_bar_icon" alt="search bar icon">
+                        <input type="text" placeholder="Search" class="diagnostics-issue_search_bar">
+                    </div>
+                    <div id="diagnostics_issue_each_detail_content_container_${issueDataIndex}">
+                    
+                    </div>
+                </div>
             `;
 
-            
-            //loop through each issue's objects create tr for each table body
-            //result store in variable tableTr
-            let tableTr = "";
-            eachIssue["objects"].forEach((issueDetailObj:any)=>{
-                if(issueDetailObj.name.includes("fs.M01.inlet_1_state[0.0]")){
-
-                    tableTr += `
-                    <tr>
-                        <td>${issueDetailObj.name}</td>
-                        <td>${issueDetailObj.value}</td>
-                    </tr>
-                    `
-                }
-            });
-            
-            //find current table's table body insert table tr init.
-            const currentIssueTable = categoryWrapper.querySelector(".diagnostics-issue_table_body");
-            if(currentIssueTable){
-                currentIssueTable.innerHTML = tableTr;
+            //add template to innerHTML
+            if(currentCategoryContainer){
+                currentCategoryContainer.innerHTML += dom;
             }
 
-            //append categoryWrapper to dom
-            diagnosticIssuesContentContainer.append(categoryWrapper);
-            //each wrapper add a event click to expand it
-            diagnosticIssuesContentContainer.addEventListener("click", (event:MouseEvent)=>{
-                this.clickGenerateDetailForIssue(event, issuesData)
-            });
-        })
+            //generate detail which from JSON object > everything into detail
+            const issueDetailContainer = document.getElementById(`diagnostics_issue_each_detail_content_container_${issueDataIndex}`);
+            if(issueDetailContainer){
+                eachIssue['objects'].forEach((el:any, index:number)=>{
+                    if(issueDataIndex < 2){
+                        const dom = `
+                            <div class="diagnostics-issue_each_detail_final flex-row">
+                                <p class="diagnostics-issue_each_detail_final_title">${eachIssue["type"]} issue, ${el.type}</p>
+                                <p class="diagnostics-issue_each_detail_final_content">${el.name}</p>
+                            </div>
+                        `
+                        issueDetailContainer.innerHTML += dom;
+                    }
+                })
 
+            }
+
+            this.makeElementWithEqual(".diagnostics-issue_each_detail_final_title")
+        });
     }
 
     clickGenerateDetailForIssue(event:MouseEvent, issueObj:any){
