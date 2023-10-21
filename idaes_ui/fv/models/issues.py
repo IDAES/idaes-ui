@@ -109,7 +109,7 @@ class ModelIssue(BaseModel):
     name: str = ""
     description: str = ""
     objects: List[
-        Union[ModelIssueVariable, ModelIssueVariableBounded, ModelIssueConstraint]
+        Union[ModelIssueVariable, ModelIssueVariableBounded, ModelIssueConstraint, ModelIssueComponent]
     ] = []
 
 

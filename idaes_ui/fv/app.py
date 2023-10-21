@@ -16,7 +16,7 @@ from idaes_ui.fv.models import DiagnosticsData, DiagnosticsException, Diagnostic
 
 
 class FlowsheetApp:
-    _root_dir = Path(__file__).parent.parent.absolute()
+    _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
     _static_dir = _root_dir / "static"
 
     def __init__(self, flowsheet):
