@@ -76,7 +76,7 @@ class ModelIssueVariable(ModelIssueBase):
     """Variable object in an issue."""
 
     type: ModelObjectType = ModelObjectType.var
-    value: float | None = 0.0
+    value: Union[float, None] = 0.0
     fixed: bool = False
 
 
