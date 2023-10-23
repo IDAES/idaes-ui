@@ -32,5 +32,6 @@ class DiagnosticsError(BaseModel):
 
     @classmethod
     def from_exception(cls, exc: DiagnosticsException):
-        return cls(error_type=exc.name, error_message=exc.message, error_details=(exc.details or ""))
+        return cls(error_type=exc.name, error_message=exc.message,
+                   error_details=(exc.details or ""))
 
