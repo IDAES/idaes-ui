@@ -126,7 +126,7 @@ class ModelStats(BaseModel):
 
     @classmethod
     def _as_table_subtypes(
-        cls, info: Dict[str, Union[Dict, float]], subtypes: Tuple[str] | Tuple
+        cls, info: Dict[str, Union[Dict, float]], subtypes: Union[Tuple[str], Tuple]
     ) -> List[Tuple[Tuple[str], float]]:
         result = []
         for key in info:
