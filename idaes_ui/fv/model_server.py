@@ -56,7 +56,7 @@ if enableOldSite:
     _static_dir = _this_dir / "static"
     _template_dir = _this_dir / "templates"
 
-
+# TODO: update this class move all http releated to FastAPI
 class FlowsheetServer(http.server.HTTPServer):
     """A simple HTTP server that runs in its own thread.
 
