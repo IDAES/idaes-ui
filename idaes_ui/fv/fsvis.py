@@ -32,6 +32,9 @@ _log = logger.getLogger(__name__)
 # Module globals
 web_server = None
 
+# Import FastAPI app
+from .app import FlowsheetApp
+
 #: Maximum number of saved versions of the same `save` file.
 #: Set to zero if you want to allow any number.
 MAX_SAVED_VERSIONS = 100
@@ -108,9 +111,13 @@ def visualize(
 
     # Start the web server
     if web_server is None:
-        web_server = FlowsheetServer(port=port)
-        web_server.add_setting("save_time_interval", save_time_interval)
-        web_server.start()
+        fastAPI_app = FlowsheetApp(flowsheet)
+        fastAPI_app.run()
+
+        # old web server
+        # web_server = FlowsheetServer(port=port)
+        # web_server.add_setting("save_time_interval", save_time_interval)
+        # web_server.start()
         if not quiet:
             _log.info("Started visualization server")
     else:
