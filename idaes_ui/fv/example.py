@@ -24,7 +24,7 @@ _log.setLevel(logging.INFO)
 
 def fv_example():
     m = build_flowsheet()
-    visualize(m.fs, "sample_visualization")
+    visualize(m.fs, "sample_visualization", port=49999)
     _log.info("Starting Flowsheet Visualizer")
     _log.info("Press Control-C to stop")
     try:

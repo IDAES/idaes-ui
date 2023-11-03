@@ -1,12 +1,3 @@
-const fs = require('fs')
-const path = require('path')
-
-//read port and flowsheet name from shared_variable.json
-const sharedVariables = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, "/shared_variable.json")
-  )
-);
 
 module.exports = {
   logging:{
@@ -15,7 +6,7 @@ module.exports = {
   screenshots: true,
   video : false,
   e2e: {
-    baseUrl: sharedVariables.url,
+    baseUrl: "http://localhost:49999/app?id=sample_visualization",
     pageLoadTimeout: 100000,
     taskTimeout: 100000,
     responseTimeout: 60000

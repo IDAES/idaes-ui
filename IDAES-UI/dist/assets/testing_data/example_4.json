@@ -1,0 +1,1403 @@
+{
+  "model": {
+      "stream_table": {
+          "index": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+          ],
+          "columns": [
+              "Variable",
+              "Units",
+              "s01",
+              "s02",
+              "s03",
+              "s04",
+              "s05"
+          ],
+          "data": [
+              [
+                  "Molar Flowrate ('Liq', 'ethylene_oxide')",
+                  {
+                      "raw": "mole / second",
+                      "html": "mol/s",
+                      "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                  },
+                  [
+                      58,
+                      "unfixed"
+                  ],
+                  [
+                      100,
+                      "unfixed"
+                  ],
+                  [
+                      158,
+                      "unfixed"
+                  ],
+                  [
+                      158,
+                      "unfixed"
+                  ],
+                  [
+                      100,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Molar Flowrate ('Liq', 'water')",
+                  {
+                      "raw": "mole / second",
+                      "html": "mol/s",
+                      "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                  },
+                  [
+                      39.6,
+                      "unfixed"
+                  ],
+                  [
+                      100,
+                      "unfixed"
+                  ],
+                  [
+                      139.6,
+                      "unfixed"
+                  ],
+                  [
+                      139.6,
+                      "unfixed"
+                  ],
+                  [
+                      100,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Molar Flowrate ('Liq', 'sulfuric_acid')",
+                  {
+                      "raw": "mole / second",
+                      "html": "mol/s",
+                      "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                  },
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      100,
+                      "unfixed"
+                  ],
+                  [
+                      100.00001,
+                      "unfixed"
+                  ],
+                  [
+                      100.00001,
+                      "unfixed"
+                  ],
+                  [
+                      100,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Molar Flowrate ('Liq', 'ethylene_glycol')",
+                  {
+                      "raw": "mole / second",
+                      "html": "mol/s",
+                      "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                  },
+                  [
+                      0.00001,
+                      "unfixed"
+                  ],
+                  [
+                      100,
+                      "unfixed"
+                  ],
+                  [
+                      100.00001,
+                      "unfixed"
+                  ],
+                  [
+                      100.00001,
+                      "unfixed"
+                  ],
+                  [
+                      100,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Temperature",
+                  {
+                      "raw": "kelvin",
+                      "html": "K",
+                      "latex": "\\mathrm{K}"
+                  },
+                  [
+                      298.15,
+                      "unfixed"
+                  ],
+                  [
+                      298.15,
+                      "unfixed"
+                  ],
+                  [
+                      298.15,
+                      "unfixed"
+                  ],
+                  [
+                      328.15,
+                      "unfixed"
+                  ],
+                  [
+                      298.15,
+                      "unfixed"
+                  ]
+              ],
+              [
+                  "Pressure",
+                  {
+                      "raw": "pascal",
+                      "html": "Pa",
+                      "latex": "\\mathrm{Pa}"
+                  },
+                  [
+                      100000,
+                      "unfixed"
+                  ],
+                  [
+                      100000,
+                      "unfixed"
+                  ],
+                  [
+                      99999.9995,
+                      "unfixed"
+                  ],
+                  [
+                      99999.9995,
+                      "unfixed"
+                  ],
+                  [
+                      100000,
+                      "unfixed"
+                  ]
+              ]
+          ]
+      },
+      "id": "Flowsheet-Name",
+      "unit_models": {
+          "OXIDE": {
+              "type": "feed",
+              "image": "/images/icons/feed.svg",
+              "performance_contents": {},
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_oxide')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 58
+                  },
+                  "1": {
+                      "Variable": "Molar Flowrate ('Liq', 'water')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 39.6
+                  },
+                  "2": {
+                      "Variable": "Molar Flowrate ('Liq', 'sulfuric_acid')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "3": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_glycol')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "4": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Outlet": 298.15
+                  },
+                  "5": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Outlet": 100000
+                  }
+              }
+          },
+          "ACID": {
+              "type": "feed",
+              "image": "/images/icons/feed.svg",
+              "performance_contents": {},
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_oxide')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "1": {
+                      "Variable": "Molar Flowrate ('Liq', 'water')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 200
+                  },
+                  "2": {
+                      "Variable": "Molar Flowrate ('Liq', 'sulfuric_acid')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 0.334
+                  },
+                  "3": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_glycol')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Outlet": 0.00001
+                  },
+                  "4": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Outlet": 298.15
+                  },
+                  "5": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Outlet": 100000
+                  }
+              }
+          },
+          "PROD": {
+              "type": "product",
+              "image": "/images/icons/product.svg",
+              "performance_contents": {},
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_oxide')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 100
+                  },
+                  "1": {
+                      "Variable": "Molar Flowrate ('Liq', 'water')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 100
+                  },
+                  "2": {
+                      "Variable": "Molar Flowrate ('Liq', 'sulfuric_acid')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 100
+                  },
+                  "3": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_glycol')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 100
+                  },
+                  "4": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Inlet": 298.15
+                  },
+                  "5": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Inlet": 100000
+                  }
+              }
+          },
+          "M101": {
+              "type": "mixer",
+              "image": "/images/icons/mixer.svg",
+              "performance_contents": {},
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_oxide')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "reagent_feed": 58,
+                      "catalyst_feed": 100,
+                      "Outlet": 158
+                  },
+                  "1": {
+                      "Variable": "Molar Flowrate ('Liq', 'water')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "reagent_feed": 39.6,
+                      "catalyst_feed": 100,
+                      "Outlet": 139.6
+                  },
+                  "2": {
+                      "Variable": "Molar Flowrate ('Liq', 'sulfuric_acid')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "reagent_feed": 0.00001,
+                      "catalyst_feed": 100,
+                      "Outlet": 100.00001
+                  },
+                  "3": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_glycol')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "reagent_feed": 0.00001,
+                      "catalyst_feed": 100,
+                      "Outlet": 100.00001
+                  },
+                  "4": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "reagent_feed": 298.15,
+                      "catalyst_feed": 298.15,
+                      "Outlet": 298.15
+                  },
+                  "5": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "reagent_feed": 100000,
+                      "catalyst_feed": 100000,
+                      "Outlet": 99999.9995
+                  }
+              }
+          },
+          "H101": {
+              "type": "heater",
+              "image": "/images/icons/heater_2.svg",
+              "performance_contents": {
+                  "0": {
+                      "Variable": "Heat Duty",
+                      "Value": 1628.30127
+                  }
+              },
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_oxide')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 158,
+                      "Outlet": 158
+                  },
+                  "1": {
+                      "Variable": "Molar Flowrate ('Liq', 'water')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 139.6,
+                      "Outlet": 139.6
+                  },
+                  "2": {
+                      "Variable": "Molar Flowrate ('Liq', 'sulfuric_acid')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 100.00001,
+                      "Outlet": 100.00001
+                  },
+                  "3": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_glycol')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 100.00001,
+                      "Outlet": 100.00001
+                  },
+                  "4": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Inlet": 298.15,
+                      "Outlet": 328.15
+                  },
+                  "5": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Inlet": 99999.9995,
+                      "Outlet": 99999.9995
+                  }
+              }
+          },
+          "R101": {
+              "type": "plug_flow_reactor",
+              "image": "/images/icons/reactor_pfr.svg",
+              "performance_contents": {
+                  "0": {
+                      "Variable": "Area",
+                      "Value": 2.93529
+                  }
+              },
+              "stream_contents": {
+                  "0": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_oxide')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 158,
+                      "Outlet": 79
+                  },
+                  "1": {
+                      "Variable": "Molar Flowrate ('Liq', 'water')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 139.6,
+                      "Outlet": 60.6
+                  },
+                  "2": {
+                      "Variable": "Molar Flowrate ('Liq', 'sulfuric_acid')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 100.00001,
+                      "Outlet": 100.00001
+                  },
+                  "3": {
+                      "Variable": "Molar Flowrate ('Liq', 'ethylene_glycol')",
+                      "Units": {
+                          "raw": "mole / second",
+                          "html": "mol/s",
+                          "latex": "\\frac{\\mathrm{mol}}{\\mathrm{s}}"
+                      },
+                      "Inlet": 100.00001,
+                      "Outlet": 179.00001
+                  },
+                  "4": {
+                      "Variable": "Temperature",
+                      "Units": {
+                          "raw": "kelvin",
+                          "html": "K",
+                          "latex": "\\mathrm{K}"
+                      },
+                      "Inlet": 328.15,
+                      "Outlet": 328.15
+                  },
+                  "5": {
+                      "Variable": "Pressure",
+                      "Units": {
+                          "raw": "pascal",
+                          "html": "Pa",
+                          "latex": "\\mathrm{Pa}"
+                      },
+                      "Inlet": 99999.9995,
+                      "Outlet": 99999.9995
+                  }
+              }
+          }
+      },
+      "arcs": {
+          "s01": {
+              "source": "OXIDE",
+              "dest": "M101",
+              "label": "Molar flowrate ('Liq', 'ethylene_oxide') 58.0\nMolar flowrate ('Liq', 'water') 39.6\nMolar flowrate ('Liq', 'sulfuric_acid') 1e-05\nMolar flowrate ('Liq', 'ethylene_glycol') 1e-05\nTemperature 298.15\nPressure 100000."
+          },
+          "s02": {
+              "source": "ACID",
+              "dest": "M101",
+              "label": "Molar flowrate ('Liq', 'ethylene_oxide') 100\nMolar flowrate ('Liq', 'water') 100\nMolar flowrate ('Liq', 'sulfuric_acid') 100\nMolar flowrate ('Liq', 'ethylene_glycol') 100\nTemperature 298.15\nPressure 100000."
+          },
+          "s03": {
+              "source": "M101",
+              "dest": "H101",
+              "label": "Molar flowrate ('Liq', 'ethylene_oxide') 158.0\nMolar flowrate ('Liq', 'water') 139.6\nMolar flowrate ('Liq', 'sulfuric_acid') 100.00001\nMolar flowrate ('Liq', 'ethylene_glycol') 100.00001\nTemperature 298.15\nPressure 99999.999"
+          },
+          "s04": {
+              "source": "H101",
+              "dest": "R101",
+              "label": "Molar flowrate ('Liq', 'ethylene_oxide') 158.0\nMolar flowrate ('Liq', 'water') 139.6\nMolar flowrate ('Liq', 'sulfuric_acid') 100.00001\nMolar flowrate ('Liq', 'ethylene_glycol') 100.00001\nTemperature 328.15\nPressure 99999.999"
+          },
+          "s05": {
+              "source": "R101",
+              "dest": "PROD",
+              "label": "Molar flowrate ('Liq', 'ethylene_oxide') 100\nMolar flowrate ('Liq', 'water') 100\nMolar flowrate ('Liq', 'sulfuric_acid') 100\nMolar flowrate ('Liq', 'ethylene_glycol') 100\nTemperature 298.15\nPressure 100000."
+          }
+      }
+  },
+  "cells": [
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 0,
+              "y": 120
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "OXIDE",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 48,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "out",
+                      "id": 0
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/feed.svg"
+              },
+              "label": {
+                  "text": "OXIDE"
+              },
+              "root": {
+                  "title": "feed"
+              }
+          }
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 150,
+              "y": 0
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "M101",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {}
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  },
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 48,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 1
+                  },
+                  {
+                      "group": "in",
+                      "id": 3
+                  },
+                  {
+                      "group": "out",
+                      "id": 4
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/mixer.svg"
+              },
+              "label": {
+                  "text": "M101"
+              },
+              "root": {
+                  "title": "mixer"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "OXIDE",
+              "port": 0
+          },
+          "target": {
+              "id": "M101",
+              "port": 1
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s01",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Molar flowrate ('Liq', 'ethylene_oxide') 58.0\nMolar flowrate ('Liq', 'water') 39.6\nMolar flowrate ('Liq', 'sulfuric_acid') 1e-05\nMolar flowrate ('Liq', 'ethylene_glycol') 1e-05\nTemperature 298.15\nPressure 100000.",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s01"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 0,
+              "y": -120
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "ACID",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 48,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "out",
+                      "id": 2
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/feed.svg"
+              },
+              "label": {
+                  "text": "ACID"
+              },
+              "root": {
+                  "title": "feed"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "ACID",
+              "port": 2
+          },
+          "target": {
+              "id": "M101",
+              "port": 3
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s02",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Molar flowrate ('Liq', 'ethylene_oxide') 100\nMolar flowrate ('Liq', 'water') 100\nMolar flowrate ('Liq', 'sulfuric_acid') 100\nMolar flowrate ('Liq', 'ethylene_glycol') 100\nTemperature 298.15\nPressure 100000.",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s02"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 303,
+              "y": 105
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "H101",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 6,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  },
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 43,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 5
+                  },
+                  {
+                      "group": "out",
+                      "id": 6
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/heater_2.svg"
+              },
+              "label": {
+                  "text": "H101"
+              },
+              "root": {
+                  "title": "heater"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "M101",
+              "port": 4
+          },
+          "target": {
+              "id": "H101",
+              "port": 5
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s03",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Molar flowrate ('Liq', 'ethylene_oxide') 158.0\nMolar flowrate ('Liq', 'water') 139.6\nMolar flowrate ('Liq', 'sulfuric_acid') 100.00001\nMolar flowrate ('Liq', 'ethylene_glycol') 100.00001\nTemperature 298.15\nPressure 99999.999",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s03"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 458,
+              "y": 13
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "R101",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 15,
+                              "y": 0,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  },
+                  "out": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 48,
+                              "y": 45,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 7
+                  },
+                  {
+                      "group": "out",
+                      "id": 8
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/reactor_pfr.svg"
+              },
+              "label": {
+                  "text": "R101"
+              },
+              "root": {
+                  "title": "plug_flow_reactor"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "H101",
+              "port": 6
+          },
+          "target": {
+              "id": "R101",
+              "port": 7
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s04",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Molar flowrate ('Liq', 'ethylene_oxide') 158.0\nMolar flowrate ('Liq', 'water') 139.6\nMolar flowrate ('Liq', 'sulfuric_acid') 100.00001\nMolar flowrate ('Liq', 'ethylene_glycol') 100.00001\nTemperature 328.15\nPressure 99999.999",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s04"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      },
+      {
+          "type": "standard.Image",
+          "position": {
+              "x": 590,
+              "y": -2
+          },
+          "size": {
+              "width": 50,
+              "height": 50
+          },
+          "angle": 0,
+          "id": "PROD",
+          "z": 1,
+          "ports": {
+              "groups": {
+                  "in": {
+                      "position": {
+                          "name": "left",
+                          "args": {
+                              "x": 2,
+                              "y": 25,
+                              "dx": 1,
+                              "dy": 1
+                          }
+                      },
+                      "attrs": {
+                          "rect": {
+                              "stroke": "#000000",
+                              "stroke-width": 0,
+                              "width": 0,
+                              "height": 0
+                          }
+                      },
+                      "markup": "<g><rect/></g>"
+                  }
+              },
+              "items": [
+                  {
+                      "group": "in",
+                      "id": 9
+                  }
+              ]
+          },
+          "attrs": {
+              "image": {
+                  "xlinkHref": "/images/icons/product.svg"
+              },
+              "label": {
+                  "text": "PROD"
+              },
+              "root": {
+                  "title": "product"
+              }
+          }
+      },
+      {
+          "type": "standard.Link",
+          "source": {
+              "id": "R101",
+              "port": 8
+          },
+          "target": {
+              "id": "PROD",
+              "port": 9
+          },
+          "router": {
+              "name": "manhattan",
+              "padding": 10
+          },
+          "connector": {
+              "name": "jumpover",
+              "attrs": {
+                  "line": {
+                      "stroke": "#5c9adb"
+                  }
+              }
+          },
+          "id": "s05",
+          "attrs": {
+              "line": {
+                  "stroke": "#979797",
+                  "stroke-width": 2
+              }
+          },
+          "labels": [
+              {
+                  "attrs": {
+                      "rect": {
+                          "fill": "#d7dce0",
+                          "stroke": "white",
+                          "stroke-width": 0,
+                          "fill-opacity": 0
+                      },
+                      "text": {
+                          "text": "Molar flowrate ('Liq', 'ethylene_oxide') 100\nMolar flowrate ('Liq', 'water') 100\nMolar flowrate ('Liq', 'sulfuric_acid') 100\nMolar flowrate ('Liq', 'ethylene_glycol') 100\nTemperature 298.15\nPressure 100000.",
+                          "fill": "black",
+                          "text-anchor": "left",
+                          "display": "none"
+                      }
+                  },
+                  "position": {
+                      "distance": 0.66,
+                      "offset": -40
+                  }
+              },
+              {
+                  "attrs": {
+                      "text": {
+                          "text": "s05"
+                      }
+                  }
+              }
+          ],
+          "z": 2
+      }
+  ],
+  "routing_config": {
+      "s01": {
+          "cell_index": 2,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s02": {
+          "cell_index": 4,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s03": {
+          "cell_index": 6,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s04": {
+          "cell_index": 8,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      },
+      "s05": {
+          "cell_index": 10,
+          "cell_config": {
+              "gap": {
+                  "source": {
+                      "x": 30,
+                      "y": 0
+                  },
+                  "destination": {
+                      "x": -30,
+                      "y": 0
+                  }
+              }
+          }
+      }
+  }
+}

@@ -1,0 +1,16 @@
+.headerLogoContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.headerLogo{
+  max-width: 70px;
+}
+
+.headerLogoText{
+  color: white;
+  font-size: 35px;
+  font-weight: 300;
+}

@@ -1,0 +1,78 @@
+.flowsheetHeader_main_container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom:1px solid rgb(16, 16, 16);
+}
+
+@media (max-width: 900px) {
+  .flowsheetHeader_main_container {
+    flex-direction: column;
+  }
+}
+
+.flowsheetHeader_title{
+  font-weight: bold;
+  font-size: 20px;
+  color: rgb(16,16,16);
+}
+
+.flowsheetHeader_icon_container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flowsheet_header_icon_container{
+  padding: 10px 10px !important;
+  border: 1px solid black;
+}
+
+.flowsheetHader_icon_stroke_only{
+  color: white;
+  stroke: black;
+  stroke-width: 40px;
+}
+
+.flowsheetHeader_icon_container > span{
+  border-right: none;
+}
+
+.flowsheetHeader_icon_container > span:hover{
+  cursor: pointer;
+  color: white;
+  background-color: #161616;
+  transition: .3s ease-in-out;
+}
+
+.flowsheetHeader_icon_container span:first-child{
+  border-top-left-radius:6px;
+  border-bottom-left-radius:6px;
+}
+
+.flowsheetHeader_last_box_icon{
+  margin-right: 20px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-right: 1px solid rgb(16, 16, 16) !important;
+}
+
+.flowsheetHeader_small_icon{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  padding: 5px !important;
+  background-color: #D9D9D9;
+  border: none;
+  border-radius: 6px;
+}
+
+.flowsheetHeader_btn_with_icon_text{
+  margin-left: 5px;
+}

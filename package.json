@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "cypress run",
-    "ui" : "python -m idaes_ui.fv.example"
+    "ui" : "python -m idaes_ui.fv.example",
+    "ui-dev": "watchmedo auto-restart --directory=\"./\" --pattern=\"*.py\" --recursive -- python -m idaes_ui.fv.example"
   },
   "repository": {
     "type": "git",
