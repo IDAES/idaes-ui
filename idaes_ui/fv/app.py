@@ -10,7 +10,10 @@ from pathlib import Path
 # external packages
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import uvicorn
+import webbrowser
+import threading
 # package
 from idaes_ui.fv.models import DiagnosticsData, DiagnosticsException, DiagnosticsError
 from idaes_ui.fv.models.settings import AppSettings
@@ -19,17 +22,26 @@ from idaes_ui.fv.models.flowsheet import Flowsheet, merge_flowsheets
 
 class FlowsheetApp:
     _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
-    _static_dir = _root_dir / "static"
+    _static_dir = _root_dir / "reactBuild/"
 
     def __init__(self, flowsheet, name="my flowsheet"):
+        # initial FastAPI
         self.app = FastAPI()
-        self.app.mount(
-            "/static", StaticFiles(directory=self._static_dir), name="static"
-        )
+
         self.diag_data = DiagnosticsData(flowsheet)
         self.settings = AppSettings()
         self.flowsheet = Flowsheet(fs=flowsheet, name=name)
 
+        # define root route
+        @self.app.get("/")
+        async def read_root():
+            index_path = self._static_dir / "index.html"
+            if not index_path.is_file():
+                raise HTTPException(status_code=404, detail="Index file not found")
+            return FileResponse(index_path)
+        # mount static file folder
+        self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
+        
         @self.app.get("/diagnostics/")
         async def get_diagnostics() -> DiagnosticsData:
             try:
@@ -57,5 +69,20 @@ class FlowsheetApp:
             # todo: save result
             return self.flowsheet
 
+    def open_browser(self, port: int):
+        """When FastAPI run, open browser with port.
+
+        Args:
+            port: the port FastAPI app running on, will open browser window with this port.
+        """
+        webbrowser.open("http://127.0.0.1:" + str(port))
+
+    
     def run(self, port: int = 8000):
+        """uvicorn run FastAPI, also call open browser but delay 1.5s
+
+        Args:
+            port: the port FastAPI app running on.
+        """
+        threading.Timer(1.5, lambda: self.open_browser(port)).start()
         uvicorn.run(self.app, host="127.0.0.1", port=port)
