@@ -111,7 +111,7 @@ def visualize(
 
     # Start the web server
     if web_server is None:
-        fastAPI_app = FlowsheetApp(flowsheet)
+        fastAPI_app = FlowsheetApp(flowsheet, name)
         fastAPI_app.run()
 
         # old web server
