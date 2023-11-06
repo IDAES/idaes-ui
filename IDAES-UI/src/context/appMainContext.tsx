@@ -9,7 +9,7 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   //get which env app is running on
   const currentENV = import.meta.env.VITE_MODE;
   //get python server running port;
-  const {server_port, fv_id} = context_parse_url() ?? { server_port: "49999", fv_id: "sample_visualization" };
+  const {server_port, fv_id} = context_parse_url() ?? { server_port: "8000", fv_id: "sample_visualization" };
 
   //App panel control
   const [panelState, setPanelState] = useState({
