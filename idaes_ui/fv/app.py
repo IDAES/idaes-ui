@@ -6,6 +6,8 @@ __author__ = "Dan Gunter"
 __created__ = "2023-10-08"
 
 # stdlib
+import sys
+import asyncio
 from pathlib import Path
 # external packages
 from fastapi import FastAPI, HTTPException
@@ -99,19 +101,43 @@ class FlowsheetApp:
         self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
     
     def open_browser(self, port: int):
-        """When FastAPI run, open browser with port.
+        """When FastAPI run, open browser on localhost with port.
 
         Args:
             port: the port FastAPI app running on, will open browser window with this port.
         """
-        webbrowser.open("http://127.0.0.1:" + str(port))
+        webbrowser.open(f"http://127.0.0.1:{port}")
 
-    
+    async def serve(self, port: int):
+        """Setup uvicorn server loop with asyncio
+        
+        Args:
+            port: the port FastAPI app running on.
+        
+        Returns:
+            server: configed uvicorn server
+        """
+        # Replace 'config' with the appropriate uvicorn configuration
+        config = uvicorn.Config(self.app, host="127.0.0.1", port=port, loop="asyncio")
+        server = uvicorn.Server(config)
+        await server.serve()
+        return server
+
     def run(self, port: int = 8000):
-        """uvicorn run FastAPI, also call open browser but delay 1.5s
+        """run FastAPI server with uvicorn, also call open browser but delay 1.5s
 
         Args:
             port: the port FastAPI app running on.
         """
-        threading.Timer(1.5, lambda: self.open_browser(port)).start()
-        uvicorn.run(self.app, host="127.0.0.1", port=port)
+        loop = asyncio.get_event_loop()
+        
+        # Check if we are in a Jupyter notebook environment.
+        if 'ipykernel' in sys.modules and 'nest_asyncio' in sys.modules:
+            import nest_asyncio
+            nest_asyncio.apply()
+
+        # Open the browser after a delay
+        threading.Timer(1.5, self.open_browser, args=(port,)).start()
+
+        # Run the uvicorn server
+        loop.run_until_complete(self.serve(port))
