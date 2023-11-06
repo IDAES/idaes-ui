@@ -38,7 +38,7 @@ class FlowsheetApp:
 
         self.app.add_middleware(
             CORSMiddleware,
-            allow_origins=["*"], # allowed url list
+            allow_origins=origins, # allowed url list
             allow_credentials=True,  # support cookies
             allow_methods=["*"],  # allowed methord
             allow_headers=["*"],  # allowed header
