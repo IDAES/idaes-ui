@@ -241,14 +241,11 @@ export class MainFV {
   }
 
     /**
-     * Get the save time interval value from the application's setting block.
+     * @description Get the save time interval value from the application's setting block.
+     * @returns save_time_interval
      */
   getSaveTimeInterval() {
-    //question:
-    //this is the old way to write setting_url question its key=" then concat, should I keep "?
-    //let settings_url = `${this.baseUrl}/setting?setting_key="`.concat(this._save_time_interval_key);
-
-    let settings_url = `${this.baseUrl}/setting?setting_key=${this._save_time_interval_key}`;
+    let settings_url = `${this.baseUrl}/api/get_settings`;
     let save_time_interval = this._default_save_time_interval;
 
     axios.get(settings_url, {
@@ -257,7 +254,7 @@ export class MainFV {
       }
     })
     .then((response) => {
-      if (response.data.value != 'None') {
+      if (response.data.value) {
           save_time_interval = response.data.value;
       } else {
           this.informUser(
