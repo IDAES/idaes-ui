@@ -31,13 +31,14 @@ class FlowsheetApp:
 
         # enable CORS let port 5173 can talk to this server
         origins = [
+            "http://localhost:8000",
             "http://localhost:5173",
             "http://127.0.0.1:5173"
         ]
 
         self.app.add_middleware(
             CORSMiddleware,
-            allow_origins=origins, # allowed url list
+            allow_origins=["*"], # allowed url list
             allow_credentials=True,  # support cookies
             allow_methods=["*"],  # allowed methord
             allow_headers=["*"],  # allowed header
@@ -49,19 +50,19 @@ class FlowsheetApp:
 
         # API
         # get flowsheet
-        @self.app.get("/api/get_fs/")
+        @self.app.get("/api/get_fs")
         def get_flowsheet() -> Flowsheet:
             # todo: check 1st time for saved one (merge if found)
             return self.flowsheet
 
         # save flowsheet
-        @self.app.put("/api/put_fs/")
+        @self.app.put("/api/put_fs")
         def put_flowsheet(fs: Flowsheet):
             self.flowsheet = merge_flowsheets(self.flowsheet, fs)
             # todo: save result
             return self.flowsheet
         
-        @self.app.get("/api/get_diagnostics/")
+        @self.app.get("/api/get_diagnostics")
         async def get_diagnostics() -> DiagnosticsData:
             try:
                 return self.diag_data
@@ -69,11 +70,11 @@ class FlowsheetApp:
                 error_json = DiagnosticsError.from_exception(exc).model_dump_json()
                 raise HTTPException(status_code=500, detail=error_json)
 
-        @self.app.get("/api/get_settings/")
+        @self.app.get("/api/get_settings")
         def get_settings() -> AppSettings:
             return self.settings
 
-        @self.app.put("/api/put_settings/")
+        @self.app.put("/api/put_settings")
         def put_settings(settings: AppSettings):
             self.settings = settings
 
