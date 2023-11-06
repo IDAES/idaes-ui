@@ -32,6 +32,7 @@ class FlowsheetApp:
         # enable CORS let port 5173 can talk to this server
         origins = [
             "http://localhost:8000",
+            "http://127.0.0.1:8000",
             "http://localhost:5173",
             "http://127.0.0.1:5173"
         ]
@@ -44,8 +45,16 @@ class FlowsheetApp:
             allow_headers=["*"],  # allowed header
         )
 
+        # get app setting
+        try:
+            self.settings = self.set_time_interval
+        except:
+            self.settings = AppSettings()
+
+        # get diagnostics json
         self.diag_data = DiagnosticsData(flowsheet)
-        self.settings = AppSettings()
+
+        # get app flowsheet
         self.flowsheet = Flowsheet(fs=flowsheet, name=name)
 
         # API
