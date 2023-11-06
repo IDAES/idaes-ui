@@ -36,7 +36,7 @@ export function context_parse_url(){
       the port and id are setup in example.py fv_example()
     */
     //fixed port when example
-    const server_port= "49999";
+    const server_port= 8000;
     //fixed id when example
     const fv_id = "sample_visualization";
     return {server_port, fv_id};
