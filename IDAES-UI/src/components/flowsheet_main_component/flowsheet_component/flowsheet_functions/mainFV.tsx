@@ -53,9 +53,9 @@ export class MainFV {
     this.isStreamTableShow = isStreamTableShow;
 
     //Gerneate url for fetch data
-    this.baseUrl = `http://localhost:${port}`
-    this.getFSUrl = VITE_MODE === "dev" ? `${this.baseUrl}/fs?id=${flowsheetId}` : `/fs?id=${flowsheetId}`;
-    this.putFSUrl = VITE_MODE === "dev" ? `${this.baseUrl}/fs?id=${flowsheetId}` : `/fs?id=${flowsheetId}`;
+    this.baseUrl = `http://localhost:${port}`;
+    this.getFSUrl = `${this.baseUrl}/api/get_fs`;
+    this.putFSUrl = `${this.baseUrl}/api/put_fs`;
 
     //Define model
     this.model = {}
@@ -73,11 +73,6 @@ export class MainFV {
     this._save_time_interval = this.getSaveTimeInterval();
     this.setupGraphChangeChecker(this._save_time_interval, flowsheetId);
     
-    //fetch model data from python server, once get data then render model and stream table
-    //default is from sample_visualization if no ?example=1 etc. in url
-    //define if fetch from example
-    this.setGetFSUrl();
-
     /**
      * @param 
      */
