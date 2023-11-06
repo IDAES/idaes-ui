@@ -11,6 +11,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import webbrowser
 import threading
@@ -27,6 +28,20 @@ class FlowsheetApp:
     def __init__(self, flowsheet, name="my flowsheet"):
         # initial FastAPI
         self.app = FastAPI()
+
+        # enable CORS let port 5173 can talk to this server
+        origins = [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173"
+        ]
+
+        self.app.add_middleware(
+            CORSMiddleware,
+            allow_origins=origins, # allowed url list
+            allow_credentials=True,  # support cookies
+            allow_methods=["*"],  # allowed methord
+            allow_headers=["*"],  # allowed header
+        )
 
         self.diag_data = DiagnosticsData(flowsheet)
         self.settings = AppSettings()
