@@ -34,19 +34,19 @@ class FlowsheetApp:
 
         # API
         # get flowsheet
-        @self.app.get("/fs/")
+        @self.app.get("/api/get_fs/")
         def get_flowsheet() -> Flowsheet:
             # todo: check 1st time for saved one (merge if found)
             return self.flowsheet
 
         # save flowsheet
-        @self.app.put("/fs/")
+        @self.app.put("/api/put_fs/")
         def put_flowsheet(fs: Flowsheet):
             self.flowsheet = merge_flowsheets(self.flowsheet, fs)
             # todo: save result
             return self.flowsheet
         
-        @self.app.get("/diagnostics/")
+        @self.app.get("/api/get_diagnostics/")
         async def get_diagnostics() -> DiagnosticsData:
             try:
                 return self.diag_data
@@ -54,11 +54,11 @@ class FlowsheetApp:
                 error_json = DiagnosticsError.from_exception(exc).model_dump_json()
                 raise HTTPException(status_code=500, detail=error_json)
 
-        @self.app.get("/settings/")
+        @self.app.get("/api/get_settings/")
         def get_settings() -> AppSettings:
             return self.settings
 
-        @self.app.put("/settings/")
+        @self.app.put("/api/put_settings/")
         def put_settings(settings: AppSettings):
             self.settings = settings
 
