@@ -42,6 +42,19 @@ class FlowsheetApp:
         # mount static file folder
         self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
         
+        # get flowsheet
+        @self.app.get("/fs/")
+        def get_flowsheet() -> Flowsheet:
+            # todo: check 1st time for saved one (merge if found)
+            return self.flowsheet
+
+        # save flowsheet
+        @self.app.put("/fs/")
+        def put_flowsheet(fs: Flowsheet):
+            self.flowsheet = merge_flowsheets(self.flowsheet, fs)
+            # todo: save result
+            return self.flowsheet
+        
         @self.app.get("/diagnostics/")
         async def get_diagnostics() -> DiagnosticsData:
             try:
@@ -58,16 +71,6 @@ class FlowsheetApp:
         def put_settings(settings: AppSettings):
             self.settings = settings
 
-        @self.app.get("/fs/")
-        def get_flowsheet() -> Flowsheet:
-            # todo: check 1st time for saved one (merge if found)
-            return self.flowsheet
-
-        @self.app.put("/fs/")
-        def put_flowsheet(fs: Flowsheet):
-            self.flowsheet = merge_flowsheets(self.flowsheet, fs)
-            # todo: save result
-            return self.flowsheet
 
     def open_browser(self, port: int):
         """When FastAPI run, open browser with port.
