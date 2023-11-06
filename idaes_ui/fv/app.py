@@ -32,16 +32,7 @@ class FlowsheetApp:
         self.settings = AppSettings()
         self.flowsheet = Flowsheet(fs=flowsheet, name=name)
 
-        # define root route
-        @self.app.get("/")
-        async def read_root():
-            index_path = self._static_dir / "index.html"
-            if not index_path.is_file():
-                raise HTTPException(status_code=404, detail="Index file not found")
-            return FileResponse(index_path)
-        # mount static file folder
-        self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
-        
+        # API
         # get flowsheet
         @self.app.get("/fs/")
         def get_flowsheet() -> Flowsheet:
@@ -71,7 +62,17 @@ class FlowsheetApp:
         def put_settings(settings: AppSettings):
             self.settings = settings
 
-
+        # mount static file
+        # define root route
+        @self.app.get("/")
+        async def read_root():
+            index_path = self._static_dir / "index.html"
+            if not index_path.is_file():
+                raise HTTPException(status_code=404, detail="Index file not found")
+            return FileResponse(index_path)
+        # mount static file folder
+        self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
+    
     def open_browser(self, port: int):
         """When FastAPI run, open browser with port.
 
