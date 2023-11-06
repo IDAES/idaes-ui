@@ -23,7 +23,6 @@ import webbrowser
 
 # package
 from idaes import logger
-from .model_server import FlowsheetServer
 from . import persist, errors
 
 # Logging
