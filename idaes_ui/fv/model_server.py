@@ -45,7 +45,7 @@ _this_dir = Path(__file__).parent.absolute()
 _static_dir = _this_dir / "static"
 _template_dir = _this_dir / "static"
 
-# TODO: update this class move all http releated to FastAPI
+
 class FlowsheetServer(http.server.HTTPServer):
     """A simple HTTP server that runs in its own thread.
 
