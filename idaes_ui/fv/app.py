@@ -14,7 +14,6 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import webbrowser
 import threading
@@ -23,6 +22,9 @@ import threading
 from idaes_ui.fv.models import DiagnosticsData, DiagnosticsException, DiagnosticsError
 from idaes_ui.fv.models.settings import AppSettings
 from idaes_ui.fv.models.flowsheet import Flowsheet, merge_flowsheets
+
+# defined functions
+from .fastAPI_functions.cors import enable_fastapi_cors
 
 
 class FlowsheetApp:
@@ -38,21 +40,8 @@ class FlowsheetApp:
             description="IDAES UI API endpoint detail.",
         )
 
-        # enable CORS let port 5173 can talk to this server
-        origins = [
-            "http://localhost:8000",
-            "http://127.0.0.1:8000",
-            "http://localhost:5173",
-            "http://127.0.0.1:5173",
-        ]
-
-        self.app.add_middleware(
-            CORSMiddleware,
-            allow_origins=origins,  # allowed url list
-            allow_credentials=True,  # support cookies
-            allow_methods=["*"],  # allowed methord
-            allow_headers=["*"],  # allowed header
-        )
+        # enable CORS let allowed port can talk to this server
+        enable_fastapi_cors(self.app)
 
         # get app setting
         try:
