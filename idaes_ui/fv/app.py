@@ -9,6 +9,7 @@ __created__ = "2023-10-08"
 import sys
 import asyncio
 from pathlib import Path
+
 # external packages
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -17,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import webbrowser
 import threading
+
 # package
 from idaes_ui.fv.models import DiagnosticsData, DiagnosticsException, DiagnosticsError
 from idaes_ui.fv.models.settings import AppSettings
@@ -36,12 +38,12 @@ class FlowsheetApp:
             "http://localhost:8000",
             "http://127.0.0.1:8000",
             "http://localhost:5173",
-            "http://127.0.0.1:5173"
+            "http://127.0.0.1:5173",
         ]
 
         self.app.add_middleware(
             CORSMiddleware,
-            allow_origins=origins, # allowed url list
+            allow_origins=origins,  # allowed url list
             allow_credentials=True,  # support cookies
             allow_methods=["*"],  # allowed methord
             allow_headers=["*"],  # allowed header
@@ -72,7 +74,7 @@ class FlowsheetApp:
             self.flowsheet = merge_flowsheets(self.flowsheet, fs)
             # todo: save result
             return self.flowsheet
-        
+
         @self.app.get("/api/get_diagnostics")
         async def get_diagnostics() -> DiagnosticsData:
             try:
@@ -97,9 +99,10 @@ class FlowsheetApp:
             if not index_path.is_file():
                 raise HTTPException(status_code=404, detail="Index file not found")
             return FileResponse(index_path)
+
         # mount static file folder
         self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
-    
+
     def open_browser(self, port: int):
         """When FastAPI run, open browser on localhost with port.
 
@@ -110,10 +113,10 @@ class FlowsheetApp:
 
     async def serve(self, port: int):
         """Setup uvicorn server loop with asyncio
-        
+
         Args:
             port: the port FastAPI app running on.
-        
+
         Returns:
             server: configed uvicorn server
         """
@@ -130,10 +133,11 @@ class FlowsheetApp:
             port: the port FastAPI app running on.
         """
         loop = asyncio.get_event_loop()
-        
+
         # Check if we are in a Jupyter notebook environment.
-        if 'ipykernel' in sys.modules and 'nest_asyncio' in sys.modules:
+        if "ipykernel" in sys.modules and "nest_asyncio" in sys.modules:
             import nest_asyncio
+
             nest_asyncio.apply()
 
         # Open the browser after a delay
