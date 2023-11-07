@@ -31,7 +31,12 @@ class FlowsheetApp:
 
     def __init__(self, flowsheet, name="my flowsheet"):
         # initial FastAPI
-        self.app = FastAPI()
+        self.app = FastAPI(
+            docs_url="/api/v1/docs",
+            redoc="/api/v1/redoc",
+            title="IDAES UI API DOC",
+            description="IDAES UI API endpoint detail.",
+        )
 
         # enable CORS let port 5173 can talk to this server
         origins = [
@@ -63,19 +68,23 @@ class FlowsheetApp:
 
         # API
         # get flowsheet
-        @self.app.get("/api/get_fs")
+        @self.app.get("/api/get_fs", tags=["Flowsheet"])
         def get_flowsheet() -> Flowsheet:
             # todo: check 1st time for saved one (merge if found)
             return self.flowsheet
 
         # save flowsheet
-        @self.app.put("/api/put_fs")
+        @self.app.put("/api/put_fs", tags=["Flowsheet"])
         def put_flowsheet(fs: Flowsheet):
+            """API endpoint use for update flowsheet
+            Args:
+            fs: Flowsheet
+            """
             self.flowsheet = merge_flowsheets(self.flowsheet, fs)
             # todo: save result
             return self.flowsheet
 
-        @self.app.get("/api/get_diagnostics")
+        @self.app.get("/api/get_diagnostics", tags=["Diagnostics"])
         async def get_diagnostics() -> DiagnosticsData:
             try:
                 return self.diag_data
@@ -83,17 +92,17 @@ class FlowsheetApp:
                 error_json = DiagnosticsError.from_exception(exc).model_dump_json()
                 raise HTTPException(status_code=500, detail=error_json)
 
-        @self.app.get("/api/get_settings")
+        @self.app.get("/api/get_settings", tags=["App setting"])
         def get_settings() -> AppSettings:
             return self.settings
 
-        @self.app.put("/api/put_settings")
+        @self.app.put("/api/put_settings", tags=["App setting"])
         def put_settings(settings: AppSettings):
             self.settings = settings
 
         # mount static file
         # define root route
-        @self.app.get("/")
+        @self.app.get("/", tags=["Static files"])
         async def read_root():
             index_path = self._static_dir / "index.html"
             if not index_path.is_file():
