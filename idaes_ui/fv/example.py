@@ -35,8 +35,10 @@ def fv_example():
     return 0
 
 
-level_map = {logging.getLevelName(n): n for n in (logging.DEBUG, logging.INFO,
-                                                  logging.WARN, logging.ERROR)}
+level_map = {
+    logging.getLevelName(n): n
+    for n in (logging.DEBUG, logging.INFO, logging.WARN, logging.ERROR)
+}
 
 
 def parse_logging_level(s: str, level: int) -> int:
