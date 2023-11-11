@@ -7,16 +7,12 @@ __created__ = "2023-10-08"
 
 # stdlib
 import sys
-import asyncio
 from pathlib import Path
 
 # external packages
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-import uvicorn
-import webbrowser
-import threading
 
 # package
 from idaes_ui.fv.models import DiagnosticsData, DiagnosticsException, DiagnosticsError
@@ -25,13 +21,20 @@ from idaes_ui.fv.models.flowsheet import Flowsheet, merge_flowsheets
 
 # defined functions
 from .fastAPI_functions.cors import enable_fastapi_cors
+from idaes_ui.fv.fastAPI_functions.uvicorn import WebUvicorn
 
 
 class FlowsheetApp:
     _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
     _static_dir = _root_dir / "reactBuild/"
 
-    def __init__(self, flowsheet, name="my flowsheet"):
+    def __init__(self, flowsheet, name, port):
+        # populate web port
+        if port:
+            self.port = port
+        else:
+            self.port = 8000
+
         # initial FastAPI
         self.app = FastAPI(
             docs_url="/api/v1/docs",
@@ -44,10 +47,10 @@ class FlowsheetApp:
         enable_fastapi_cors(self.app)
 
         # get app setting
-        try:
-            self.settings = self.set_time_interval
-        except:
-            self.settings = AppSettings()
+        # try:
+        #     self.settings = self.set_time_interval
+        # except:
+        #     self.settings = AppSettings()
 
         # get diagnostics json
         self.diag_data = DiagnosticsData(flowsheet)
@@ -101,45 +104,4 @@ class FlowsheetApp:
         # mount static file folder
         self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
 
-    def open_browser(self, port: int):
-        """When FastAPI run, open browser on localhost with port.
-
-        Args:
-            port: the port FastAPI app running on, will open browser window with this port.
-        """
-        webbrowser.open(f"http://127.0.0.1:{port}")
-
-    async def serve(self, port: int):
-        """Setup uvicorn server loop with asyncio
-
-        Args:
-            port: the port FastAPI app running on.
-
-        Returns:
-            server: configed uvicorn server
-        """
-        # Replace 'config' with the appropriate uvicorn configuration
-        config = uvicorn.Config(self.app, host="127.0.0.1", port=port, loop="asyncio")
-        server = uvicorn.Server(config)
-        await server.serve()
-        return server
-
-    def run(self, port: int = 8000):
-        """run FastAPI server with uvicorn, also call open browser but delay 1.5s
-
-        Args:
-            port: the port FastAPI app running on.
-        """
-        loop = asyncio.get_event_loop()
-
-        # Check if we are in a Jupyter notebook environment.
-        if "ipykernel" in sys.modules and "nest_asyncio" in sys.modules:
-            import nest_asyncio
-
-            nest_asyncio.apply()
-
-        # Open the browser after a delay
-        threading.Timer(1.5, self.open_browser, args=(port,)).start()
-
-        # Run the uvicorn server
-        loop.run_until_complete(self.serve(port))
+        WebUvicorn(self.app, self.port)
