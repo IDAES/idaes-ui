@@ -3,5 +3,6 @@ idaes-pse @ git+https://github.com/IDAES/idaes-pse@main
 pydantic~=2.0
 fastapi
 uvicorn
+nest_asyncio>=1.4.0 #fix event loop already running
 pytest-icdiff >= 0.7  # readable dict diffs for test_flowsheet and others
 httpx  # fastapi testing
