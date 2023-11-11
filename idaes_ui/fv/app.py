@@ -104,4 +104,5 @@ class FlowsheetApp:
         # mount static file folder
         self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
 
+        # Uvicorn serve fastAPI app
         WebUvicorn(self.app, self.port)
