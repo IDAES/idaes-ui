@@ -110,8 +110,7 @@ def visualize(
 
     # Start the web server
     if web_server is None:
-        fastAPI_app = FlowsheetApp(flowsheet, name)
-        fastAPI_app.run()
+        fastAPI_app = FlowsheetApp(flowsheet, name, port)
 
         # old web server
         # web_server = FlowsheetServer(port=port)
@@ -122,136 +121,137 @@ def visualize(
     else:
         _log.info(f"Using HTTP server on localhost, port {web_server.port}")
 
-    # Set up save location
-    use_default = False
-    if save is None or save is True:
-        save_path = _pick_default_save_location(name, save_dir)
-        use_default = True
-    elif save is False:
-        save_path = None
-    else:
-        try:
-            save_path = Path(save)
-        except TypeError as err:
-            raise errors.VisualizerSaveError(
-                save, f"Cannot convert 'save' value to Path object: {err}"
-            )
-        if save_dir is not None and not save_path.is_absolute():
-            save_path = save_dir / save_path
-    # Create datastore for save location
-    if save_path is None:
-        datastore = persist.MemoryDataStore()
-    else:
-        if save_path.exists() and load_from_saved:
-            # Load from saved
-            datastore = persist.DataStore.create(save_path)
-            _log.info(f"Loading saved flowsheet from '{save_path}'")
-            datastore.load()
-        else:
-            # Create new file
-            # deal with duplicate names
-            try:
-                save_path = _handle_existing_save_path(
-                    name,
-                    save_path,
-                    max_versions=MAX_SAVED_VERSIONS,
-                    overwrite=overwrite,
-                )
-            except errors.TooManySavedVersions as err:
-                raise RuntimeError(f"In visualize(): {err}")
-            datastore = persist.DataStore.create(save_path)
 
-        if use_default:
-            if not quiet:
-                cwd = save_path.parent.absolute()
-                _log.info(
-                    f"Saving flowsheet to default file '{save_path.name}' in current"
-                    f" directory ({cwd})"
-                )
-        else:
-            if not quiet:
-                print(f"Saving flowsheet to {str(datastore)}")
+#     # Set up save location
+#     use_default = False
+#     if save is None or save is True:
+#         save_path = _pick_default_save_location(name, save_dir)
+#         use_default = True
+#     elif save is False:
+#         save_path = None
+#     else:
+#         try:
+#             save_path = Path(save)
+#         except TypeError as err:
+#             raise errors.VisualizerSaveError(
+#                 save, f"Cannot convert 'save' value to Path object: {err}"
+#             )
+#         if save_dir is not None and not save_path.is_absolute():
+#             save_path = save_dir / save_path
+#     # Create datastore for save location
+#     if save_path is None:
+#         datastore = persist.MemoryDataStore()
+#     else:
+#         if save_path.exists() and load_from_saved:
+#             # Load from saved
+#             datastore = persist.DataStore.create(save_path)
+#             _log.info(f"Loading saved flowsheet from '{save_path}'")
+#             datastore.load()
+#         else:
+#             # Create new file
+#             # deal with duplicate names
+#             try:
+#                 save_path = _handle_existing_save_path(
+#                     name,
+#                     save_path,
+#                     max_versions=MAX_SAVED_VERSIONS,
+#                     overwrite=overwrite,
+#                 )
+#             except errors.TooManySavedVersions as err:
+#                 raise RuntimeError(f"In visualize(): {err}")
+#             datastore = persist.DataStore.create(save_path)
 
-    # Add our flowsheet to it
-    try:
-        new_name = web_server.add_flowsheet(name, flowsheet, datastore)
-    except (errors.ProcessingError, errors.DatastoreError) as err:
-        raise errors.VisualizerError(f"Cannot add flowsheet: {err}")
+#         if use_default:
+#             if not quiet:
+#                 cwd = save_path.parent.absolute()
+#                 _log.info(
+#                     f"Saving flowsheet to default file '{save_path.name}' in current"
+#                     f" directory ({cwd})"
+#                 )
+#         else:
+#             if not quiet:
+#                 print(f"Saving flowsheet to {str(datastore)}")
 
-    if new_name != name:
-        _log.warning(f"Flowsheet name changed: old='{name}' new='{new_name}'")
-        if not quiet:
-            print(f"Flowsheet name changed to '{new_name}'")
-        name = new_name
+#     # Add our flowsheet to it
+#     try:
+#         new_name = web_server.add_flowsheet(name, flowsheet, datastore)
+#     except (errors.ProcessingError, errors.DatastoreError) as err:
+#         raise errors.VisualizerError(f"Cannot add flowsheet: {err}")
 
-    # Open a browser window for the UI
-    url = f"http://localhost:{web_server.port}/app?id={name}"
-    if browser:
-        success = webbrowser.open(url)
-        if success:
-            _log.debug("Flowsheet opened in browser window")
-        else:
-            _log.warning(f"Could not open flowsheet URL '{url}' in browser")
+#     if new_name != name:
+#         _log.warning(f"Flowsheet name changed: old='{name}' new='{new_name}'")
+#         if not quiet:
+#             print(f"Flowsheet name changed to '{new_name}'")
+#         name = new_name
 
-    if not quiet:
-        _log.info(f"Flowsheet visualization at: {url}")
+#     # Open a browser window for the UI
+#     url = f"http://localhost:{web_server.port}/app?id={name}"
+#     if browser:
+#         success = webbrowser.open(url)
+#         if success:
+#             _log.debug("Flowsheet opened in browser window")
+#         else:
+#             _log.warning(f"Could not open flowsheet URL '{url}' in browser")
 
-    if loop_forever:
-        _loop_forever(quiet)
+#     if not quiet:
+#         _log.info(f"Flowsheet visualization at: {url}")
 
-    return VisualizeResult(store=datastore, port=web_server.port, server=web_server)
+#     if loop_forever:
+#         _loop_forever(quiet)
 
-
-def _loop_forever(quiet):
-    try:
-        if not quiet:
-            print("Type ^C to stop the program")
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        if not quiet:
-            print("Program stopped")
+#     return VisualizeResult(store=datastore, port=web_server.port, server=web_server)
 
 
-def _pick_default_save_location(name, save_dir):
-    """Pick a default save location."""
-    if not save_dir:
-        save_dir = Path(".")
-    save_path = save_dir / f"{name}.json"
-    return save_path
+# def _loop_forever(quiet):
+#     try:
+#         if not quiet:
+#             print("Type ^C to stop the program")
+#         while True:
+#             time.sleep(1)
+#     except KeyboardInterrupt:
+#         if not quiet:
+#             print("Program stopped")
 
 
-def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None):
-    """Set up for overwrite/versioning for existing save paths."""
-    save_dir = save_path.parent
-    # Handle simple cases: overwrite, and no existing file
-    if overwrite:
-        if save_path.exists():
-            _log.warning(f"Overwriting existing save file '{save_path}'")
-            save_path.open("w")  # blank file
-        return save_path
-    elif not save_path.exists():
-        return save_path
-    # Find the next version that does not exist
-    _log.info(f"Save file {save_path} exists. Creating new version")
-    counter = 0
-    if max_versions == 0:
-        max_versions = sys.maxsize  # millions of years of file-creating fun
-    while save_path.exists() and counter < max_versions:
-        counter += 1
-        save_file = f"{name}-{counter}.json"
-        save_path = save_dir / save_file
-    # Edge case: too many NAME-#.json files for this NAME
-    if counter == max_versions:
-        why = (
-            f"Found {max_versions} numbered files of form '{name}-<num>.json'. That's"
-            " too many."
-        )
-        _log.error(why)
-        raise errors.TooManySavedVersions(why)
-    # Return new (versioned) path
-    _log.info(f"Created new version for save file: {save_path}")
-    return save_path
+# def _pick_default_save_location(name, save_dir):
+#     """Pick a default save location."""
+#     if not save_dir:
+#         save_dir = Path(".")
+#     save_path = save_dir / f"{name}.json"
+#     return save_path
+
+
+# def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None):
+#     """Set up for overwrite/versioning for existing save paths."""
+#     save_dir = save_path.parent
+#     # Handle simple cases: overwrite, and no existing file
+#     if overwrite:
+#         if save_path.exists():
+#             _log.warning(f"Overwriting existing save file '{save_path}'")
+#             save_path.open("w")  # blank file
+#         return save_path
+#     elif not save_path.exists():
+#         return save_path
+#     # Find the next version that does not exist
+#     _log.info(f"Save file {save_path} exists. Creating new version")
+#     counter = 0
+#     if max_versions == 0:
+#         max_versions = sys.maxsize  # millions of years of file-creating fun
+#     while save_path.exists() and counter < max_versions:
+#         counter += 1
+#         save_file = f"{name}-{counter}.json"
+#         save_path = save_dir / save_file
+#     # Edge case: too many NAME-#.json files for this NAME
+#     if counter == max_versions:
+#         why = (
+#             f"Found {max_versions} numbered files of form '{name}-<num>.json'. That's"
+#             " too many."
+#         )
+#         _log.error(why)
+#         raise errors.TooManySavedVersions(why)
+#     # Return new (versioned) path
+#     _log.info(f"Created new version for save file: {save_path}")
+#     return save_path
 
 
 def _init_logging(lvl):
