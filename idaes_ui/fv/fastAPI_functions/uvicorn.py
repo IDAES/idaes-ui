@@ -60,4 +60,4 @@ class WebUvicorn:
         threading.Timer(1.5, self.open_browser, args=(self.port,)).start()
 
         # Run the uvicorn server
-        loop.run_until_complete(self.serve(self.port))
+        loop.run_until_complete(self.serve())
