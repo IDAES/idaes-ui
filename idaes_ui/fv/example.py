@@ -27,12 +27,12 @@ def fv_example():
     visualize(m.fs, "sample_visualization", port=49999)
     _log.info("Starting Flowsheet Visualizer")
     _log.info("Press Control-C to stop")
-    try:
-        while 1:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        _log.info("Flowsheet Visualizer stopped")
-    return 0
+    # try:
+    #     while 1:
+    #         time.sleep(1)
+    # except KeyboardInterrupt:
+    #     _log.info("Flowsheet Visualizer stopped")
+    # return 0
 
 
 level_map = {
