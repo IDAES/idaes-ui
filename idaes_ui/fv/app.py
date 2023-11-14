@@ -17,7 +17,8 @@ from fastapi.responses import FileResponse
 # package
 from idaes_ui.fv.models import DiagnosticsData, DiagnosticsException, DiagnosticsError
 from idaes_ui.fv.models.settings import AppSettings
-from idaes_ui.fv.models.flowsheet import Flowsheet, merge_flowsheets
+
+# from idaes_ui.fv.models.flowsheet import Flowsheet, merge_flowsheets
 
 # defined functions
 from .fastAPI_functions.cors import enable_fastapi_cors
@@ -46,9 +47,14 @@ class FlowsheetApp:
             description="IDAES UI API endpoint detail.",
         )
 
+        # initial everything related to flowsheet
+        self.flowsheet = flowsheet
+        self.flowsheet_name = name
+
         # enable CORS let allowed port can talk to this server
         enable_fastapi_cors(self.app)
-        Router(flowsheet)
+
+        # initialize router
 
         # get app setting
         # try:
@@ -59,54 +65,50 @@ class FlowsheetApp:
         # get diagnostics json
         self.diag_data = DiagnosticsData(flowsheet)
 
-        # get app flowsheet
-        self.flowsheet = Flowsheet(fs=flowsheet, name=name)
+        # # get app flowsheet
+        # self.flowsheet = Flowsheet(fs=flowsheet, name=name)
 
-        # API
-        # get flowsheet
-        @self.app.get("/api/get_fs", tags=["Flowsheet"])
-        def get_flowsheet() -> Flowsheet:
-            # todo: check 1st time for saved one (merge if found)
-            return self.flowsheet
+        # # API router
+        Router(self.app, self.flowsheet, self.flowsheet_name)
 
-        # save flowsheet
-        @self.app.put("/api/put_fs", tags=["Flowsheet"])
-        def put_flowsheet(fs: Flowsheet):
-            """API endpoint use for update flowsheet
-            Args:
-            fs: Flowsheet
-            """
-            self.flowsheet = merge_flowsheets(self.flowsheet, fs)
-            # todo: save result
-            return self.flowsheet
+        # # save flowsheet
+        # @self.app.put("/api/put_fs", tags=["Flowsheet"])
+        # def put_flowsheet(fs: Flowsheet):
+        #     """API endpoint use for update flowsheet
+        #     Args:
+        #     fs: Flowsheet
+        #     """
+        #     self.flowsheet = merge_flowsheets(self.flowsheet, fs)
+        #     # todo: save result
+        #     return self.flowsheet
 
-        @self.app.get("/api/get_diagnostics", tags=["Diagnostics"])
-        async def get_diagnostics() -> DiagnosticsData:
-            try:
-                return self.diag_data
-            except DiagnosticsException as exc:
-                error_json = DiagnosticsError.from_exception(exc).model_dump_json()
-                raise HTTPException(status_code=500, detail=error_json)
+        # @self.app.get("/api/get_diagnostics", tags=["Diagnostics"])
+        # async def get_diagnostics() -> DiagnosticsData:
+        #     try:
+        #         return self.diag_data
+        #     except DiagnosticsException as exc:
+        #         error_json = DiagnosticsError.from_exception(exc).model_dump_json()
+        #         raise HTTPException(status_code=500, detail=error_json)
 
-        @self.app.get("/api/get_settings", tags=["App setting"])
-        def get_settings() -> AppSettings:
-            return self.settings
+        # @self.app.get("/api/get_settings", tags=["App setting"])
+        # def get_settings() -> AppSettings:
+        #     return self.settings
 
-        @self.app.put("/api/put_settings", tags=["App setting"])
-        def put_settings(settings: AppSettings):
-            self.settings = settings
+        # @self.app.put("/api/put_settings", tags=["App setting"])
+        # def put_settings(settings: AppSettings):
+        #     self.settings = settings
 
-        # mount static file
-        # define root route
-        @self.app.get("/", tags=["Static files"])
-        async def read_root():
-            index_path = self._static_dir / "index.html"
-            if not index_path.is_file():
-                raise HTTPException(status_code=404, detail="Index file not found")
-            return FileResponse(index_path)
+        # # mount static file
+        # # define root route
+        # @self.app.get("/", tags=["Static files"])
+        # async def read_root():
+        #     index_path = self._static_dir / "index.html"
+        #     if not index_path.is_file():
+        #         raise HTTPException(status_code=404, detail="Index file not found")
+        #     return FileResponse(index_path)
 
-        # mount static file folder
-        self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
+        # # mount static file folder
+        # self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
 
         # Uvicorn serve fastAPI app
         WebUvicorn(self.app, self.port)
