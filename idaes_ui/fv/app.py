@@ -23,6 +23,9 @@ from idaes_ui.fv.models.flowsheet import Flowsheet, merge_flowsheets
 from .fastAPI_functions.cors import enable_fastapi_cors
 from idaes_ui.fv.fastAPI_functions.uvicorn import WebUvicorn
 
+# defined route
+from .fastAPI_route.router import Router
+
 
 class FlowsheetApp:
     _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
@@ -45,6 +48,7 @@ class FlowsheetApp:
 
         # enable CORS let allowed port can talk to this server
         enable_fastapi_cors(self.app)
+        Router(flowsheet)
 
         # get app setting
         # try:
