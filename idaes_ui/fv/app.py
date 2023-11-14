@@ -7,12 +7,14 @@ __created__ = "2023-10-08"
 
 # stdlib
 import sys
-from pathlib import Path
+
+# from pathlib import Path
 
 # external packages
 from fastapi import FastAPI, HTTPException
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+
+# from fastapi.staticfiles import StaticFiles
+# from fastapi.responses import FileResponse
 
 # package
 from idaes_ui.fv.models import DiagnosticsData, DiagnosticsException, DiagnosticsError
@@ -29,8 +31,8 @@ from .fastAPI_route.router import Router
 
 
 class FlowsheetApp:
-    _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
-    _static_dir = _root_dir / "reactBuild/"
+    # _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
+    # _static_dir = _root_dir / "reactBuild/"
 
     def __init__(self, flowsheet, name, port):
         # populate web port
@@ -97,18 +99,6 @@ class FlowsheetApp:
         # @self.app.put("/api/put_settings", tags=["App setting"])
         # def put_settings(settings: AppSettings):
         #     self.settings = settings
-
-        # # mount static file
-        # # define root route
-        # @self.app.get("/", tags=["Static files"])
-        # async def read_root():
-        #     index_path = self._static_dir / "index.html"
-        #     if not index_path.is_file():
-        #         raise HTTPException(status_code=404, detail="Index file not found")
-        #     return FileResponse(index_path)
-
-        # # mount static file folder
-        # self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
 
         # Uvicorn serve fastAPI app
         WebUvicorn(self.app, self.port)

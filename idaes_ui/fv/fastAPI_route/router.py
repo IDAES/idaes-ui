@@ -1,5 +1,6 @@
 # import routes
 from .api_get_flowsheet_route import GetFlowsheetRoute
+from .api_get_react_app_route import GetReactAppRoute
 
 
 class Router:
@@ -12,3 +13,7 @@ class Router:
         """
         # api end point get flowsheet
         GetFlowsheetRoute(fastAPIApp, flowsheet, flowsheet_name)
+
+        # api end point serve react app
+        # static router has to defined at end
+        GetReactAppRoute(fastAPIApp)
