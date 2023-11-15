@@ -32,6 +32,7 @@ class FlowsheetApp:
         self.settings = AppSettings()
         self.flowsheet = Flowsheet(fs=flowsheet, name=name)
 
+<<<<<<< HEAD
         @self.app.get("/diagnostics/")
         async def get_diagnostics() -> DiagnosticsData:
             try:
@@ -43,6 +44,10 @@ class FlowsheetApp:
         @self.app.get("/settings/")
         def get_settings() -> AppSettings:
             return self.settings
+=======
+        # # API router
+        Router(self.app, self.flowsheet, self.flowsheet_name, self.save_time_interval)
+>>>>>>> 9f11168 (remove get flowsheet it's already in it's own route file)
 
         @self.app.put("/settings/")
         def put_settings(settings: AppSettings):
