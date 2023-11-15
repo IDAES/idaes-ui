@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://CopyDemon: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@github.com/CopyDemon/idaes-ui.git"
+    "url": "https://github.com/CopyDemon/idaes-ui.git"
   },
   "author": "Sheng",
   "license": "ISC",
