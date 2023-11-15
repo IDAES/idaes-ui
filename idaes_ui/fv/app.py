@@ -44,6 +44,7 @@ class FlowsheetApp:
             self.port = port
         else:
             self.port = 8000
+
         # initial save dir
         if save_dir:
             self.save_dir = save_dir
