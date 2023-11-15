@@ -14,6 +14,7 @@ class WebUvicorn:
     def __init__(self, fastAPIApp, port):
         self.app = fastAPIApp
         self.port = self.port_usage_check(port)
+        self.running_port_storage = []
 
         # run uvicorn serve web app
         self.run()
@@ -56,6 +57,8 @@ class WebUvicorn:
             import nest_asyncio
 
             nest_asyncio.apply()
+        # store current running port
+        self.add_running_port()
 
         # Open the browser after a delay
         threading.Timer(1.5, self.open_browser, args=(self.port,)).start()
@@ -78,3 +81,15 @@ class WebUvicorn:
                     return port
                 except OSError:
                     port += 1
+
+    def add_running_port(self):
+        """Use to store all running ports create by this app
+        Args:
+            port: self.port
+        """
+        self.running_port_storage.append(self.port)
+
+    """
+    TODO:
+    1. when user turn off uvicorn app, close that port
+    """
