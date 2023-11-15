@@ -56,14 +56,6 @@ class FlowsheetApp:
         # enable CORS let allowed port can talk to this server
         enable_fastapi_cors(self.app)
 
-        # initialize router
-
-        # get app setting
-        # try:
-        #     self.settings = self.set_time_interval
-        # except:
-        #     self.settings = AppSettings()
-
         # get diagnostics json
         self.diag_data = DiagnosticsData(flowsheet)
 
