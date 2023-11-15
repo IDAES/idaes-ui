@@ -73,10 +73,6 @@ class FlowsheetApp:
         # # API router
         Router(self.app, self.flowsheet, self.flowsheet_name)
 
-        # @self.app.get("/api/get_settings", tags=["App setting"])
-        # def get_settings() -> AppSettings:
-        #     return self.settings
-
         # @self.app.put("/api/put_settings", tags=["App setting"])
         # def put_settings(settings: AppSettings):
         #     self.settings = settings
