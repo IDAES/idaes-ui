@@ -1,6 +1,7 @@
 # import routes
 from .api_get_flowsheet_route import GetFlowsheetRoute
 from .api_put_flowsheet_route import PutFlowsheetRoute
+from .api_get_diagnostics_route import GetDiagnosticsRoute
 from .api_get_react_app_route import GetReactAppRoute
 
 
@@ -17,6 +18,9 @@ class Router:
 
         # api end point put flowsheet
         PutFlowsheetRoute(fastAPIApp)
+
+        # api end point get diagnostics
+        GetDiagnosticsRoute(fastAPIApp, flowsheet)
 
         # api end point serve react app
         # static router has to defined at end

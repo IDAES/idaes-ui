@@ -73,14 +73,6 @@ class FlowsheetApp:
         # # API router
         Router(self.app, self.flowsheet, self.flowsheet_name)
 
-        # @self.app.get("/api/get_diagnostics", tags=["Diagnostics"])
-        # async def get_diagnostics() -> DiagnosticsData:
-        #     try:
-        #         return self.diag_data
-        #     except DiagnosticsException as exc:
-        #         error_json = DiagnosticsError.from_exception(exc).model_dump_json()
-        #         raise HTTPException(status_code=500, detail=error_json)
-
         # @self.app.get("/api/get_settings", tags=["App setting"])
         # def get_settings() -> AppSettings:
         #     return self.settings
