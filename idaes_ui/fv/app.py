@@ -59,9 +59,6 @@ class FlowsheetApp:
         # get diagnostics json
         self.diag_data = DiagnosticsData(flowsheet)
 
-        # # get app flowsheet
-        # self.flowsheet = Flowsheet(fs=flowsheet, name=name)
-
         # # API router
         Router(self.app, self.flowsheet, self.flowsheet_name, self.save_time_interval)
 
