@@ -41,6 +41,10 @@ class FlowsheetApp:
         else:
             self.port = 8000
 
+        # initial everything related to flowsheet
+        self.flowsheet = flowsheet
+        self.flowsheet_name = name
+
         # initial FastAPI
         self.app = FastAPI(
             docs_url="/api/v1/docs",
@@ -48,10 +52,6 @@ class FlowsheetApp:
             title="IDAES UI API DOC",
             description="IDAES UI API endpoint detail.",
         )
-
-        # initial everything related to flowsheet
-        self.flowsheet = flowsheet
-        self.flowsheet_name = name
 
         # enable CORS let allowed port can talk to this server
         enable_fastapi_cors(self.app)
