@@ -7,6 +7,7 @@ __created__ = "2023-10-08"
 
 # stdlib
 import sys
+from typing import Optional
 
 # from pathlib import Path
 
@@ -34,12 +35,19 @@ class FlowsheetApp:
     # _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
     # _static_dir = _root_dir / "reactBuild/"
 
-    def __init__(self, flowsheet, name, port, save_time_interval):
+    def __init__(
+        self, flowsheet, name, port, save_time_interval, save_dir: Optional[str] = None
+    ):
         # populate web port
         if port:
             self.port = port
         else:
             self.port = 8000
+        # initial save dir
+        if save_dir:
+            self.save_dir = save_dir
+        else:
+            self.save_dir = "./saved_flowsheet"
 
         # initial everything related to flowsheet
         self.flowsheet = flowsheet
