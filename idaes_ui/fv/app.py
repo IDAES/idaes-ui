@@ -73,17 +73,6 @@ class FlowsheetApp:
         # # API router
         Router(self.app, self.flowsheet, self.flowsheet_name)
 
-        # # save flowsheet
-        # @self.app.put("/api/put_fs", tags=["Flowsheet"])
-        # def put_flowsheet(fs: Flowsheet):
-        #     """API endpoint use for update flowsheet
-        #     Args:
-        #     fs: Flowsheet
-        #     """
-        #     self.flowsheet = merge_flowsheets(self.flowsheet, fs)
-        #     # todo: save result
-        #     return self.flowsheet
-
         # @self.app.get("/api/get_diagnostics", tags=["Diagnostics"])
         # async def get_diagnostics() -> DiagnosticsData:
         #     try:
