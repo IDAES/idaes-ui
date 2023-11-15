@@ -34,7 +34,7 @@ class FlowsheetApp:
     # _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
     # _static_dir = _root_dir / "reactBuild/"
 
-    def __init__(self, flowsheet, name, port):
+    def __init__(self, flowsheet, name, port, save_time_interval):
         # populate web port
         if port:
             self.port = port
@@ -63,7 +63,7 @@ class FlowsheetApp:
         # self.flowsheet = Flowsheet(fs=flowsheet, name=name)
 
         # # API router
-        Router(self.app, self.flowsheet, self.flowsheet_name)
+        Router(self.app, self.flowsheet, self.flowsheet_name, self.save_time_interval)
 
         # @self.app.put("/api/put_settings", tags=["App setting"])
         # def put_settings(settings: AppSettings):
