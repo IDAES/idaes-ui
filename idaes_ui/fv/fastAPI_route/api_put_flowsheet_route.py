@@ -17,7 +17,7 @@ class PutFlowsheetReqModel(BaseModel):
 
 
 class PutFlowsheetRoute:
-    def __init__(self, fastAPIApp):
+    def __init__(self, fastAPIApp, save_dir):
         @fastAPIApp.put("/api/put_fs", tags=["Save Flowsheet"])
         def put_flowsheet(req_body: PutFlowsheetReqModel):
             """PUT request use to receive updated flowsheet, compare with stored flowsheet, if find change, update the stored one.
