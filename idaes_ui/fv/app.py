@@ -33,9 +33,6 @@ from .fastAPI_route.router import Router
 
 
 class FlowsheetApp:
-    # _root_dir = Path(__file__).parent.absolute()  # static dir in same dir as this file
-    # _static_dir = _root_dir / "reactBuild/"
-
     def __init__(
         self,
         flowsheet,
