@@ -30,4 +30,4 @@ class PutFlowsheetRoute:
 
             if not req_body.fs_name or not req_body.fs:
                 return {"error": "please check you missing body params"}
-            return req_body.fs
+            return {"new_flow_sheet": req_body.fs, "save_dir": save_dir}
