@@ -298,7 +298,7 @@ export class MainFV {
      */
     saveModel(url:any, model:any) {
       // let clientData = JSON.stringify(model.toJSON());
-      let clientData = JSON.stringify({fs_name:"new name", fs:model.toJSON()});
+      let clientData = JSON.stringify({fs_name:"new name", jjs_fs:model.toJSON()});
       axios.put(url, clientData, {
         headers: {
             'Content-Type': 'application/json'
