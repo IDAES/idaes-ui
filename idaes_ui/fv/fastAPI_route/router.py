@@ -25,7 +25,7 @@ class Router:
             save_time_interval: Optional, default is 5s, use to define how long does flowsheet should save
         """
         # api end point get flowsheet
-        GetFlowsheetRoute(fastAPIApp, flowsheet, flowsheet_name)
+        GetFlowsheetRoute(fastAPIApp, flowsheet, flowsheet_name, save_dir)
 
         # api end point put flowsheet
         PutFlowsheetRoute(fastAPIApp, save_dir)
@@ -34,7 +34,7 @@ class Router:
         GetDiagnosticsRoute(fastAPIApp, flowsheet)
 
         # api end point get app setting
-        GetAppSettingRoute(fastAPIApp, setting)
+        GetAppSettingRoute(fastAPIApp, save_time_interval)
 
         # api end point serve react app
         # static router has to defined at end
