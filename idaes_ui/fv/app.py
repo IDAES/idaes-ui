@@ -24,6 +24,7 @@ from idaes_ui.fv.models.settings import AppSettings
 # from idaes_ui.fv.models.flowsheet import Flowsheet, merge_flowsheets
 
 # defined functions
+from .fastAPI_functions.initial_params import InitialParams
 from .fastAPI_functions.cors import enable_fastapi_cors
 from idaes_ui.fv.fastAPI_functions.uvicorn import WebUvicorn
 
@@ -36,23 +37,22 @@ class FlowsheetApp:
     # _static_dir = _root_dir / "reactBuild/"
 
     def __init__(
-        self, flowsheet, name, port, save_time_interval, save_dir: Optional[str] = None
+        self,
+        flowsheet,
+        name,
+        port: Optional[int] = None,
+        save_time_interval: Optional[int] = None,
+        save_dir: Optional[str] = None,
     ):
-        # populate web port
-        if port:
-            self.port = port
-        else:
-            self.port = 8000
-
-        # initial save dir
-        if save_dir:
-            self.save_dir = save_dir
-        else:
-            self.save_dir = "./saved_flowsheet"
-
-        # initial everything related to flowsheet
-        self.flowsheet = flowsheet
-        self.flowsheet_name = name
+        # Initial self.... params
+        InitialParams(
+            main_class=self,
+            flowsheet=flowsheet,
+            name=name,
+            port=port,
+            save_time_interval=save_time_interval,
+            save_dir=save_dir,
+        )
 
         # initial FastAPI
         self.app = FastAPI(
