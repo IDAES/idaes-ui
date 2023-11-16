@@ -35,6 +35,7 @@ export class MainFV {
   baseUrl:string;
   getFSUrl:string;
   putFSUrl:string;
+  getAppSettingUrl:string;
   model:any;
   paper:any;
   _is_graph_changed:boolean;
@@ -56,6 +57,7 @@ export class MainFV {
     this.baseUrl = `http://localhost:${port}`;
     this.getFSUrl = `${this.baseUrl}/api/get_fs`;
     this.putFSUrl = `${this.baseUrl}/api/put_fs`;
+    this.getAppSettingUrl = `${this.baseUrl}/api/get_app_setting`;
 
     //Define model
     this.model = {}
@@ -70,7 +72,7 @@ export class MainFV {
     // Setting name (key) that defines the save model time interval
     this._save_time_interval_key = 'save_time_interval';
     this._default_save_time_interval = 5000; // Default time interval
-    this._save_time_interval = this.getSaveTimeInterval();
+    this._save_time_interval = this.getSaveTimeInterval(this.getAppSettingUrl);
     this.setupGraphChangeChecker(this._save_time_interval, flowsheetId);
     
     /**
@@ -78,7 +80,6 @@ export class MainFV {
      */
     axios.get(this.getFSUrl)
     .then((response) => {
-        console.log(this.getFSUrl)
         //get data from python server /fs
         this.model = response.data;
         //debug when flowsheet has no position it should not stack on each other
@@ -219,12 +220,12 @@ export class MainFV {
     });
   }
 
-    /**
-     * @description Get the save time interval value from the application's setting block.
-     * @returns save_time_interval
-     */
-  getSaveTimeInterval() {
-    let settings_url = `${this.baseUrl}/api/get_settings`;
+  /**
+   * @description Get the save time interval value from the application's setting block.
+   * @returns save_time_interval
+   */
+  getSaveTimeInterval(setting_url:string) {
+    let settings_url = `${this.baseUrl}/api/get_app_setting`;
     let save_time_interval = this._default_save_time_interval;
 
     axios.get(settings_url, {
@@ -296,7 +297,8 @@ export class MainFV {
      * @param model The model to save
      */
     saveModel(url:any, model:any) {
-      let clientData = JSON.stringify(model.toJSON());
+      // let clientData = JSON.stringify(model.toJSON());
+      let clientData = JSON.stringify({fs_name:"new name", fs:model.toJSON()});
       axios.put(url, clientData, {
         headers: {
             'Content-Type': 'application/json'
@@ -304,6 +306,7 @@ export class MainFV {
       })
       .then((response) => {
         console.log(`saved`)
+        console.log(response.data)
         this.informUser(0, "Saved new model values");
       })
       .catch((error) => {
