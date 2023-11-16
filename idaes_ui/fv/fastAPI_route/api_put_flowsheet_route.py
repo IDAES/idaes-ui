@@ -17,7 +17,7 @@ class PutFlowsheetReqModel(BaseModel):
 
 
 class PutFlowsheetRoute:
-    def __init__(self, fastAPIApp, save_dir):
+    def __init__(self, fastAPIApp, flowsheet_manager, save_dir):
         @fastAPIApp.put("/api/put_fs", tags=["Save Flowsheet"])
         def put_flowsheet(req_body: PutFlowsheetReqModel):
             """PUT request use to receive updated flowsheet, compare with stored flowsheet, if find change, update the stored one.
@@ -28,6 +28,17 @@ class PutFlowsheetRoute:
             """
             print("Recetive request from /api/put_fs......")
 
+            # check request body
             if not req_body.fs_name or not req_body.fs:
-                return {"error": "please check you missing body params"}
-            return {"new_flow_sheet": req_body.fs, "save_dir": save_dir}
+                return {
+                    "error": "please check you missing body params, corrent format\{fs_name:'flowsheet name', fs:flowsheet\}"
+                }
+
+            # read user's saved flowsheet from frontend
+            flowsheet = req_body.fs
+
+            # update flowsheet through flowsheet manager
+            flowsheet_manager.update_flowsheet(flowsheet)
+
+            # TODO: remove this return, a put req need to return or on frontend make another call
+            return {"message": "flowsheet uptodate"}
