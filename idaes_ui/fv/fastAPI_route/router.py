@@ -1,5 +1,8 @@
 from typing import Optional
 
+# import function
+from idaes_ui.fv.fastAPI_functions.flowsheet_manager import FlowsheetManager
+
 # import routes
 from .api_get_flowsheet_route import GetFlowsheetRoute
 from .api_put_flowsheet_route import PutFlowsheetRoute
@@ -24,14 +27,17 @@ class Router:
             flowsheet: flowsheet object pass from fsvis -> FlowsheetApp
             save_time_interval: Optional, default is 5s, use to define how long does flowsheet should save
         """
+        # call flowsheet manager
+        flowsheet_manager = FlowsheetManager(flowsheet)
+
         # api end point get flowsheet
-        GetFlowsheetRoute(fastAPIApp, flowsheet, flowsheet_name, save_dir)
+        GetFlowsheetRoute(fastAPIApp, flowsheet_manager, flowsheet_name, save_dir)
 
         # api end point put flowsheet
-        PutFlowsheetRoute(fastAPIApp, save_dir)
+        PutFlowsheetRoute(fastAPIApp, flowsheet_manager, save_dir)
 
         # api end point get diagnostics
-        GetDiagnosticsRoute(fastAPIApp, flowsheet)
+        GetDiagnosticsRoute(fastAPIApp, flowsheet_manager)
 
         # api end point get app setting
         GetAppSettingRoute(fastAPIApp, save_time_interval)
