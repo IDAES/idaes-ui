@@ -13,7 +13,7 @@ class PutFlowsheetReqModel(BaseModel):
     """
 
     fs_name: str
-    fs: Flowsheet
+    jjs_fs: Flowsheet
 
 
 class PutFlowsheetRoute:
@@ -29,16 +29,16 @@ class PutFlowsheetRoute:
             print("Recetive request from /api/put_fs......")
 
             # check request body
-            if not req_body.fs_name or not req_body.fs:
+            if not req_body.fs_name or not req_body.jjs_fs:
                 return {
                     "error": "please check you missing body params, corrent format\{fs_name:'flowsheet name', fs:flowsheet\}"
                 }
 
             # read user's saved flowsheet from frontend
-            flowsheet = req_body.fs
+            jjs_flowsheet = req_body.jjs_fs
 
             # update flowsheet through flowsheet manager
-            flowsheet_manager.update_flowsheet(flowsheet)
+            flowsheet_manager.update_jjs_flowsheet(jjs_flowsheet)
 
             # TODO: remove this return, a put req need to return or on frontend make another call
             return {"message": "flowsheet uptodate"}

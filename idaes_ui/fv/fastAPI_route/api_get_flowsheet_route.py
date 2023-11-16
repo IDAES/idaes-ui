@@ -8,8 +8,8 @@ class GetFlowsheetRoute:
     def __init__(self, fastAPIApp, flowsheet_manager, flowsheet_name, save_dir):
         @fastAPIApp.get("/api/get_fs", tags=["Flowsheet"])
         def get_flowsheet() -> Flowsheet:
-            flowsheet = flowsheet_manager.get_flowsheet()
-            return flowsheet
+            jjs_flowsheet = flowsheet_manager.get_jjs_flowsheet()
+            return jjs_flowsheet
 
             # TODO: do we want to save file on user's input save_path? or everything happens in memary only?
             # # check if save_dir already has flowsheet file
