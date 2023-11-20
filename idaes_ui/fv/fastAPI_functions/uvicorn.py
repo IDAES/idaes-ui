@@ -59,12 +59,17 @@ class WebUvicorn:
             nest_asyncio.apply()
         # store current running port
         self.add_running_port()
+        print(
+            f"server is running on port {self.port}, in port list {self.running_port_storage}"
+        )
 
-        # Open the browser after a delay
+        # start uvicorn server
+        threading.Thread(
+            target=lambda: uvicorn.run(self.app, host="127.0.0.1", port=self.port)
+        ).start()
+
+        # waiting 1.5 then start browser
         threading.Timer(1.5, self.open_browser, args=(self.port,)).start()
-
-        # Run the uvicorn server
-        loop.run_until_complete(self.serve())
 
     def port_usage_check(self, port):
         """use for port check, if pass in port is in use then modifiy port number + 1 until port available
@@ -91,5 +96,5 @@ class WebUvicorn:
 
     """
     TODO:
-    1. when user turn off uvicorn app, close that port
+    1. when user turn off browser, close that port
     """
