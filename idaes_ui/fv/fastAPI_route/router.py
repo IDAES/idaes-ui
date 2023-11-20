@@ -9,6 +9,7 @@ from .api_put_flowsheet_route import PutFlowsheetRoute
 from .api_get_diagnostics_route import GetDiagnosticsRoute
 from .api_get_app_setting_route import GetAppSettingRoute
 from .api_get_react_app_route import GetReactAppRoute
+from .api_post_health_check_route import PostHealthCheck
 
 
 class Router:
@@ -29,6 +30,9 @@ class Router:
         """
         # call flowsheet manager
         flowsheet_manager = FlowsheetManager(flowsheet)
+
+        # api end point post health check
+        PostHealthCheck(fastAPIApp)
 
         # api end point get flowsheet
         GetFlowsheetRoute(fastAPIApp, flowsheet_manager, flowsheet_name, save_dir)
