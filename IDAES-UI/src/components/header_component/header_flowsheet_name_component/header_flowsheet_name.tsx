@@ -37,6 +37,6 @@ export default function HeaderFlowsheetName(){
   // loadFlowsheetName(hasContext);
 
   return(
-    <p className={`${css.header_flowsheet_name}`}>{fv_id ? fv_id : "loading..."}</p>
+    <p className={`${css.header_flowsheet_name}`}>{fv_id ? fv_id : "Name not found"}</p>
   )
 }
