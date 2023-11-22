@@ -1,3 +1,5 @@
+import json
+from typing import Any
 from pydantic import BaseModel
 
 from idaes_ui.fv.models.flowsheet import Flowsheet
@@ -12,8 +14,8 @@ class PutFlowsheetReqModel(BaseModel):
         fs: Flowsheet Object, pass from frontend
     """
 
-    fs_name: str
-    jjs_fs: Flowsheet
+    flowsheet_type: str  # original and jjs_fs
+    flowsheet: dict  # flowsheet
 
 
 class PutFlowsheetRoute:
@@ -26,19 +28,13 @@ class PutFlowsheetRoute:
             returns:
                 updated flowsheet
             """
-            print("Recetive request from /api/put_fs......")
+            print("get request !!!!!!!! endpoint")
+            # update joint js flowsheet
+            if req_body.flowsheet_type == "jjs_fs":
+                flowsheet_manager.update_jjs_flowsheet(req_body.flowsheet)
+                return {"message": "successfully update joint js flowsheet"}
 
-            # check request body
-            if not req_body.fs_name or not req_body.jjs_fs:
-                return {
-                    "error": "please check you missing body params, corrent format\{fs_name:'flowsheet name', fs:flowsheet\}"
-                }
-
-            # read user's saved flowsheet from frontend
-            jjs_flowsheet = req_body.jjs_fs
-
-            # update flowsheet through flowsheet manager
-            flowsheet_manager.update_jjs_flowsheet(jjs_flowsheet)
-
-            # TODO: remove this return, a put req need to return or on frontend make another call
-            return {"message": "flowsheet uptodate"}
+            # update original flowsheet
+            if req_body.flowsheet_type == "original":
+                flowsheet_manager.update_original_flowsheet(req_body.flowsheet)
+                return {"message": "successfully update original flowsheet"}
