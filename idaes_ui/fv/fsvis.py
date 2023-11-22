@@ -24,15 +24,16 @@ import webbrowser
 # package
 from idaes import logger
 from . import persist, errors
+from .fastAPI_functions.server_manager import ServerManager
 
 # Logging
 _log = logger.getLogger(__name__)
 
 # Module globals
-web_server = None
+# web_server = None
 
 # Import FastAPI app
-from .app import FlowsheetApp
+# from .app import FlowsheetApp
 
 #: Maximum number of saved versions of the same `save` file.
 #: Set to zero if you want to allow any number.
@@ -103,23 +104,24 @@ def visualize(
         :mod:`idaes.core.ui.fv.errors.VisualizerError`: Any other errors
         RuntimeError: If too many versions of the save file already exist. See :data:`MAX_SAVED_VERSIONS`.
     """
-    global web_server  # pylint: disable=global-statement
 
-    # Initialize IDAES logging
-    _init_logging(log_level)
+    # # Initialize IDAES logging
+    # _init_logging(log_level)
 
-    # Start the web server
-    if web_server is None:
-        fastAPI_app = FlowsheetApp(flowsheet, name, port)
+    ServerManager(flowsheet=flowsheet, flowsheet_name=name, port=port)
 
-        # old web server
-        # web_server = FlowsheetServer(port=port)
-        # web_server.add_setting("save_time_interval", save_time_interval)
-        # web_server.start()
-        if not quiet:
-            _log.info("Started visualization server")
-    else:
-        _log.info(f"Using HTTP server on localhost, port {web_server.port}")
+    # # Start the web server
+    # if web_server is None:
+    #     fastAPI_app = FlowsheetApp(flowsheet, name, port)
+
+    #     # old web server
+    #     # web_server = FlowsheetServer(port=port)
+    #     # web_server.add_setting("save_time_interval", save_time_interval)
+    #     # web_server.start()
+    #     if not quiet:
+    #         _log.info("Started visualization server")
+    # else:
+    #     _log.info(f"Using HTTP server on localhost, port {web_server.port}")
 
 
 #     # Set up save location
