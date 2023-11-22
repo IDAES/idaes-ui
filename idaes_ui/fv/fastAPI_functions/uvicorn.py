@@ -8,27 +8,20 @@ import asyncio
 import uvicorn
 import webbrowser
 import threading
+from threading import Thread
+import time
 
 
 class WebUvicorn:
-    def __init__(self, fastAPIApp, port):
+    def __init__(self, fastAPIApp, port, flowsheet_name):
+        self.flowsheet_name = flowsheet_name
         self.app = fastAPIApp
         self.port = self.port_usage_check(port)
-        self.running_port_storage = []
-
         # run uvicorn serve web app
         self.run()
 
-    def open_browser(self, port: int):
-        """When FastAPI run, open browser on localhost with port.
-
-        Args:
-            port: the port FastAPI app running on, will open browser window with this port.
-        """
-        webbrowser.open(f"http://127.0.0.1:{self.port}")
-
     async def serve(self):
-        """Setup uvicorn server loop with asyncio
+        """Setup uvicorn serve with async
 
         Args:
             port: the port FastAPI app running on.
@@ -36,40 +29,40 @@ class WebUvicorn:
         Returns:
             server: configed uvicorn server
         """
-        # Replace 'config' with the appropriate uvicorn configuration
+        # Get available port
+        self.port = self.port_usage_check(self.port)
+        # setup uvicorn config
         config = uvicorn.Config(
-            self.app, host="127.0.0.1", port=self.port, loop="asyncio"
+            self.app, host="127.0.0.1", port=self.port  # loop="asyncio"
         )
         server = uvicorn.Server(config)
         await server.serve()
         return server
 
-    def run(self):
+    def run_server_async(self):
         """Run FastAPI server with uvicorn, also call open browser but delay 1.5s
 
         Args:
             port: the port FastAPI app running on.
         """
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(self.serve())
 
-        # Check if we are in a Jupyter notebook environment & not has nest_asyncio we need import it or error: event already running
-        if "ipykernel" in sys.modules and "nest_asyncio" not in sys.modules:
-            import nest_asyncio
+    def open_browser(self):
+        """When FastAPI run, open browser on localhost with port.
 
-            nest_asyncio.apply()
-        # store current running port
-        self.add_running_port()
-        print(
-            f"server is running on port {self.port}, in port list {self.running_port_storage}"
-        )
+        Args:
+            port: the port FastAPI app running on, will open browser window with this port.
+        """
+        url = f"http://127.0.0.1:{self.port}?id={self.flowsheet_name}"
+        webbrowser.open(url)
 
-        # start uvicorn server
-        threading.Thread(
-            target=lambda: uvicorn.run(self.app, host="127.0.0.1", port=self.port)
-        ).start()
-
-        # waiting 1.5 then start browser
-        threading.Timer(1.5, self.open_browser, args=(self.port,)).start()
+    def run(self):
+        # start server, if want stop async just add daemon=True after target=self.run_server_async
+        Thread(target=self.run_server_async).start()
+        time.sleep(1)  # give system 1 second to start server the open browser
+        Thread(target=self.open_browser).start()  # start browser
 
     def port_usage_check(self, port):
         """use for port check, if pass in port is in use then modifiy port number + 1 until port available
@@ -86,15 +79,3 @@ class WebUvicorn:
                     return port
                 except OSError:
                     port += 1
-
-    def add_running_port(self):
-        """Use to store all running ports create by this app
-        Args:
-            port: self.port
-        """
-        self.running_port_storage.append(self.port)
-
-    """
-    TODO:
-    1. when user turn off browser, close that port
-    """
