@@ -29,7 +29,10 @@ class Router:
             save_time_interval: Optional, default is 5s, use to define how long does flowsheet should save
         """
         # call flowsheet manager
-        flowsheet_manager = FlowsheetManager(flowsheet)
+        # this is not a route this is a universal class help routes to process flowsheet
+        flowsheet_manager = FlowsheetManager(
+            flowsheet=flowsheet, flowsheet_name=flowsheet_name
+        )
 
         # api end point post health check
         PostHealthCheck(fastAPIApp)
