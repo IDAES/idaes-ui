@@ -55,7 +55,7 @@ export class MainFV {
 
     //Gerneate url for fetch data
     this.baseUrl = `http://localhost:${port}`;
-    this.getFSUrl = `${this.baseUrl}/api/get_fs`;
+    this.getFSUrl = `${this.baseUrl}/api/get_fs?get_which=flowsheet`;
     this.putFSUrl = `${this.baseUrl}/api/put_fs`;
     this.getAppSettingUrl = `${this.baseUrl}/api/get_app_setting`;
 
@@ -297,9 +297,12 @@ export class MainFV {
      * @param model The model to save
      */
     saveModel(url:any, model:any) {
-      // let clientData = JSON.stringify(model.toJSON());
-      let clientData = JSON.stringify({fs_name:"new name", jjs_fs:model.toJSON()});
-      axios.put(url, clientData, {
+      console.log(model)
+      let modelData = {
+          "flowsheet_type": "jjs_fs",
+          "flowsheet": model //data type in python is dict
+      };
+      axios.put(url, JSON.stringify(modelData), {
         headers: {
             'Content-Type': 'application/json'
         }
