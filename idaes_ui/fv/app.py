@@ -79,4 +79,4 @@ class FlowsheetApp:
         #     self.settings = settings
 
         # Uvicorn serve fastAPI app
-        WebUvicorn(self.app, self.port)
+        WebUvicorn(self.app, self.port, self.flowsheet_name)
