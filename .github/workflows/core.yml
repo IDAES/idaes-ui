@@ -107,12 +107,13 @@ jobs:
         with:
           activate-environment: ${{ env.IDAES_CONDA_ENV_NAME_DEV }}
           python-version: ${{ matrix.python-version }}
-      - name: Install additional dependencies
-        run: pip install idaes-pse pytest
-      - name: Install the code
-        uses: ./.github/actions/install
-        with:
-          install-target: git+${{ github.server_url}}/${{ github.repository }}@${{ github.ref }}
+      - name: Install package and testing dependencies
+        env:
+          pip_install_url: git+${{ github.server_url }}/${{ github.repository }}@${{ github.ref }}
+          PIP_PROGRESS_BAR: "off"
+        run: |
+          pip install "$pip_install_url" idaes-pse pytest
+          idaes get-extensions --verbose
       - name: Run pytest
         run: pytest -v --pyargs idaes_ui.fv
         
