@@ -12,7 +12,7 @@ class GetReactAppRoute:
         _root_dir = Path(
             __file__
         ).parent.absolute()  # ! static dir in not in same dir as this file
-        _static_dir = _root_dir.parents[0] / "reactBuild/"
+        _static_dir = _root_dir.parents[0] / "static/"
 
         @fastAPIApp.get("/", tags=["Static files"])
         async def read_static_root():
