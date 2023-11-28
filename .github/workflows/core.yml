@@ -45,6 +45,42 @@ defaults:
 
 jobs:
 
+  pytest:
+    # description: Run pytest with dev dependencies
+    name: pytest (py${{ matrix.python-version }}/${{ matrix.os }})
+    runs-on: ${{ matrix.runner-image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+        os:
+          - linux
+          - win64
+        include:
+          - os: linux
+            runner-image: ubuntu-20.04
+          - os: win64
+            runner-image: windows-2022
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v2.2.0
+        with:
+          activate-environment: ${{ env.IDAES_CONDA_ENV_NAME_DEV }}
+          python-version: ${{ matrix.python-version }}
+      - name: Install additional dependencies
+        run: pip install idaes-pse
+      - name: Install the code
+        uses: ./.github/actions/install
+        with:
+          install-target: -r requirements-dev.txt
+      - name: Run pytest
+        run: pytest -v -s -m "not integration"
+
   pytest-non-editable:
     # description: Run pytest with dev dependencies
     name: pytest non-editable (py${{ matrix.python-version }}/${{ matrix.os }})
@@ -80,3 +116,52 @@ jobs:
           idaes get-extensions --verbose
       - name: Run pytest
         run: pytest -v --pyargs idaes_ui.fv
+        
+  cypress:
+    name: cypress (py${{ matrix.python-version }}/${{ matrix.os }})
+    #setup python environment for python server, install UI
+    runs-on: ${{ matrix.runner-image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+        os:
+          - linux
+          - win64
+        include:
+          - os: linux
+            runner-image: ubuntu-20.04
+          - os: win64
+            runner-image: windows-2022
+    steps:
+      #python starts here
+      - uses: actions/checkout@v3
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v2.2.0
+        with:
+          activate-environment: ${{ env.IDAES_CONDA_ENV_NAME_DEV }}
+          python-version: ${{ matrix.python-version }}
+      - name: Install the code
+        uses: ./.github/actions/install
+        with:
+          install-target: -r requirements-dev.txt
+      #cypress starts here
+      - name: Install node packages
+        run: npm install
+      - name: Start UI
+        run: npm run ui & echo "UI Server started"
+      - name: Extract server port
+        run: |
+          echo "Reading port from shared_variable.json"
+          echo 'URL='$(node -pe "require('./shared_variable.json').url") >> $GITHUB_ENV
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          wait-on: ${{ env.URL }}
+          wait-on-timeout: 20
+          command: npm run test
+          browser: chrome
