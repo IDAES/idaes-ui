@@ -44,6 +44,7 @@ defaults:
     shell: bash -l {0}
 
 jobs:
+
   pytest:
     # description: Run pytest with dev dependencies
     name: pytest (py${{ matrix.python-version }}/${{ matrix.os }})
@@ -79,6 +80,41 @@ jobs:
           install-target: -r requirements-dev.txt
       - name: Run pytest
         run: pytest -v -s -m "not integration"
+
+  pytest-non-editable:
+    # description: Run pytest with dev dependencies
+    name: pytest non-editable (py${{ matrix.python-version }}/${{ matrix.os }})
+    runs-on: ${{ matrix.runner-image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+        os:
+          - linux
+          - win64
+        include:
+          - os: linux
+            runner-image: ubuntu-20.04
+          - os: win64
+            runner-image: windows-2022
+    steps:
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v2.2.0
+        with:
+          activate-environment: ${{ env.IDAES_CONDA_ENV_NAME_DEV }}
+          python-version: ${{ matrix.python-version }}
+      - name: Install additional dependencies
+        run: pip install idaes-pse pytest
+      - name: Install the code
+        uses: ./.github/actions/install
+        with:
+          install-target: git+${{ github.server_url}}/${{ github.repository }}@${{ github.ref }}
+      - name: Run pytest
+        run: pytest -v --pyargs idaes_ui.fv
         
   cypress:
     name: cypress (py${{ matrix.python-version }}/${{ matrix.os }})
