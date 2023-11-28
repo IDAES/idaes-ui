@@ -43,7 +43,8 @@ build-backend = "setuptools.build_meta"
         # For running tests
         "pytest",
         # dependency 'requests' module for standalone idaes-ui package
-        "requests"
+        "requests",
+        "pydantic",  # idaes_ui.fv.models
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
