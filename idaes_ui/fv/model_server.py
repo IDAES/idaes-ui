@@ -76,12 +76,6 @@ class FlowsheetServer(http.server.HTTPServer):
         self._thr = threading.Thread(target=self._run, daemon=True)
         self._thr.start()
 
-        # create shared JSON file
-        # define file path for shared_variable.json for React
-        root = "./shared_variable.json"
-        IDAES_UI_path = "./IDAES-UI/src/context/shared_variable.json"
-        pathDic = [root, IDAES_UI_path]
-
     def add_setting(self, key: str, value):
         """Add a setting to the flowsheet's settings block. Settings block is
         a dict that has general setting values related to the UI server. Such
