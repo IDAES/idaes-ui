@@ -4,6 +4,7 @@ import pickle
 import json
 import requests
 import time
+import threading
 
 from idaes_ui.fv.models.flowsheet import Flowsheet
 from idaes_ui.fv.flowsheet import FlowsheetSerializer
@@ -28,6 +29,30 @@ class ServerManager:
         # call functions
         self.check_running_servers_file_exist()
         self.update_running_server_file()
+
+    #     # Monitor if user update flowsheet
+    #     monitor_flowsheet = threading.Thread(target=self.flowsheet_monitor)
+    #     monitor_flowsheet.start()
+
+    # def flowsheet_monitor(self):
+    #     print("#######")
+    #     print("function is called!")
+    #     print("#######")
+    #     latest_flowsheet = self.flowsheet
+    #     first_time_print = True
+
+    #     while True:
+    #         # Just first time start while loop print this
+    #         if first_time_print:
+    #             print("loop started")
+    #             first_time_print = False
+
+    #         # Check flowsheet different if different update it.
+    #         if self.flowsheet != latest_flowsheet:
+    #             print("find different flowsheet, flowsheet is updating")
+    #             latest_flowsheet = self.flowsheet
+
+    #         time.sleep(1)
 
     def check_running_servers_file_exist(self):
         """Use to check the file running_server.pickle exist or not
