@@ -4,8 +4,8 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: {
-    outDir: '../idaes_ui/fv/reactBuild'
+  build:{
+    outDir:'../idaes_ui/fv/static'
   },
   plugins: [react()],
   resolve: {

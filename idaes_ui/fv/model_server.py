@@ -1,20 +1,20 @@
-# #################################################################################
-# # The Institute for the Design of Advanced Energy Systems Integrated Platform
-# # Framework (IDAES IP) was produced under the DOE Institute for the
-# # Design of Advanced Energy Systems (IDAES).
-# #
-# # Copyright (c) 2018-2023 by the software owners: The Regents of the
-# # University of California, through Lawrence Berkeley National Laboratory,
-# # National Technology & Engineering Solutions of Sandia, LLC, Carnegie Mellon
-# # University, West Virginia University Research Corporation, et al.
-# # All rights reserved.  Please see the files COPYRIGHT.md and LICENSE.md
-# # for full copyright and license information.
-# #################################################################################
-# """
-# Visualization server back-end.
+#################################################################################
+# The Institute for the Design of Advanced Energy Systems Integrated Platform
+# Framework (IDAES IP) was produced under the DOE Institute for the
+# Design of Advanced Energy Systems (IDAES).
+#
+# Copyright (c) 2018-2023 by the software owners: The Regents of the
+# University of California, through Lawrence Berkeley National Laboratory,
+# National Technology & Engineering Solutions of Sandia, LLC, Carnegie Mellon
+# University, West Virginia University Research Corporation, et al.
+# All rights reserved.  Please see the files COPYRIGHT.md and LICENSE.md
+# for full copyright and license information.
+#################################################################################
+"""
+Visualization server back-end.
 
-# The main class is `FlowsheetServer`, which is instantiated from the `visualize()` function.
-# """
+The main class is `FlowsheetServer`, which is instantiated from the `visualize()` function.
+"""
 # # TODO: Missing docstrings
 # # pylint: disable=missing-function-docstring
 
@@ -42,21 +42,10 @@
 # # old web dir
 # # this can be switch by add param ?app=old in url to enable old site
 # # logic is in do_GET()
-# # _static_dir = _this_dir / "static"
-# # _template_dir = _this_dir / "templates"
+# _static_dir = _this_dir / "static"
+# _template_dir = _this_dir / "static"
 
-# # react app dir
-# _static_dir = _this_dir / "../../IDAES-UI/dist/"
-# _template_dir = _this_dir / "../../IDAES-UI/dist/"
 
-# # Dev switch between old site and new site
-# enableOldSite = False
-# # enableOldSite = True
-# if enableOldSite:
-#     _static_dir = _this_dir / "static"
-#     _template_dir = _this_dir / "templates"
-
-# # TODO: update this class move all http releated to FastAPI
 # class FlowsheetServer(http.server.HTTPServer):
 #     """A simple HTTP server that runs in its own thread.
 
@@ -86,12 +75,6 @@
 #         """Start the server, which will spawn a thread."""
 #         self._thr = threading.Thread(target=self._run, daemon=True)
 #         self._thr.start()
-
-#         # create shared JSON file
-#         # define file path for shared_variable.json for React
-#         root = "./shared_variable.json"
-#         IDAES_UI_path = "./IDAES-UI/src/context/shared_variable.json"
-#         pathDic = [root, IDAES_UI_path]
 
 #     def add_setting(self, key: str, value):
 #         """Add a setting to the flowsheet's settings block. Settings block is

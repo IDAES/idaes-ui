@@ -117,10 +117,6 @@ jobs:
         run: npm install
       - name: Start UI
         run: npm run ui & echo "UI Server started"
-      - name: Extract server port
-        run: |
-          echo "Reading port from shared_variable.json"
-          echo 'URL='$(node -pe "require('./shared_variable.json').url") >> $GITHUB_ENV
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
