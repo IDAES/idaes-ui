@@ -42,19 +42,8 @@ _this_dir = Path(__file__).parent.absolute()
 # old web dir
 # this can be switch by add param ?app=old in url to enable old site
 # logic is in do_GET()
-# _static_dir = _this_dir / "static"
-# _template_dir = _this_dir / "templates"
-
-# react app dir
-_static_dir = _this_dir / "../../IDAES-UI/dist/"
-_template_dir = _this_dir / "../../IDAES-UI/dist/"
-
-# Dev switch between old site and new site
-enableOldSite = False
-# enableOldSite = True
-if enableOldSite:
-    _static_dir = _this_dir / "static"
-    _template_dir = _this_dir / "templates"
+_static_dir = _this_dir / "static"
+_template_dir = _this_dir / "static"
 
 
 class FlowsheetServer(http.server.HTTPServer):
