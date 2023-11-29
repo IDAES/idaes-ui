@@ -65,6 +65,6 @@ runs:
         echo '::group::Output of "pip list"'
         pip list
         echo '::endgroup::'
-        echo '::group::Output of "pip show ${{ inputs.info-packages }}"
+        echo '::group::Output of "pip show ${{ inputs.info-packages }}"'
         pip show ${{ inputs.info-packages }}
         echo '::endgroup::'
