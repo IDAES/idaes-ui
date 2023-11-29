@@ -74,12 +74,15 @@ jobs:
         run: pytest -v --pyargs idaes_ui.fv
 
   cypress:
-    name: cypress (py${{ matrix.python-version }}/${{ matrix.os }})
+    name: cypress (${{ matrix.install-variant }}/py${{ matrix.python-version }}/${{ matrix.os }})
     #setup python environment for python server, install UI
     runs-on: ${{ matrix.runner-image }}
     strategy:
       fail-fast: false
       matrix:
+        install-variant:
+          - standard
+          - dev
         python-version:
           - '3.8'
         #   - '3.9'
@@ -98,21 +101,23 @@ jobs:
       - name: Install python code
         uses: IDAES/idaes-ui/.github/actions/install@refs/pull/41/head
         with:
-          variant: dev
+          variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
       #cypress starts here
       - name: Install node packages
-        run: npm install
+        run: npm install cypress
+      - name: Check out cypress tests
+        if: matrix.install-variant != 'dev'
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            cypress
       - name: Start UI
-        run: npm run ui & echo "UI Server started"
-      - name: Extract server port
-        run: |
-          echo "Reading port from shared_variable.json"
-          echo 'URL='$(node -pe "require('./shared_variable.json').url") >> $GITHUB_ENV
+        run: python -m idaes_ui.fv.example & echo "UI Server started"
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          wait-on: ${{ env.URL }}
           wait-on-timeout: 20
-          command: npm run test
+          command: cypress run
           browser: chrome
