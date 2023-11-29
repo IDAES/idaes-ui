@@ -104,20 +104,22 @@ jobs:
           variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
       #cypress starts here
-      - name: Install node packages
-        run: npm install cypress
-      - name: Check out cypress tests
+      - name: Check out files needed to run cypress tests
         if: matrix.install-variant != 'dev'
         uses: actions/checkout@v4
         with:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             cypress
+            package.json
+            package-lock.json
+      - name: Install node packages
+        run: npm install
       - name: Start UI
-        run: python -m idaes_ui.fv.example & echo "UI Server started"
+        run: npm run ui & echo "UI Server started"
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
           wait-on-timeout: 20
-          command: cypress run
+          command: npm run test
           browser: chrome
