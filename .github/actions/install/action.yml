@@ -39,7 +39,7 @@ runs:
       if: inputs.variant == 'dev'
       shell: bash -l {0}
       run: |
-        pip install --progress-bar off requirements-dev.txt
+        pip install --progress-bar off -r requirements-dev.txt
 
     - name: Install using pip (git+... URL)
       if: inputs.variant == 'standard'
