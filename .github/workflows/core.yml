@@ -66,7 +66,7 @@ jobs:
           - os: win64
             runner-image: windows-2022
     steps:
-      - uses: IDAES/idaes-ui/.github/actions/install@refs/pull/41/merge
+      - uses: IDAES/idaes-ui/.github/actions/install@refs/pull/41/head
         with:
           variant: ${{ matrix.variant }}
           python-version: ${{ matrix.python-version }}
@@ -96,7 +96,7 @@ jobs:
     steps:
       #python starts here
       - name: Install python code
-        uses: IDAES/idaes-ui/.github/actions/install@refs/pull/41/merge
+        uses: IDAES/idaes-ui/.github/actions/install@refs/pull/41/head
         with:
           variant: dev
           python-version: ${{ matrix.python-version }}
