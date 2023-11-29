@@ -68,7 +68,7 @@ jobs:
     steps:
       - uses: IDAES/idaes-ui/.github/actions/install@refs/pull/41/head
         with:
-          variant: ${{ matrix.variant }}
+          variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
       - name: Run pytest
         run: pytest -v --pyargs idaes_ui.fv
