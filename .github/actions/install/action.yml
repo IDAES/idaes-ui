@@ -4,8 +4,8 @@ description: Install IDAES and extensions
 inputs:
 
   variant:
-    required: false
     description: "Which installation variant to use. Choices: standard (default); dev"
+    required: false
     default: standard
 
   python-version:
