@@ -28,15 +28,15 @@ class Flowsheet(BaseModel):
 
 def merge_flowsheets(cur: Flowsheet, changed: Flowsheet) -> Flowsheet:
     fs_cur = {
-        "model": cur.model,
-        "cells": cur.cells,
-        "routing_config": cur.routing_config,
+        "model": cur["model"],
+        "cells": cur["cells"],
+        "routing_config": cur["routing_config"],
     }
     fs_changed = {
-        "model": changed.model,
-        "cells": changed.cells,
-        "routing_config": changed.routing_config,
+        "model": changed["model"],
+        "cells": changed["cells"],
+        "routing_config": changed["routing_config"],
     }
     diff = FlowsheetDiff(fs_changed, fs_cur)
     d = diff.merged()
-    return Flowsheet(name=changed.name, **d)
+    return Flowsheet(name=changed["model"]["id"], **d)
