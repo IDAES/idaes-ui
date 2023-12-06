@@ -33,9 +33,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # default Python version to use for checks that do not require multiple versions
-  DEFAULT_PYTHON_VERSION: '3.8'
-  IDAES_CONDA_ENV_NAME_DEV: idaes-ui-dev
   PYTEST_ADDOPTS: "--color=yes"
 
 defaults:
@@ -44,17 +41,21 @@ defaults:
     shell: bash -l {0}
 
 jobs:
+
   pytest:
-    # description: Run pytest with dev dependencies
-    name: pytest (py${{ matrix.python-version }}/${{ matrix.os }})
+    # description: Run pytest test suite
+    name: pytest (${{ matrix.install-variant }}/py${{ matrix.python-version }}/${{ matrix.os }})
     runs-on: ${{ matrix.runner-image }}
     strategy:
       fail-fast: false
       matrix:
+        install-variant:
+          - standard
+          - dev
         python-version:
           - '3.8'
-          - '3.9'
-          - '3.10'
+        #   - '3.9'
+        #   - '3.10'
           - '3.11'
         os:
           - linux
@@ -65,32 +66,27 @@ jobs:
           - os: win64
             runner-image: windows-2022
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Conda environment
-        uses: conda-incubator/setup-miniconda@v2.2.0
+      - uses: IDAES/idaes-ui/.github/actions/install@refs/pull/41/head
         with:
-          activate-environment: ${{ env.IDAES_CONDA_ENV_NAME_DEV }}
+          variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
-      - name: Install additional dependencies
-        run: pip install idaes-pse
-      - name: Install the code
-        uses: ./.github/actions/install
-        with:
-          install-target: -r requirements-dev.txt
       - name: Run pytest
-        run: pytest -v -s -m "not integration"
-        
+        run: pytest -v --pyargs idaes_ui.fv
+
   cypress:
-    name: cypress (py${{ matrix.python-version }}/${{ matrix.os }})
+    name: cypress (${{ matrix.install-variant }}/py${{ matrix.python-version }}/${{ matrix.os }})
     #setup python environment for python server, install UI
     runs-on: ${{ matrix.runner-image }}
     strategy:
       fail-fast: false
       matrix:
+        install-variant:
+          - standard
+          - dev
         python-version:
           - '3.8'
-          - '3.9'
-          - '3.10'
+        #   - '3.9'
+        #   - '3.10'
           - '3.11'
         os:
           - linux
@@ -102,29 +98,29 @@ jobs:
             runner-image: windows-2022
     steps:
       #python starts here
-      - uses: actions/checkout@v3
-      - name: Set up Conda environment
-        uses: conda-incubator/setup-miniconda@v2.2.0
+      - name: Install python code
+        uses: IDAES/idaes-ui/.github/actions/install@refs/pull/41/head
         with:
-          activate-environment: ${{ env.IDAES_CONDA_ENV_NAME_DEV }}
+          variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
-      - name: Install the code
-        uses: ./.github/actions/install
-        with:
-          install-target: -r requirements-dev.txt
       #cypress starts here
+      - name: Check out files needed to run cypress tests
+        if: matrix.install-variant != 'dev'
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            cypress
+            package.json
+            package-lock.json
+            cypress.config.js
       - name: Install node packages
         run: npm install
       - name: Start UI
         run: npm run ui & echo "UI Server started"
-      - name: Extract server port
-        run: |
-          echo "Reading port from shared_variable.json"
-          echo 'URL='$(node -pe "require('./shared_variable.json').url") >> $GITHUB_ENV
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          wait-on: ${{ env.URL }}
           wait-on-timeout: 20
           command: npm run test
           browser: chrome
