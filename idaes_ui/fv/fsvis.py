@@ -16,16 +16,12 @@
 # stdlib
 from collections import namedtuple
 from pathlib import Path
-import sys
-import time
 from typing import Optional, Union, Dict, Tuple
-import webbrowser
 
 # package
 from idaes import logger
 from . import persist, errors
 from .fastAPI_functions.server_manager import ServerManager
-from idaes_ui.fv.models.flowsheet import FlowsheetDiff
 
 # Logging
 _log = logger.getLogger(__name__)
@@ -108,15 +104,6 @@ def visualize(
 
     # # Initialize IDAES logging
     # _init_logging(log_level)
-
-    # import time
-    # import threading
-
-    # # global m
-
-    # print(vars(m))
-    # monitor_flowsheet = threading.Thread(target=flowsheet_monitor, args=(flowsheet,))
-    # monitor_flowsheet.start()
 
     ServerManager(flowsheet=flowsheet, flowsheet_name=name, port=port)
 
@@ -269,25 +256,3 @@ def visualize(
 def _init_logging(lvl):
     ui_logger = logger.getIdaesLogger("ui", level=lvl, tag="ui")
     ui_logger.setLevel(lvl)
-
-
-def flowsheet_monitor(flowsheet):
-    print("#######")
-    print("function is called!")
-    print("#######")
-    latest_flowsheet = flowsheet
-    first_time_print = True
-
-    while True:
-        # Just first time start while loop print this
-        if first_time_print:
-            print("loop started")
-            first_time_print = False
-
-        # diff = FlowsheetDiff(latest_flowsheet, flowsheet)
-        # Check flowsheet different if different update it.
-        if vars(latest_flowsheet) != vars(flowsheet):
-            print("find different flowsheet, flowsheet is updating")
-            latest_flowsheet = flowsheet
-
-        time.sleep(1)
