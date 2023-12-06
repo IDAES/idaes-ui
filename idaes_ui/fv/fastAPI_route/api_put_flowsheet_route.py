@@ -15,7 +15,7 @@ class PutFlowsheetReqModel(BaseModel):
     """
 
     flowsheet_type: str  # original and jjs_fs
-    flowsheet: dict  # flowsheet
+    flowsheet: Any  # flowsheet
 
 
 class PutFlowsheetRoute:
@@ -28,11 +28,17 @@ class PutFlowsheetRoute:
             returns:
                 updated flowsheet
             """
-            print("get request !!!!!!!! endpoint")
+            print("in PUT request")
             # update joint js flowsheet
             if req_body.flowsheet_type == "jjs_fs":
-                flowsheet_manager.update_jjs_flowsheet(req_body.flowsheet)
-                return {"message": "successfully update joint js flowsheet"}
+                update_flowsheet = flowsheet_manager.update_jjs_flowsheet(
+                    req_body.flowsheet
+                )
+
+                return {
+                    "message": "successfully update joint js flowsheet",
+                    "flowsheet": update_flowsheet,
+                }
 
             # update original flowsheet
             if req_body.flowsheet_type == "original":
