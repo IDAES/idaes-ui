@@ -1,12 +1,12 @@
 import os
-import sys
+import socket
 import pickle
 import json
 import requests
 import time
 import threading
 
-from idaes_ui.fv.models.flowsheet import Flowsheet
+from idaes_ui.fv.models.flowsheet import merge_flowsheets
 from idaes_ui.fv.flowsheet import FlowsheetSerializer
 
 # FastAPI App
@@ -18,41 +18,19 @@ class ServerManager:
         # flowsheet related
         self.flowsheet = flowsheet
         self.flowsheet_name = flowsheet_name
+        # check if user named a port or start to pick an available port start from 8000
         if port:
-            self.port = port
+            self.port = self.port_usage_check(port)
         else:
-            self.port = 8000
+            self.port = self.port_usage_check(8000)
 
         # server related
         self.running = False
 
         # call functions
+        # self.run_flowsheet_monitor(self.flowsheet, self.flowsheet_name, self.port)
         self.check_running_servers_file_exist()
         self.update_running_server_file()
-
-    #     # Monitor if user update flowsheet
-    #     monitor_flowsheet = threading.Thread(target=self.flowsheet_monitor)
-    #     monitor_flowsheet.start()
-
-    # def flowsheet_monitor(self):
-    #     print("#######")
-    #     print("function is called!")
-    #     print("#######")
-    #     latest_flowsheet = self.flowsheet
-    #     first_time_print = True
-
-    #     while True:
-    #         # Just first time start while loop print this
-    #         if first_time_print:
-    #             print("loop started")
-    #             first_time_print = False
-
-    #         # Check flowsheet different if different update it.
-    #         if self.flowsheet != latest_flowsheet:
-    #             print("find different flowsheet, flowsheet is updating")
-    #             latest_flowsheet = self.flowsheet
-
-    #         time.sleep(1)
 
     def check_running_servers_file_exist(self):
         """Use to check the file running_server.pickle exist or not
@@ -158,7 +136,7 @@ class ServerManager:
                 }
 
                 res = requests.put(
-                    "http://127.0.0.1:49999/api/put_fs",
+                    f"http://127.0.0.1:{self.port}/api/put_fs",
                     data=json.dumps(json_req_body),
                     headers=headers,
                 )
@@ -270,11 +248,26 @@ class ServerManager:
             f"server on port: {self.port} is stoped, running server: {self.flowsheet_name} is removed from running_server.pickle"
         )
 
+    # empty pickle file
+    # import pickle
 
-# empty pickle file
-# import pickle
+    # with open("./running_server.pickle", "wb") as file:
+    #     pickle.dump({}, file)
+    # with open("./running_server.pickle", "rb") as file:
+    #     print(pickle.load(file))
 
-# with open("./running_server.pickle", "wb") as file:
-#     pickle.dump({}, file)
-# with open("./running_server.pickle", "rb") as file:
-#     print(pickle.load(file))
+    def port_usage_check(self, port):
+        """use for port check, if pass in port is in use, then modifiy port number + 1 until port available
+        Args:
+            port: the port use to pass in by user or default 8000
+        Returns:
+            port: the modified port number (available port number)
+        """
+
+        while True:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                try:
+                    s.bind(("127.0.0.1", port))
+                    return port
+                except OSError:
+                    port += 1
