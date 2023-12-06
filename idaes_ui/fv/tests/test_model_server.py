@@ -14,6 +14,7 @@
 Tests for model_server module
 """
 # stdlib
+from pathlib import Path
 # ext
 import pytest
 from pyomo.environ import ConcreteModel
@@ -26,6 +27,29 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
 )
 from idaes.models.unit_models import Flash
 from .test_fsvis import flash_model
+
+
+
+@pytest.fixture
+def _frontend_assets_dir() -> Path:
+    from idaes_ui.fv.model_server import _static_dir
+    return Path(_static_dir).resolve()
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "relpath",
+    [
+        "",
+        "index.html",
+        "idaes-logo.ico",
+        "data/demo_flowsheet.json",
+    ]
+)
+def test_packaged_frontend_assets(_frontend_assets_dir: Path, relpath):
+    path = _frontend_assets_dir / relpath
+    assert path.exists()
+
 
 @pytest.mark.unit
 def test_flowsheet_server_class():
