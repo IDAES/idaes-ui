@@ -1,4 +1,10 @@
+import json
 from idaes_ui.fv.models.flowsheet import Flowsheet
+from idaes_ui.fv.flowsheet import FlowsheetSerializer
+from idaes_ui.fv.models.flowsheet import merge_flowsheets
+from idaes_ui.fv.flowsheet import FlowsheetDiff
+import time
+from threading import Thread
 
 
 class FlowsheetManager:
@@ -10,29 +16,48 @@ class FlowsheetManager:
             flowsheet: the flowsheet pass eather from fsvis -> FlowsheetApp -> Router
         """
         self.flowsheet_name = flowsheet_name
-        self.original_flowsheet = flowsheet
-        self.jjs_flowsheet = Flowsheet(flowsheet)
+        self.flowsheet = flowsheet
+        self.updated_fs = None
+        self.front_end_jjs_flowsheet = None
+
+    def get_flowsheet_name(self):
+        return self.flowsheet_name
 
     def get_original_flowsheet(self):
-        return self.original_flowsheet
+        return self.flowsheet
 
     def update_original_flowsheet(self, new_original_flowsheet):
-        self.original_flowsheet = new_original_flowsheet
-        self.jjs_flowsheet = Flowsheet(new_original_flowsheet)
+        print("update")
+        # TODO eather update this or remove it check all route use this fn
+        # self.original_flowsheet = new_original_flowsheet
+        # self.jjs_flowsheet = Flowsheet(new_original_flowsheet)
 
-    def get_jjs_flowsheet(self) -> Flowsheet:
-        """Return most recent flowsheet use in joint js
+    def get_jjs_flowsheet(self):
+        """Return return populated JJS flowsheet depends on if user has modified the flowsheet
         Returns: flowsheet
         """
-        return self.jjs_flowsheet
+        if self.updated_fs:
+            old_fs = FlowsheetSerializer(
+                self.flowsheet, self.flowsheet_name, True
+            ).as_dict()
+
+            new_fs = self.front_end_jjs_flowsheet
+
+            updated_fs = merge_flowsheets(old_fs, new_fs)
+            self.updated_fs = updated_fs
+            return self.updated_fs
+        else:
+            jjs_fs = Flowsheet(self.flowsheet)
+            return jjs_fs
 
     def update_jjs_flowsheet(self, frontend_put_jjs_flowsheet):
         """Update self flowsheet to user saved flowsheet use in joint js
         Args:
             frontend_put_jjs_flowsheet: the flowsheet user saved and passed from api/put_fs
         """
-        self.jjs_flowsheet = frontend_put_jjs_flowsheet
-
-    def get_flowsheet_name(self):
-        print(self.flowsheet_name)
-        return self.flowsheet_name
+        self.front_end_jjs_flowsheet = frontend_put_jjs_flowsheet
+        old_fs = FlowsheetSerializer(
+            self.flowsheet, self.flowsheet_name, True
+        ).as_dict()
+        updated_fs = merge_flowsheets(old_fs, frontend_put_jjs_flowsheet)
+        self.updated_fs = updated_fs
