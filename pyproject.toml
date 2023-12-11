@@ -43,7 +43,8 @@ build-backend = "setuptools.build_meta"
         # For running tests
         "pytest",
         # dependency 'requests' module for standalone idaes-ui package
-        "requests"
+        "requests",
+        "pydantic",  # idaes_ui.fv.models
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
@@ -93,12 +94,4 @@ idaes_ui = [
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra"
-testpaths = [
-    "idaes_ui"
-]
-markers = [
-    "component: between unit and integration test",
-    "unit: test one small unit of functionality",
-    "integration: test integrated functionality"
-]
+addopts = "-ra --pyargs idaes_ui.fv"
