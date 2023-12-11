@@ -138,7 +138,7 @@ dmypy.json
 # auto generated files
 sample_visualization.json
 shared_variable.json
-running_server.pickle
+*.pickle
 
 # cypress
 screenshots
