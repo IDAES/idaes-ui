@@ -2,6 +2,8 @@
 Tests for the IDAES FV app, using FastAPI TestClient
 """
 import pytest
+
+pytest.importorskip("fastapi", reason="fastapi not available")
 from fastapi.testclient import TestClient
 from ..app import FlowsheetApp
 from idaes_ui.fv.tests.flowsheets import idaes_demo_flowsheet
