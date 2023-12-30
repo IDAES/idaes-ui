@@ -14,10 +14,13 @@ from idaes_ui.fv.app import FlowsheetApp
 
 
 class ServerManager:
-    def __init__(self, flowsheet, flowsheet_name, port):
+    def __init__(
+        self, flowsheet, flowsheet_name: str, port: int, save_time_interval: int
+    ):
         # flowsheet related
         self.flowsheet = flowsheet
         self.flowsheet_name = flowsheet_name
+        self.save_time_interval = save_time_interval
         # check if user named a port or start to pick an available port start from 8000
         if port:
             self.port = self.port_usage_check(port)
@@ -115,6 +118,7 @@ class ServerManager:
                 flowsheet=self.flowsheet,
                 name=self.flowsheet_name,
                 port=self.port,
+                save_time_interval=self.save_time_interval,
             )
 
             self.running = True
