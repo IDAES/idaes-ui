@@ -10,7 +10,7 @@ from threading import Thread
 class FlowsheetManager:
     """Use to manage flowsheet, use as a universal container can allow different class call its getter ans setter to update and read new flowsheet"""
 
-    def __init__(self, flowsheet, flowsheet_name):
+    def __init__(self, flowsheet, flowsheet_name, save_time_interval):
         """init assign define slef's
         Args:
             flowsheet: the flowsheet pass eather from fsvis -> FlowsheetApp -> Router
@@ -19,6 +19,7 @@ class FlowsheetManager:
         self.flowsheet = flowsheet
         self.updated_fs = None
         self.front_end_jjs_flowsheet = None
+        self.save_time_interval = save_time_interval
 
     def get_flowsheet_name(self):
         return self.flowsheet_name
@@ -61,3 +62,15 @@ class FlowsheetManager:
         ).as_dict()
         updated_fs = merge_flowsheets(old_fs, frontend_put_jjs_flowsheet)
         self.updated_fs = updated_fs
+
+    # App settings
+    def get_save_time_interval(self):
+        """reading current save time interval"""
+        return self.save_time_interval
+
+    def update_save_time_interval(self, new_save_time_interval: int):
+        """update current save time interval
+        Args:
+            new_save_time_interval: int, the value of new auto save time
+        """
+        self.save_time_interval = new_save_time_interval
