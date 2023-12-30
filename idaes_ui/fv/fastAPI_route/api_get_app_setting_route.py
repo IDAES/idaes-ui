@@ -7,6 +7,5 @@ class GetAppSettingRoute:
         def get_app_setting():
             save_time_interval = flowsheet_manager.get_save_time_interval()
             return {
-                "message": "get app setting",
                 "save_time_interval": save_time_interval,
             }
