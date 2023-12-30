@@ -18,7 +18,7 @@ class InitialParams:
         flowsheet,
         name,
         port: Optional[int] = None,
-        save_time_interval: Optional[int] = None,
+        save_time_interval: Optional[int] = 5,
         save_dir: Optional[str] = None,
     ):
         # initial everything related to flowsheet
@@ -32,10 +32,7 @@ class InitialParams:
             main_class.port = 8000
 
         # initial save_time_interval
-        if save_time_interval is not None:
-            main_class.save_time_interval = save_time_interval
-        else:
-            main_class.save_time_interval = 5
+        main_class.save_time_interval = save_time_interval
 
         # initial save dir
         if save_dir:
