@@ -9,4 +9,4 @@ from pydantic import BaseModel
 
 
 class AppSettings(BaseModel):
-    autosave_interval: int = 5000  # unit = ms easy for frontend to use or need to convert it
+    autosave_interval: int = 5
