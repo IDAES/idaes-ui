@@ -62,6 +62,7 @@ class FlowsheetManager:
         ).as_dict()
         updated_fs = merge_flowsheets(old_fs, frontend_put_jjs_flowsheet)
         self.updated_fs = updated_fs
+        return updated_fs
 
     # App settings
     def get_save_time_interval(self):
