@@ -28,7 +28,6 @@ class PutFlowsheetRoute:
             returns:
                 updated flowsheet
             """
-            print("in PUT request")
             # update joint js flowsheet
             if req_body.flowsheet_type == "jjs_fs":
                 update_flowsheet = flowsheet_manager.update_jjs_flowsheet(
