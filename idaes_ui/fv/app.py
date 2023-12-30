@@ -38,7 +38,7 @@ class FlowsheetApp:
         flowsheet,
         name,
         port: Optional[int] = None,
-        save_time_interval: Optional[int] = None,
+        save_time_interval: Optional[int] = 5,
         save_dir: Optional[str] = None,
     ):
         # Initial self.... params
