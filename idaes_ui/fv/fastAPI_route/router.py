@@ -8,6 +8,7 @@ from .api_get_flowsheet_route import GetFlowsheetRoute
 from .api_put_flowsheet_route import PutFlowsheetRoute
 from .api_get_diagnostics_route import GetDiagnosticsRoute
 from .api_get_app_setting_route import GetAppSettingRoute
+from .api_put_app_setting_route import PutAppSettingRoute
 from .api_get_react_app_route import GetReactAppRoute
 from .api_post_health_check_route import PostHealthCheck
 
@@ -19,7 +20,7 @@ class Router:
         flowsheet,
         flowsheet_name,
         save_dir,
-        save_time_interval: Optional[int] = None,
+        save_time_interval: int,
     ):
         """Main router class use to call routes and pass params down to each route base on it needs
         Args:
@@ -31,7 +32,9 @@ class Router:
         # call flowsheet manager
         # this is not a route this is a universal class help routes to process flowsheet
         flowsheet_manager = FlowsheetManager(
-            flowsheet=flowsheet, flowsheet_name=flowsheet_name
+            flowsheet=flowsheet,
+            flowsheet_name=flowsheet_name,
+            save_time_interval=save_time_interval,
         )
 
         # api end point post health check
@@ -47,7 +50,10 @@ class Router:
         GetDiagnosticsRoute(fastAPIApp, flowsheet_manager)
 
         # api end point get app setting
-        GetAppSettingRoute(fastAPIApp, save_time_interval)
+        GetAppSettingRoute(fastAPIApp, flowsheet_manager)
+
+        # api end point get app setting
+        PutAppSettingRoute(fastAPIApp, flowsheet_manager)
 
         # api end point serve react app
         # static router has to defined at end
