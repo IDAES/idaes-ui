@@ -1,10 +1,12 @@
 from typing import Optional
-from idaes_ui.fv.models.settings import AppSettings
 
 
 class GetAppSettingRoute:
-    def __init__(self, fastAPIApp, setting: Optional[int] = None):
+    def __init__(self, fastAPIApp, flowsheet_manager):
         @fastAPIApp.get("/api/get_app_setting", tags=["Get App Setting"])
         def get_app_setting():
-            app_setting = AppSettings()
-            return {"message": "get app setting"}
+            save_time_interval = flowsheet_manager.get_save_time_interval()
+            return {
+                "message": "get app setting",
+                "save_time_interval": save_time_interval,
+            }
