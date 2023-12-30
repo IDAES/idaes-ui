@@ -27,6 +27,10 @@ class ServerManager:
         else:
             self.port = self.port_usage_check(8000)
 
+        # use to store fastapi app
+        self.flowsheet_class_instence = None
+        self.fastapi_app = None
+
         # server related
         self.running = False
 
@@ -113,13 +117,16 @@ class ServerManager:
             with open("running_server.pickle", "wb") as file:
                 pickle.dump(exist_running_servers, file)
 
-            # run fastAPI app
-            FlowsheetApp(
+            # run fastAPI app and store flowsheet class instence
+            self.flowsheet_class_instence = FlowsheetApp(
                 flowsheet=self.flowsheet,
                 name=self.flowsheet_name,
                 port=self.port,
                 save_time_interval=self.save_time_interval,
             )
+
+            # read fastapi app from flowsheet instence assign to self.fastapi_app
+            self.fastapi_app = self.flowsheet_class_instence.get_fast_api_app()
 
             self.running = True
 
