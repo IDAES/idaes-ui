@@ -80,3 +80,6 @@ class FlowsheetApp:
 
         # Uvicorn serve fastAPI app
         WebUvicorn(self.app, self.port, self.flowsheet_name)
+
+    def get_fast_api_app(self):
+        return self.app
