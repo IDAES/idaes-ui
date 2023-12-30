@@ -55,7 +55,7 @@ def visualize(
     save: Optional[Union[Path, str, bool]] = None,
     load_from_saved: bool = True,
     save_dir: Optional[Path] = None,
-    save_time_interval=5000,  # 5 seconds
+    save_time_interval: Optional[int] = 5,  # 5 seconds
     overwrite: bool = False,
     browser: bool = True,
     port: Optional[int] = None,
@@ -102,20 +102,28 @@ def visualize(
         RuntimeError: If too many versions of the save file already exist. See :data:`MAX_SAVED_VERSIONS`.
     """
 
-    # # Initialize IDAES logging
-    # _init_logging(log_level)
+    # Initialize IDAES logging
+    _init_logging(log_level)
 
-    ServerManager(flowsheet=flowsheet, flowsheet_name=name, port=port)
+    ServerManager(
+        flowsheet=flowsheet,
+        flowsheet_name=name,
+        port=port,
+        save_time_interval=save_time_interval,
+    )
 
-    # # Start the web server
+    return "favis is running ok"
+
+    # Start the web server
     # if web_server is None:
-    #     fastAPI_app = FlowsheetApp(flowsheet, name, port)
+
+    # ServerManager(flowsheet=flowsheet, flowsheet_name=name, port=port)
 
     #     # old web server
     #     # web_server = FlowsheetServer(port=port)
     #     # web_server.add_setting("save_time_interval", save_time_interval)
     #     # web_server.start()
-    #     if not quiet:
+    # 	if not quiet:
     #         _log.info("Started visualization server")
     # else:
     #     _log.info(f"Using HTTP server on localhost, port {web_server.port}")
@@ -137,6 +145,7 @@ def visualize(
 #             )
 #         if save_dir is not None and not save_path.is_absolute():
 #             save_path = save_dir / save_path
+
 #     # Create datastore for save location
 #     if save_path is None:
 #         datastore = persist.MemoryDataStore()
@@ -201,6 +210,14 @@ def visualize(
 #     return VisualizeResult(store=datastore, port=web_server.port, server=web_server)
 
 
+# def _pick_default_save_location(name, save_dir):
+#     """Pick a default save location."""
+#     if not save_dir:
+#         save_dir = Path(".")
+#     save_path = save_dir / f"{name}.json"
+#     return save_path
+
+
 # def _loop_forever(quiet):
 #     try:
 #         if not quiet:
@@ -210,14 +227,6 @@ def visualize(
 #     except KeyboardInterrupt:
 #         if not quiet:
 #             print("Program stopped")
-
-
-# def _pick_default_save_location(name, save_dir):
-#     """Pick a default save location."""
-#     if not save_dir:
-#         save_dir = Path(".")
-#     save_path = save_dir / f"{name}.json"
-#     return save_path
 
 
 # def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None):
@@ -253,6 +262,6 @@ def visualize(
 #     return save_path
 
 
-def _init_logging(lvl):
-    ui_logger = logger.getIdaesLogger("ui", level=lvl, tag="ui")
-    ui_logger.setLevel(lvl)
+# def _init_logging(lvl):
+#     ui_logger = logger.getIdaesLogger("ui", level=lvl, tag="ui")
+#     ui_logger.setLevel(lvl)
