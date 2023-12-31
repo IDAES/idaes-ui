@@ -116,20 +116,6 @@ def visualize(
     # return fastapi instence from server manager instence
     return server_manager_instence.fastapi_app
 
-    # Start the web server
-    # if web_server is None:
-
-    # ServerManager(flowsheet=flowsheet, flowsheet_name=name, port=port)
-
-    #     # old web server
-    #     # web_server = FlowsheetServer(port=port)
-    #     # web_server.add_setting("save_time_interval", save_time_interval)
-    #     # web_server.start()
-    #     if not quiet:
-    #         _log.info("Started visualization server")
-    # else:
-    #     _log.info(f"Using HTTP server on localhost, port {web_server.port}")
-
 
 #     # Set up save location
 #     use_default = False
