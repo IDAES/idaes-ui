@@ -66,6 +66,17 @@ jobs:
           - os: win64
             runner-image: windows-2022
     steps:
+      # install requirements-dev
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      # start test    
       - uses: IDAES/idaes-ui/.github/actions/install@main
         with:
           variant: ${{ matrix.install-variant }}
