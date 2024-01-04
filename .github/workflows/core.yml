@@ -70,6 +70,9 @@ jobs:
         with:
           variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
+      - name: Print variant
+        run: echo "Variant is ${{matrix.install-variant}}"
+        
       - name: Run pytest
         run: pytest -v --pyargs
 
