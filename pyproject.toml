@@ -94,4 +94,4 @@ idaes_ui = [
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra --pyargs ./idaes_ui/fv"
+addopts = "-ra ./idaes_ui/fv"
