@@ -94,7 +94,7 @@ def visualize(
            invoking this function at the end of a script.
 
     Returns:
-        See :data:`VisualizeResult`
+        fastapi instence
 
     Raises:
         :mod:`idaes.core.ui.fv.errors.VisualizerSaveError`: if the data storage at 'save_as' can't be opened
@@ -111,6 +111,10 @@ def visualize(
         flowsheet_name=name,
         port=port,
         save_time_interval=save_time_interval,
+        save=save,
+        save_dir=save_dir,
+        load_from_saved=load_from_saved,
+        overwrite=overwrite,
     )
 
     # return fastapi instence from server manager instence
