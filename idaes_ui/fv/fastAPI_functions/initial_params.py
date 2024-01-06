@@ -1,4 +1,5 @@
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union, Dict, Tuple
 
 
 class InitialParams:
@@ -19,7 +20,10 @@ class InitialParams:
         name,
         port: Optional[int] = None,
         save_time_interval: Optional[int] = 5,
-        save_dir: Optional[str] = None,
+        save: Optional[Union[Path, str, bool]] = None,
+        save_dir: Optional[Path] = None,
+        load_from_saved: bool = True,
+        overwrite: bool = False,
     ):
         # initial everything related to flowsheet
         main_class.flowsheet = flowsheet
@@ -34,8 +38,17 @@ class InitialParams:
         # initial save_time_interval
         main_class.save_time_interval = save_time_interval
 
+        # initial save
+        main_class.save = save
+
         # initial save dir
         if save_dir:
             main_class.save_dir = save_dir
         else:
-            main_class.save_dir = "./saved_flowsheet"
+            main_class.save_dir = "."
+
+        # initial load from save
+        main_class.load_from_saved = load_from_saved
+
+        # initial overwite
+        main_class.overwrite = overwrite
