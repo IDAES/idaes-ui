@@ -4,7 +4,8 @@ import pickle
 import json
 import requests
 import time
-import threading
+from pathlib import Path
+from typing import Optional, Union, Dict, Tuple
 
 from idaes_ui.fv.models.flowsheet import merge_flowsheets
 from idaes_ui.fv.flowsheet import FlowsheetSerializer
@@ -15,12 +16,25 @@ from idaes_ui.fv.app import FlowsheetApp
 
 class ServerManager:
     def __init__(
-        self, flowsheet, flowsheet_name: str, port: int, save_time_interval: int
+        self,
+        flowsheet,
+        flowsheet_name: str,
+        port: int,
+        save_time_interval: int,
+        save: Optional[Union[Path, str, bool]] = None,
+        save_dir: Optional[str] = None,
+        load_from_saved: Optional[bool] = True,
+        overwrite: Optional[bool] = False,
     ):
         # flowsheet related
         self.flowsheet = flowsheet
         self.flowsheet_name = flowsheet_name
-        self.save_time_interval = save_time_interval
+        self.save_time_interval = (save_time_interval,)
+        self.save = save
+        self.save_dir = save_dir
+        self.load_from_saved = load_from_saved
+        self.overwrite = overwrite
+
         # check if user named a port or start to pick an available port start from 8000
         if port:
             self.port = self.port_usage_check(port)
@@ -36,6 +50,7 @@ class ServerManager:
 
         # call functions
         # self.run_flowsheet_monitor(self.flowsheet, self.flowsheet_name, self.port)
+        # initial save
         self.check_running_servers_file_exist()
         self.update_running_server_file()
 
@@ -49,7 +64,7 @@ class ServerManager:
                 pickle.dump({}, file)
 
     def update_running_server_file(self):
-        """Check curren running server existing in running_server.pickle or not
+        """Check current running server existing in running_server.pickle or not
         if not exist: means this server never been start before, we use self.flowsheet_name
         and self.port create a dict write into running_server.pickle
         if exist: means user call visualize with same name again then we use flowsheet, flowsheet_name and port
@@ -123,6 +138,10 @@ class ServerManager:
                 name=self.flowsheet_name,
                 port=self.port,
                 save_time_interval=self.save_time_interval,
+                save=self.save,
+                save_dir=self.save_dir,
+                load_from_saved=self.load_from_saved,
+                overwrite=self.overwrite,
             )
 
             # read fastapi app from flowsheet instence assign to self.fastapi_app
