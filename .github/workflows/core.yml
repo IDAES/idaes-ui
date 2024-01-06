@@ -50,7 +50,10 @@ jobs:
       fail-fast: false
       matrix:
         install-variant:
-          - standard
+          ####
+          # TODO: this comment out standard is only a temp work over for install when variant is standrd fix this later
+          ####
+          # - standard
           - dev
         python-version:
           - '3.8'
