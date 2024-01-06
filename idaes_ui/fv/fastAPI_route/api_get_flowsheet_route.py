@@ -1,6 +1,7 @@
 import os
 import json
 from fastapi import Query
+from idaes_ui.fv.flowsheet import FlowsheetSerializer
 
 from idaes_ui.fv.models.flowsheet import Flowsheet
 
@@ -19,4 +20,7 @@ class GetFlowsheetRoute:
 
             if get_which == "original_flowsheet":
                 original_flowsheet = flowsheet_manager.get_original_flowsheet()
-                return original_flowsheet
+                serialized_flowsheet = FlowsheetSerializer(
+                    original_flowsheet, flowsheet_manager.get_flowsheet_name(), True
+                ).as_dict()
+                return serialized_flowsheet
