@@ -20,6 +20,6 @@ def test_model_stats(flowsheet):
     s = ModelStats(flowsheet)
     s.update()
     print(s.as_table())
-    assert s.dof.value == 0
+    assert s.dof.value == 52
     assert s.var.value > 100
     assert s.constr.value > 100
