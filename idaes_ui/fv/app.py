@@ -7,7 +7,8 @@ __created__ = "2023-10-08"
 
 # stdlib
 import sys
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union, Dict, Tuple
 
 # from pathlib import Path
 
@@ -39,7 +40,10 @@ class FlowsheetApp:
         name,
         port: Optional[int] = None,
         save_time_interval: Optional[int] = 5,
-        save_dir: Optional[str] = None,
+        save: Optional[Union[Path, str, bool]] = None,
+        save_dir: Optional[Path] = None,
+        load_from_saved: bool = True,
+        overwrite: bool = False,
     ):
         # Initial self.... params
         InitialParams(
@@ -48,7 +52,10 @@ class FlowsheetApp:
             name=name,
             port=port,
             save_time_interval=save_time_interval,
+            save=save,
             save_dir=save_dir,
+            load_from_saved=load_from_saved,
+            overwrite=overwrite,
         )
 
         # initial FastAPI
@@ -70,8 +77,11 @@ class FlowsheetApp:
             fastAPIApp=self.app,
             flowsheet=self.flowsheet,
             flowsheet_name=self.flowsheet_name,
-            save_dir=self.save_dir,
             save_time_interval=self.save_time_interval,
+            save=self.save,
+            save_dir=self.save_dir,
+            load_from_saved=self.load_from_saved,
+            overwrite=self.overwrite,
         )
 
         # @self.app.put("/api/put_settings", tags=["App setting"])
