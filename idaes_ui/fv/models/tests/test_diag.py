@@ -9,4 +9,4 @@ from . import flowsheet
 @pytest.mark.unit
 def test_data(flowsheet):
     data = DiagnosticsData(flowsheet)
-    print(data.model_dump_json())  # forces update
+    # print(data.model_dump_json())  # forces update
