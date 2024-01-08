@@ -1,12 +1,13 @@
 """
 Define how to use uvicorn to serve fastAPI app
 """
-
+import sys
 import asyncio
 import uvicorn
 import webbrowser
 from threading import Thread
 import time
+import pickle
 
 
 class WebUvicorn:
@@ -55,8 +56,36 @@ class WebUvicorn:
         url = f"http://127.0.0.1:{self.port}?id={self.flowsheet_name}"
         webbrowser.open(url)
 
+    def clean_up(self):
+        """when this flowsheet server stopped, we should clean up running_server.pickle remove this flowsheet from
+        running_server.pickle
+
+        when uvicorn stopped port will be auto release
+        """
+        print("Stoping server, clean up running_server.pickle")
+        pickle_file_path = "running_server.pickle"
+
+        # open running_server.pickle and delete this flowsheet base on self.flowsheet_name
+        with open(pickle_file_path, "rb") as file:
+            running_server_list = pickle.load(file)
+            del running_server_list[self.flowsheet_name]
+
+        # write rest of running servers back to the running_server.pickle
+        with open(pickle_file_path, "wb") as file:
+            pickle.dump(running_server_list, file)
+            print(running_server_list)
+
     def run(self):
-        # start server, if want stop async just add daemon=True after target=self.run_server_async
-        Thread(target=self.run_server_async).start()
-        time.sleep(1)  # give system 1 second to start server the open browser
-        Thread(target=self.open_browser).start()  # start browser
+        try:
+            # start server, if want stop async just add daemon=True after target=self.run_server_async
+            Thread(target=self.run_server_async).start()
+            time.sleep(1)  # give system 1 second to start server the open browser
+            Thread(target=self.open_browser).start()  # start browser
+
+            # TODO find a better way to capture the keyboardInterrupt not use while loop
+            # while loop use to block thread to allow except to capture keyboardInterrupt
+            while True:
+                time.sleep(5)
+        except KeyboardInterrupt:
+            self.clean_up()
+            sys.exit(0)
