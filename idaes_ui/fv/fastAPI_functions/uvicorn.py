@@ -84,8 +84,8 @@ class WebUvicorn:
 
             # TODO find a better way to capture the keyboardInterrupt not use while loop
             # while loop use to block thread to allow except to capture keyboardInterrupt
-            while True:
-                time.sleep(5)
+            # while True:
+            #     time.sleep(5)
         except KeyboardInterrupt:
             self.clean_up()
             sys.exit(0)
