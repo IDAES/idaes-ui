@@ -34,34 +34,8 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
 )
 from idaes.models.unit_models import Flash
 from idaes_ui.fv import fsvis, errors, validate_flowsheet
-
-
-def port_usage_check(port):
-    """use for port check, if pass in port is in use, then modifiy port number + 1 until port available
-    Args:
-        port: the port use to pass in by user or default 8000
-    Returns:
-        port: the modified port number (available port number)
-    """
-
-    while True:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            try:
-                s.bind(("127.0.0.1", port))
-                return port
-            except OSError:
-                port += 1
-
-
-def kill_port(port):
-    """use for kill port process everytime finished running test
-    Args: port, the port current test is running on
-    """
-    pid = None
-    result = subprocess.run(["lsof", "-i", f":{port}"], capture_output=True, text=True)
-    if result.returncode == 0:
-        pid = result.stdout.splitlines()[1].split()[1]
-        subprocess.run(["kill", pid])
+from ..fsvis import visualize
+from fastapi.testclient import TestClient
 
 
 @pytest.fixture(scope="module")
@@ -85,22 +59,49 @@ def flash_model():
     return m
 
 
+# @pytest.fixture
+# def fvapp():
+#     """Start the FastAPI app."""
+#     flowsheet = flash_model()
+#     app = visualize(
+#         flowsheet=flowsheet,
+#         name=flowsheet.name,
+#         port=8000,
+#         test=True,
+#         # clean up has to be True or if server in running server list it won't start a new fastapi and return None
+#         clean_up=True,
+#     )
+#     return app
+
+
+# @pytest.fixture
+# def client(fvapp):
+#     """FastAPI client for testing"""
+#     with TestClient(fvapp) as test_client:
+#         return test_client
+
+
 @pytest.mark.integration
 def test_visualize(flash_model, tmp_path):
     from pathlib import Path
 
     flowsheet = flash_model.fs
-    # check avilable port
-    avilable_port = port_usage_check(8000)
 
-    # Start the visualization server
-    result = fsvis.visualize(
-        flowsheet, "Flash", browser=False, save_dir=tmp_path, port=avilable_port
+    # Start the visualization server and return fastapi app
+    fastapi_app = fsvis.visualize(
+        name="Flash",
+        flowsheet=flowsheet,
+        browser=False,
+        save_dir=tmp_path,
+        port=8000,
+        test=True,
+        clean_up=True,
     )
+    # enable testclient
+    client = TestClient(fastapi_app)
+
+    resp = client.get("/api/get_fs?get_which=original_flowsheet")
     # Get the model
-    resp = requests.get(
-        f"http://127.0.0.1:{avilable_port}/api/get_fs?get_which=original_flowsheet"
-    )
     data = resp.json()
     # Validate the model
     ok, msg = validate_flowsheet(data)
@@ -116,9 +117,7 @@ def test_visualize(flash_model, tmp_path):
     # Modify the model by deleting its one and only component
     flowsheet.del_component("flash")
     # Get the model (again)
-    resp = requests.get(
-        f"http://127.0.0.1:{avilable_port}/api/get_fs?get_which=original_flowsheet"
-    )
+    resp = client.get(f"/api/get_fs?get_which=original_flowsheet")
     data = resp.json()
     # Validate the modified model
     expected = {
@@ -134,30 +133,33 @@ def test_visualize(flash_model, tmp_path):
     assert data == expected
 
 
-# @pytest.mark.integration
-# def test_save_visualization(flash_model, tmp_path):
-#     # find avilable port
-#     avilable_port = port_usage_check(8000)
-#     # view logs from the persistence module
-#     logging.getLogger("idaes_ui.fv").setLevel(logging.DEBUG)
-#     flowsheet = flash_model.fs
-#     # Start the visualization server, using temporary save location
-#     save_location = tmp_path / "flash-vis.json"
-#     fsvis_result = fsvis.visualize(
-#         flowsheet, "Flash", browser=False, save=save_location, save_dir=tmp_path
-#     )
-#     # Check the contents of the saved file are the same as what is returned by the server
-#     # with open(
-#     #     fsvis_result.store.filename
-#     # ) as fp:  # error open in wrong path need to fix
-#     #     file_data = json.load(fp)
-#     with open(save_location) as fp:  # error open in wrong path need to fix
-#         file_data = json.load(fp)
-#     resp = requests.get(
-#         f"http://127.0.0.1:{avilable_port}/api/get_fs?get_which=flowsheet"
-#     )
-#     # net_data = resp.json()
-#     # assert file_data == net_data
+@pytest.mark.integration
+def test_save_visualization(flash_model, tmp_path):
+    # view logs from the persistence module
+    logging.getLogger("idaes_ui.fv").setLevel(logging.DEBUG)
+    flowsheet = flash_model.fs
+    save_location = tmp_path / "Flash.json"
+    # Start the visualization server, using temporary save location
+    fastapi_app = fsvis.visualize(
+        flowsheet,
+        name="Flash",
+        browser=False,
+        save=save_location,
+        # save=".",
+        save_dir=tmp_path,
+        clean_up=True,
+    )
+    # enable fastapi testclient
+    client = TestClient(fastapi_app)
+    res = client.post("/api/post_save_flowsheet", json={"save_flowsheet": True})
+    # Check the contents of the saved file are the same as what is returned by the server
+    with open(save_location) as fp:
+        file_data = json.load(fp)
+
+    resp = client.get("/api/get_fs?get_which=flowsheet")
+
+    net_data = resp.json()
+    assert file_data == net_data
 
 
 # def _canonicalize(d):
@@ -167,24 +169,28 @@ def test_visualize(flash_model, tmp_path):
 #             cell["ports"]["items"] = sorted(items, key=lambda x: x["group"])
 
 
+@pytest.mark.unit
+def test_invoke(flash_model):
+    # from inspect import signature -- TODO: use for checking params
+    from idaes_ui import fv as fsvis_pkg
+
+    functions = {
+        "method": getattr(flash_model.fs, "visualize"),
+        "package": getattr(fsvis_pkg, "visualize"),
+        "module": getattr(fsvis, "visualize"),
+    }
+
+
+# TODO: check params
+
+
 # @pytest.mark.unit
-# def test_invoke(flash_model):
-#     # from inspect import signature -- TODO: use for checking params
-#     from idaes_ui import fv as fsvis_pkg
-
-#     functions = {
-#         "method": getattr(flash_model.fs, "visualize"),
-#         "package": getattr(fsvis_pkg, "visualize"),
-#         "module": getattr(fsvis, "visualize"),
-#     }
-#     # TODO: check params
-
-
-# @pytest.mark.unit
-# def test_visualize_fn(flash_model):
+# def test_visualize_fn_without_save(flash_model):
 #     flowsheet = flash_model.fs
-#     result = fsvis.visualize(flowsheet, browser=False, save=False)
-#     assert result.store.filename == ""
+#     fastapi_app = fsvis.visualize(flowsheet, browser=False, save=False, clean_up=True)
+#     client = TestClient(fastapi_app)
+#     # result = client.get('')
+#     # assert result.store.filename == ""
 #     #
 #     for bad_save_as in (1, "/no/such/file/exists.I.hope", flowsheet):
 #         with pytest.raises(errors.VisualizerError):
