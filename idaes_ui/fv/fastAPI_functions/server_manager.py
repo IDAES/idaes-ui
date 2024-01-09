@@ -25,6 +25,8 @@ class ServerManager:
         save_dir: Optional[str] = None,
         load_from_saved: Optional[bool] = True,
         overwrite: Optional[bool] = False,
+        test: bool = False,
+        browser: bool = True,
     ):
         # flowsheet related
         self.flowsheet = flowsheet
@@ -34,6 +36,8 @@ class ServerManager:
         self.save_dir = save_dir
         self.load_from_saved = load_from_saved
         self.overwrite = overwrite
+        self.test = test
+        self.browser = browser
 
         # check if user named a port or start to pick an available port start from 8000
         if port:
@@ -46,245 +50,94 @@ class ServerManager:
         self.fastapi_app = None
 
         # server related
-        self.running = False
+        # default asume the server is down, will be check and update in self.update_running_server_file()
+        self.is_current_server_down = True
 
-        # call functions
-        # self.run_flowsheet_monitor(self.flowsheet, self.flowsheet_name, self.port)
         # initial save
         self.check_running_servers_file_exist()
         self.update_running_server_file()
 
+        # start fastapi server only if is_current_server_down is True
+        # is_current_server_down value assign in self.update_running_server_file()
+        if self.is_current_server_down:
+            self.start_fastapi()
+
     def check_running_servers_file_exist(self):
         """Use to check the file running_server.pickle exist or not
-        if not exist create one
+        if not exist create one.
+
+        The running_server.pickle file use to store list of running server
         """
         has_file = os.path.exists("./running_server.pickle")
         if not has_file:
             with open("running_server.pickle", "wb") as file:
                 pickle.dump({}, file)
 
-    def update_running_server_file(self):
+    def update_running_server_file(self, flowsheet_name: Optional[str] = None):
         """Check current running server existing in running_server.pickle or not
-        if not exist: means this server never been start before, we use self.flowsheet_name
-        and self.port create a dict write into running_server.pickle
-        if exist: means user call visualize with same name again then we use flowsheet, flowsheet_name and port
-        as param create a put req againest /api/put_fs to update flowsheet
+        if not exist: means this server never been start before or deleted when server shutdown,
+        we use self.flowsheet_name and self.port create a dict write into running_server.pickle.
 
+        if exist: means user call visualize with same name again then we use flowsheet, flowsheet is in memary, it will auto update
+
+        Args:
+            self: server_manager instence self
+            flowsheet_name:Optional string of flowsheet name, use to remove server from the running_server.pickle
         Returns:
             Void
         """
-        # Initialize running_servers as an empty dictionary
-        running_servers = {}
-
-        # read from file pass read content to running_servers variable return dict with {"server_name": {"name":"somename", "port":"running_port"}}
+        # read from file pass read content to running_servers variable return dict with
+        # data structure -> {"server_name": {"name":"somename", "port":"running_port"}}
         with open("running_server.pickle", "rb") as file:
             running_servers = pickle.load(file)
 
         # check current flowsheet name existing in running_servers
-        is_current_server_down = False
+        # is_current_server_down == True, self.flowsheet_name not in running_server list, vice versa.
+        self.is_current_server_down = self.flowsheet_name not in running_servers
 
-        if self.flowsheet_name in running_servers:
-            # check if this server is running or not, if down will return True to is_current_server_down
-            is_current_server_down = self.check_server_status(
-                port=self.port, flowsheet_name=self.flowsheet_name
-            )
-
-            # when server is up, call visualize, update flowsheet
-            if not is_current_server_down:
-                self.update_flowsheet(
-                    port=self.port,
-                    flowsheet=self.flowsheet,
-                    flowsheet_name=self.flowsheet_name,
-                )
-
-            # exist, call put to update fs
-
-        if self.flowsheet_name not in running_servers or is_current_server_down:
-            # check current flowsheet name not exist in running_servers,
-            # add new dict to running_servers_file base on this flowsheet name run a uvicorn server
+        # when is_current_server_down:
+        if self.is_current_server_down:
+            """when server is not in list we do:
+            1. write this server into running_server.pickle
+                    Format: "self.flowsheet_name": {name: self.flowsheet_name, port: self.port}
+            2. start server with call FlowsheetApp(args...)
             """
-            dict format:
-            self.flowsheet_name : {
-                "name" : self.flowsheet_name,
-                "port" : self.port
-            }
-            """
-            print("no server, adding... then running new uvicorn")
-            # edit current_running_server obj
-            current_running_server = {
-                "name": self.flowsheet_name,
-                "port": self.port,
-            }
-
-            # assign self api_url
-            port = current_running_server["port"]
-            self.api_url = f"http://127.0.0.1:{port}/api/"
-
-            # read_exist_running_server from running_server.pickle
-            exist_running_servers = {}
+            # 1. write this server into running_server.pickle
+            # read from pickle get running_server_list
+            # read server list from running_server.pickle and add current server to the list as running_servers
             with open("running_server.pickle", "rb") as file:
-                exist_running_servers = pickle.load(file)
-
-            # because self.flowsheet_name not in running_servers, so add curent_running_server to running_server file
-            exist_running_servers[self.flowsheet_name] = current_running_server
-
-            # write new exist_running_servers to file: running_server.pickle
-            with open("running_server.pickle", "wb") as file:
-                pickle.dump(exist_running_servers, file)
-
-            # run fastAPI app and store flowsheet class instence
-            self.flowsheet_class_instence = FlowsheetApp(
-                flowsheet=self.flowsheet,
-                name=self.flowsheet_name,
-                port=self.port,
-                save_time_interval=self.save_time_interval,
-                save=self.save,
-                save_dir=self.save_dir,
-                load_from_saved=self.load_from_saved,
-                overwrite=self.overwrite,
-            )
-
-            # read fastapi app from flowsheet instence assign to self.fastapi_app
-            self.fastapi_app = self.flowsheet_class_instence.get_fast_api_app()
-
-            self.running = True
-
-            try:
-                print("Entering try block")
-                time.sleep(2)
-                print("making put req from python !!!!!!!!")
-                ###############################
-                # test area
-                headers = {"Content-Type": "application/json"}
-                # new_flowsheet = Flowsheet(self.flowsheet)
-                new_flowsheet = FlowsheetSerializer(
-                    self.flowsheet, self.flowsheet_name, False
-                ).as_dict()
-                json_req_body = {
-                    "flowsheet_type": "jjs_fs",
-                    "flowsheet": new_flowsheet,
+                running_servers = pickle.load(file)
+                new_server = {
+                    "name": self.flowsheet_name,
+                    "port": self.port,
                 }
+                running_servers[f"{self.flowsheet_name}"] = new_server
 
-                res = requests.put(
-                    f"http://127.0.0.1:{self.port}/api/put_fs",
-                    data=json.dumps(json_req_body),
-                    headers=headers,
-                )
-                print("$$$$$$")
-                print(res)
-                print("$$$$$$")
-                print("making put req from python done !!!!!!!!")
-                ###############################
+            # write running_servers to running_server.pickle
+            with open("running_server.pickle", "wb") as writeToFile:
+                pickle.dump(running_servers, writeToFile)
 
-                # url = f"http://127.0.0.1:{self.port}/api/post_health_check"
-                # headers = {"Content-Type": "application/json"}
-                # while self.running:
-                #     time.sleep(1)
-                #     print("running...")
-                #     health_check_res = requests.post(
-                #         url, data=json.dumps({"server_alive_check": 1}), headers=headers
-                #     )
-                #     if not health_check_res:
-                #         self.remove_current_running_server_from_file(
-                #             self.flowsheet_name
-                #         )
-
-                print(f"server is running with uvicorn on port {self.port}")
-            except KeyboardInterrupt:
-                self.running = False
-                print("____________________")
-                print("Exist UI server...")
-                print("Remove current server out of running_server.pickle")
-                self.remove_current_running_server_from_file(self.flowsheet_name)
-                print("Server removed from running_server.pickle")
-                print("____________________")
-
-    def check_server_status(self, port, flowsheet_name):
-        """Check if server is running on port
-        if not running on port remove this server base on flowsheet_name from running_server.pickle
-        Args:
-            port: self.port
-            flowsheet_name: self.flowsheet_name
+    def start_fastapi(self):
+        """when self.is_current_server_down this fn will be called and start a new fastapi instence
+        and assign fastapi instence to self.fastapi_app use for Testclient to test
+        return:
+            Void
         """
-        health_check_url = f"http://127.0.0.1:{port}/api/post_health_check"
-        headers = {"Content-Type": "application/json"}
-
-        try:
-            response = requests.post(
-                health_check_url,
-                data=json.dumps({"server_alive_check": 1}),
-                headers=headers,
-            )
-            print(response)
-            return False
-        except requests.exceptions.ConnectionError:
-            self.remove_current_running_server_from_file(flowsheet_name)
-            return True
-
-    def update_flowsheet(self, port, flowsheet, flowsheet_name):
-        """Check if server is running on port
-        if not running on port remove this server base on flowsheet_name from running_server.pickle
-        Args:
-            port: self.port
-            flowsheet_name: self.flowsheet_name
-        """
-        update_flowsheet_url = f"http://127.0.0.1:{port}/api/put_fs"
-        headers = {"Content-Type": "application/json"}
-
-        try:
-            # dump flowsheet to dict
-            new_flowsheet = FlowsheetSerializer(
-                flowsheet, flowsheet_name, False
-            ).as_dict()
-            # build request body
-            req_body = {
-                "flowsheet_type": "jjs_fs",
-                "flowsheet": new_flowsheet,
-            }
-            # api call
-            res = requests.put(
-                update_flowsheet_url,
-                data=json.dumps(req_body),
-                headers=headers,
-            )
-        except requests.exceptions:
-            print("error")
-
-    def remove_current_running_server_from_file(self, flowsheet_name):
-        """Removes the specified flowsheet server from the 'running_server.pickle' file.
-
-        This function is called when the server is stopped, either by a 'Control+C' command or when a health check to
-        '/api/post_health_check' endpoint does not receive a response, indicating that the server has already stopped.
-
-        Removing the flowsheet server from the file ensures that the next time the UI application is launched, it correctly
-        identifies that this particular flowsheet server is not running.
-
-        Args:
-            flowsheet_name (str): The name of the flowsheet whose server needs to be removed from the tracking file.
-        """
-        running_server = {}
-        # read from running_servers.pickle write to running_servers
-        with open("running_server.pickle", "rb") as file:
-            running_server = pickle.load(file)
-
-        # base on flowsheet_name remove item name = flowsheet_name
-        running_server.pop(flowsheet_name, None)
-
-        # write modified running_servers back to running_server.pickle
-        with open("running_server.pickle", "wb") as file:
-            pickle.dump(running_server, file)
-
-        print(
-            f"server on port: {self.port} is stoped, running server: {self.flowsheet_name} is removed from running_server.pickle"
+        self.flowsheet_class_instence = FlowsheetApp(
+            flowsheet=self.flowsheet,
+            name=self.flowsheet_name,
+            port=self.port,
+            save_time_interval=self.save_time_interval,
+            save=self.save,
+            save_dir=self.save_dir,
+            load_from_saved=self.load_from_saved,
+            overwrite=self.overwrite,
+            test=self.test,
+            browser=self.browser,
         )
 
-    # empty pickle file
-    # import pickle
-
-    # with open("./running_server.pickle", "wb") as file:
-    #     pickle.dump({}, file)
-    # with open("./running_server.pickle", "rb") as file:
-    #     print(pickle.load(file))
+        # read fastapi app from flowsheet instence assign to self.fastapi_app
+        self.fastapi_app = self.flowsheet_class_instence.get_fast_api_app()
 
     def port_usage_check(self, port):
         """use for port check, if pass in port is in use, then modifiy port number + 1 until port available
