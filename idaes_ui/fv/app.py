@@ -44,6 +44,8 @@ class FlowsheetApp:
         save_dir: Optional[Path] = None,
         load_from_saved: bool = True,
         overwrite: bool = False,
+        test: bool = False,
+        browser: bool = True,
     ):
         # Initial self.... params
         InitialParams(
@@ -56,6 +58,7 @@ class FlowsheetApp:
             save_dir=save_dir,
             load_from_saved=load_from_saved,
             overwrite=overwrite,
+            test=test,
         )
 
         # initial FastAPI
@@ -72,7 +75,7 @@ class FlowsheetApp:
         # get diagnostics json
         self.diag_data = DiagnosticsData(flowsheet)
 
-        # # API router
+        # API router
         Router(
             fastAPIApp=self.app,
             flowsheet=self.flowsheet,
@@ -84,12 +87,18 @@ class FlowsheetApp:
             overwrite=self.overwrite,
         )
 
-        # @self.app.put("/api/put_settings", tags=["App setting"])
-        # def put_settings(settings: AppSettings):
-        #     self.settings = settings
+        # print message why browser not start
+        if self.test:
+            print("Test mode enabled with 'test = True', browser won't start!")
+        if not browser:
+            print(
+                "Browser mode disenabled with 'browser = False', browser won't start!"
+            )
 
-        # Uvicorn serve fastAPI app
-        WebUvicorn(self.app, self.port, self.flowsheet_name)
+        # # Uvicorn serve fastAPI app
+        # # condation not test only not test case will start uvicorn
+        if not self.test and browser:
+            WebUvicorn(self.app, self.port, self.flowsheet_name)
 
     def get_fast_api_app(self):
         return self.app
