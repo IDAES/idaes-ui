@@ -139,6 +139,7 @@ dmypy.json
 sample_visualization.json
 shared_variable.json
 *.pickle
+saved_flowsheet/
 
 # cypress
 screenshots
