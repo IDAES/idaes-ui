@@ -24,6 +24,8 @@ class InitialParams:
         save_dir: Optional[Path] = None,
         load_from_saved: bool = True,
         overwrite: bool = False,
+        test: bool = False,
+        browser: bool = True,
     ):
         # initial everything related to flowsheet
         main_class.flowsheet = flowsheet
@@ -52,3 +54,9 @@ class InitialParams:
 
         # initial overwite
         main_class.overwrite = overwrite
+
+        # initial test param
+        main_class.test = test
+
+        # initial browser
+        main_class.browser = browser
