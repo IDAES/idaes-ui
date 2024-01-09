@@ -48,7 +48,10 @@ class FlowsheetManager:
             self.updated_fs = updated_fs
             return self.updated_fs
         else:
-            jjs_fs = Flowsheet(self.flowsheet)
+            # jjs_fs = Flowsheet(self.flowsheet)
+            jjs_fs = FlowsheetSerializer(
+                self.flowsheet, self.flowsheet_name, True
+            ).as_dict()
             return jjs_fs
 
     def update_jjs_flowsheet(self, frontend_put_jjs_flowsheet):
