@@ -166,6 +166,7 @@ def visualize(
         load_from_saved=load_from_saved,
         overwrite=overwrite,
         test=test,
+        browser=browser,
     )
 
     # return fastapi instence from server manager instence
