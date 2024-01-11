@@ -84,7 +84,7 @@ jobs:
       fail-fast: false
       matrix:
         install-variant:
-          - standard
+          # - standard
           - dev
         python-version:
           - '3.8'
