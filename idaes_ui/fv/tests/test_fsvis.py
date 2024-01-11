@@ -22,10 +22,10 @@ import os
 from pathlib import Path
 import pytest
 import re
-import requests
 import time
 import socket
 import subprocess
+import shutil
 
 from pyomo.environ import ConcreteModel
 from idaes.core import FlowsheetBlock
@@ -145,7 +145,6 @@ def test_save_visualization(flash_model, tmp_path):
         name="Flash",
         browser=False,
         save=save_location,
-        # save=".",
         save_dir=tmp_path,
         clean_up=True,
     )
@@ -184,26 +183,67 @@ def test_invoke(flash_model):
 # TODO: check params
 
 
-# @pytest.mark.unit
-# def test_visualize_fn_without_save(flash_model):
-#     flowsheet = flash_model.fs
-#     fastapi_app = fsvis.visualize(flowsheet, browser=False, save=False, clean_up=True)
-#     client = TestClient(fastapi_app)
-#     # result = client.get('')
-#     # assert result.store.filename == ""
-#     #
-#     for bad_save_as in (1, "/no/such/file/exists.I.hope", flowsheet):
-#         with pytest.raises(errors.VisualizerError):
-#             fsvis.visualize(flowsheet, save=bad_save_as, browser=False)
+@pytest.mark.unit
+def test_visualize_fn_without_save(flash_model, tmp_path):
+    flowsheet = flash_model.fs
+    fastapi_app = fsvis.visualize(flowsheet, browser=False, save=False, clean_up=True)
+    client = TestClient(fastapi_app)
+
+    # when save is false try to read if any files saved
+    files_arr = []
+    dir = Path(tmp_path)
+    for path in dir.iterdir():
+        if path.is_file():
+            files_arr.append(path.name)
+    assert files_arr == []
+
+    # bad_save_as = 1
+    # fastapi_app = fsvis.visualize(flowsheet, save=bad_save_as, browser=False)
+    # client = TestClient(fastapi_app)
+    # resp = client.post("/api/post_save_flowsheet", json={"save_flowsheet": True})
+    # assert resp.json()["saved"] == False
+
+    # for bad_save_as in (1, "/no/such/file/exists.I.hope", flowsheet):
+    #     fastapi_app = fsvis.visualize(flowsheet, save=bad_save_as, browser=False)
+    #     client = TestClient(fastapi_app)
+    #     resp = client.post("/api/post_save_flowsheet", json={"save_flowsheet": True})
+    #     assert resp.json()["saved"] == False
 
 
-# @pytest.mark.unit
-# def test_flowsheet_name(flash_model, tmp_path):
-#     raw_name = "Hello World"
-#     result = fsvis.visualize(
-#         flash_model.fs, name=raw_name, browser=False, save_dir=tmp_path
-#     )
-#     assert re.search(raw_name, result.store.filename)
+@pytest.mark.unit
+def test_flowsheet_name(flash_model, tmp_path):
+    # test flowsheet name is equal to the assigned flowsheet name
+    raw_name = "Hello World"
+    fastapi_app = fsvis.visualize(
+        name=raw_name,
+        flowsheet=flash_model.fs,
+        browser=False,
+        save=tmp_path,
+        overwrite=True,
+        clean_up=True,
+    )
+
+    client = TestClient(fastapi_app)
+    resp = client.get("/api/get_fs?get_which=flowsheet_name")
+    flowsheet_name = resp.json()
+    assert raw_name == flowsheet_name
+
+    # check if save file name is equal to the flowsheet name
+    # make sure call save and save the file in tmp_path
+    res = client.post("/api/post_save_flowsheet", json={"save_flowsheet": True})
+
+    # read file from save dir to check if the file is in the save dir
+    dir = Path(tmp_path)
+    for path in dir.iterdir():
+        if path.is_file() and raw_name in path.name:
+            assert f"{raw_name}.json" == path.name
+
+    # delete all file and subfolders in tmp_path folder, easier for future test
+    for path in dir.iterdir():
+        if path.is_file():
+            path.unlink()  # delete file
+        elif path.is_dir():
+            shutil.rmtree(path)  # remove subfolder and files
 
 
 # @pytest.mark.unit
