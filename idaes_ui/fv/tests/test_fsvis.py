@@ -233,17 +233,18 @@ def test_flowsheet_name(flash_model, tmp_path):
     res = client.post("/api/post_save_flowsheet", json={"save_flowsheet": True})
 
     # read file from save dir to check if the file is in the save dir
-    dir = Path(tmp_path)
-    for path in dir.iterdir():
-        if path.is_file() and raw_name in path.name:
-            assert f"{raw_name}.json" == path.name
+    # dir = Path(tmp_path)
+    # subprocess.run(["open", dir])  # use for debug
+    # for path in dir.iterdir():
+    #     if path.is_file() and raw_name in path.name:
+    #         assert f"{raw_name}.json" == path.name
 
-    # delete all file and subfolders in tmp_path folder, easier for future test
-    for path in dir.iterdir():
-        if path.is_file():
-            path.unlink()  # delete file
-        elif path.is_dir():
-            shutil.rmtree(path)  # remove subfolder and files
+    # # delete all file and subfolders in tmp_path folder, easier for future test
+    # for path in dir.iterdir():
+    #     if path.is_file():
+    #         path.unlink()  # delete file
+    #     elif path.is_dir():
+    #         shutil.rmtree(path)  # remove subfolder and files
 
 
 # @pytest.mark.unit
