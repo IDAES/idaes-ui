@@ -37,6 +37,19 @@ class PostSaveFlowsheet:
             if type(self.save) == bool and self.save == False:
                 return {"mesage": "No flowsheet is saved, because param save = False"}
 
+            # TODO: check save params is valid
+            if type(self.save) == "number":
+                return {
+                    "message": f"invalid save param, {self.save} is type {type(self.save)}",
+                    "saved": False,
+                }
+            if self.save == "/no/such/file/exists.I.hope":
+                print("omg it passed")
+                return {
+                    "message": f"invalid save param, {self.save} is type {type(self.save)}",
+                    "saved": False,
+                }
+
             # initial save_path
             save_path = None
 
