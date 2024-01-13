@@ -14,7 +14,7 @@ class GetFlowsheetRoute:
                 jjs_flowsheet = flowsheet_manager.get_jjs_flowsheet()
                 return jjs_flowsheet
 
-            if get_which == "flowsheetName":
+            if get_which == "flowsheet_name":
                 flowsheet_name = flowsheet_manager.get_flowsheet_name()
                 return flowsheet_name
 
