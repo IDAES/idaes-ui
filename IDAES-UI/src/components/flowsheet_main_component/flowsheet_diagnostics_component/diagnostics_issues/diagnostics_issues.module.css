@@ -5,6 +5,7 @@
     flex-direction: row;
     justify-content: center;
     gap: 20px;
+    border-bottom: 1px solid gray;
 }
 
 .diagnosticIssues_each_issue{
