@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "@/context/appMainContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import css from './header_fn_btn_diagnostics.module.css'
 
 export default function HeaderFNBtnDiagnostics(){
     const {panelState, setPanelState} = useContext(AppContext);
@@ -13,13 +14,21 @@ export default function HeaderFNBtnDiagnostics(){
         })
     }
     return(
-        <li 
+        <div 
             id="headerDiagnosticsBtn" 
-            className={`header_each_btn`}
+            className={`header_each_btn ${css.headerDiagnosticsBtnContainer}`}
             onClick={toggleDiagnosticHandler}
         >
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-sm"/>
-            Diagnostics
-        </li>
+            <span className={css.taggleBtn}>
+                <span className={panelState.diagnostics.show ? css.toggleBtnInnerOn : css.toggleBtnInnerOff}>
+                { 
+                    panelState.diagnostics.show ? 
+                    <FontAwesomeIcon icon={faCheck} className={css.faIcon}/> :
+                    <FontAwesomeIcon icon={faX} className={css.faIcon}/> 
+                }
+                </span>
+            </span>
+            <p>Diagnostics {}</p>
+        </div>
     )
 }
