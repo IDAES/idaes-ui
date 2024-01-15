@@ -3,8 +3,9 @@ import { AppContext } from "@/context/appMainContext";
 import axios from "axios";
 import DiagnosticsHeader from "./flowsheet_diagnostics_header/flowsheet_diagnostics_header";
 import { Diagnostic_main } from "./diagnostic_functions/diagnostic_main";
-import DiagnosticIssues from "./diagnostics_issues/diagnostics_issues";
 import "./flowsheet_diagnostics.css";
+import DiagnosticIssues from "./diagnostics_issues/diagnostics_issues";
+import DiagnosticsDisplay from "./diagnostics_display/diagnostics_display";
 
 
 export default function FlowsheetDiagnostics(){
@@ -42,6 +43,7 @@ export default function FlowsheetDiagnostics(){
         <>
             <DiagnosticsHeader />
             <DiagnosticIssues diagnosticData={diagnosticData} toggleIssue={toggleIssueHandler} whichIssue={whichIssue}/>
+            <DiagnosticsDisplay />
             {/* <div id="diagnosticsContainer"></div> */}
         </>
     )
