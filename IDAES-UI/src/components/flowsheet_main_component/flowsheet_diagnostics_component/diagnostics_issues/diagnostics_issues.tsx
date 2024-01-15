@@ -1,11 +1,13 @@
 import css from "./diagnostics_issues.module.css";
 
 export default function DiagnosticIssues(props:any) {
-    let diagnosticData = props.diagnosticData; // reading props from parent
+    // reading props from parent
+    let diagnosticData = props.diagnosticData;
+    // set default diagnostics issue display as loading...
     let displayDiagnosticIssues:any = "Loading...";
 
     if (diagnosticData) {
-        // start update template displayDiagnosticIssues
+        // when diagnostics is loaded populate how many kinds of issues and update issue component display
         // get issues array
         let issues = diagnosticData.issues.issues;
         // initial issueTypes
@@ -20,18 +22,20 @@ export default function DiagnosticIssues(props:any) {
             }
         }
 
-        displayDiagnosticIssues = Object.keys(issueTypes).map((el, index)=>{
+        // update issue component display
+        displayDiagnosticIssues = Object.keys(issueTypes).map((eachIssueName, index)=>{
             return(
-                <div key={index} className={`${css.diagnosticIssues_each_issue} ${index == 0 ? css.activated : css.deactivated}`}>
+                <div key={index} 
+                    className={`${css.diagnosticIssues_each_issue} ${eachIssueName == props.whichIssue ? css.activated : css.deactivated}`}
+                    onClick={()=>props.toggleIssue(eachIssueName)}
+                >
                     <p>
-                        {el} issues
-                        <sup>{issueTypes[el]}</sup>
+                        {eachIssueName} issues
+                        <sup>{issueTypes[eachIssueName]}</sup>
                     </p>
                 </div>
             )
         })
-
-
     } else {
         console.log(`Diagnostic data is not pass from parent!`)
     }
