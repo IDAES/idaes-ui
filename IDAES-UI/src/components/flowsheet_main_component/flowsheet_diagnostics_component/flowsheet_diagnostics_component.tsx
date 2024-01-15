@@ -8,15 +8,25 @@ import "./flowsheet_diagnostics.css";
 
 
 export default function FlowsheetDiagnostics(){
-    const [diagnosticData, setDiagnosticsData] = useState(null);
     let {server_port} = useContext(AppContext);
-    
+    // this use to hold all diagnostic data fetched from api end point pass down to sub components
+    const [diagnosticData, setDiagnosticsData] = useState(null);
+    // use to hold which issue currently is displayed on screen setWhichIssue to update diagnostics display
+    const [whichIssue, setWhichIssue] = useState(null); 
+
+    const toggleIssueHandler = (issue:any) =>{
+        // this function use in issues component's each issue tab
+        // use for when each issue tab click and toggle current displayed issue
+        setWhichIssue(issue)
+    }
+
     useEffect(()=>{
         const getDiagnosticUrl = `http://127.0.0.1:${server_port}/api/get_diagnostics`
         // const fetchDiagnosticsData = axios.get(url);
         // console.log(fetchDiagnosticsData);
 
         const fetchDiagnosticData = async (url:string) =>{
+            // fetch diagnostic data from end point and update to state
             try{
                 const res = await axios.get(url);
                 const data = res.data
@@ -31,7 +41,7 @@ export default function FlowsheetDiagnostics(){
     return (
         <>
             <DiagnosticsHeader />
-            <DiagnosticIssues diagnosticData={diagnosticData}/>
+            <DiagnosticIssues diagnosticData={diagnosticData} toggleIssue={toggleIssueHandler} whichIssue={whichIssue}/>
             {/* <div id="diagnosticsContainer"></div> */}
         </>
     )
