@@ -22,11 +22,20 @@ export default function DiagnosticIssues(props:any) {
             }
         }
 
+        // setup default issue when whichIssue is null
+        const issueArray = Object.keys(issueTypes);
+        let currentIssueName = ""
+        if(!props.whichIssue && issueArray.length >= 1){
+            currentIssueName = issueArray[0];
+        }else{
+            currentIssueName = props.whichIssue;
+        }
+
         // update issue component display
-        displayDiagnosticIssues = Object.keys(issueTypes).map((eachIssueName, index)=>{
+        displayDiagnosticIssues = issueArray.map((eachIssueName, index)=>{
             return(
                 <div key={index} 
-                    className={`${css.diagnosticIssues_each_issue} ${eachIssueName == props.whichIssue ? css.activated : css.deactivated}`}
+                    className={`${css.diagnosticIssues_each_issue} ${eachIssueName == currentIssueName ? css.activated : css.deactivated}`}
                     onClick={()=>props.toggleIssue(eachIssueName)}
                 >
                     <p>
