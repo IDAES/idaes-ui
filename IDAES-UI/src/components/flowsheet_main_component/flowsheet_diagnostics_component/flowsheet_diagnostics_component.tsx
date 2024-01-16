@@ -22,9 +22,7 @@ export default function FlowsheetDiagnostics(){
     }
 
     useEffect(()=>{
-        const getDiagnosticUrl = `http://127.0.0.1:${server_port}/api/get_diagnostics`
-        // const fetchDiagnosticsData = axios.get(url);
-        // console.log(fetchDiagnosticsData);
+        const getDiagnosticUrl = `http://127.0.0.1:${server_port}/api/get_diagnostics`;
 
         const fetchDiagnosticData = async (url:string) =>{
             // fetch diagnostic data from end point and update to state
@@ -43,7 +41,7 @@ export default function FlowsheetDiagnostics(){
         <>
             <DiagnosticsHeader />
             <DiagnosticIssues diagnosticData={diagnosticData} toggleIssue={toggleIssueHandler} whichIssue={whichIssue}/>
-            <DiagnosticsDisplay />
+            <DiagnosticsDisplay diagnosticData={diagnosticData} whichIssue={whichIssue}/>
             {/* <div id="diagnosticsContainer"></div> */}
         </>
     )
