@@ -1,0 +1,58 @@
+.diagnostics_display_main_container{
+    padding: 30px;
+}
+
+.diagnostic_display_each_section_container{
+    margin-bottom: 30px;
+}
+
+.diagnostic_display_each_config_container{
+    display: flex;
+    gap:10px;
+    margin-bottom: 5px;
+}
+
+.diagnostic_display_each_severity_title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    text-transform: capitalize;
+    margin-bottom: 10px;
+}
+
+.diagnostic_display_diagnostic_content_container{
+    margin-left: 20px;
+}
+
+.diagnostic_display_each_severity_title > span{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 29px;
+    height: 29px;
+    border-radius: 50%;
+}
+
+.warning{
+    color: red;
+}
+
+.warning > span{
+    border: 2px solid red;
+}
+
+.caution{
+    color: orange;
+}
+
+.caution > span{
+    border: 2px solid orange;
+}
+
+.diagnostic_display_each_issue_container{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
