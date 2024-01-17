@@ -23,6 +23,8 @@ export default function FlowsheetDiagnostics(){
 
     useEffect(()=>{
         const getDiagnosticUrl = `http://127.0.0.1:${server_port}/api/get_diagnostics`;
+        // const getDiagnosticUrl = "./data/diagnostic_example.json";
+        // new Diagnostic_main("./data/diagnostic_example.json");
 
         const fetchDiagnosticData = async (url:string) =>{
             // fetch diagnostic data from end point and update to state
