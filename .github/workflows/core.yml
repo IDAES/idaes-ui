@@ -103,6 +103,10 @@ jobs:
         with:
           variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
+      - name: checkout current repo
+        uses: actions/checkout@v4
+      - name: debug run install current repo
+        run : pip install .
       #cypress starts here
       - name: Check out files needed to run cypress tests
         uses: actions/checkout@v4
