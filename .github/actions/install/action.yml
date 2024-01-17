@@ -43,7 +43,9 @@ runs:
       run: pip install --progress-bar off -r requirements-dev.txt
 
     - name: Check if idaes_ui module exists
+      shell: bash -l {0}
       run: |
+        echo "Running check for idaes_ui module"
         python -c "import idaes_ui; print(idaes_ui)"
         which python
         python --version
