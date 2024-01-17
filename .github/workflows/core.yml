@@ -50,10 +50,7 @@ jobs:
       fail-fast: false
       matrix:
         install-variant:
-          ####
-          # TODO: this comment out standard is only a temp work over for install when variant is standrd fix this later
-          ####
-          # - standard
+          - standard
           - dev
         python-version:
           - '3.8'
@@ -74,7 +71,7 @@ jobs:
           variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
       - name: Run pytest
-        run: pytest -v --pyargs
+        run: pytest -v
 
   cypress:
     name: cypress (${{ matrix.install-variant }}/py${{ matrix.python-version }}/${{ matrix.os }})
@@ -84,7 +81,7 @@ jobs:
       fail-fast: false
       matrix:
         install-variant:
-          # - standard
+          - standard
           - dev
         python-version:
           - '3.8'
