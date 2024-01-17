@@ -105,7 +105,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       #cypress starts here
       - name: Check out files needed to run cypress tests
-        if: matrix.install-variant == 'dev'
         uses: actions/checkout@v4
         with:
           sparse-checkout-cone-mode: false
