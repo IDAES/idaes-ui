@@ -44,7 +44,10 @@ build-backend = "setuptools.build_meta"
         "pytest",
         # dependency 'requests' module for standalone idaes-ui package
         "requests",
-        "pydantic",  # idaes_ui.fv.models
+        "nest_asyncio", # support notebook and uvicorn can run asynchronically
+        "pydantic",     # idaes_ui.fv.models
+        "fastapi",      # web app banckend server
+        "uvicorn",      # web app backend server runner
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
