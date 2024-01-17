@@ -35,12 +35,19 @@ runs:
     - name: Check out repository
       if: inputs.variant == 'dev'
       uses: actions/checkout@v3
+    - name: install current repository
+      run: pip install .
     - name: Install using pip (requirements-dev.txt)
       if: inputs.variant == 'dev'
       shell: bash -l {0}
+      run: pip install --progress-bar off -r requirements-dev.txt
+
+    - name: Check if idaes_ui module exists
       run: |
-        pip install --progress-bar off -r requirements-dev.txt
-        pip install -e .
+        python -c "import idaes_ui; print(idaes_ui)"
+        which python
+        python --version
+        pip list
 
     - name: Install using pip (git+... URL)
       if: inputs.variant == 'standard'
