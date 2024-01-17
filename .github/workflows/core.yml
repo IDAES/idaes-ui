@@ -116,7 +116,7 @@ jobs:
       - name: Install node packages
         run: npm install
       - name: Start UI
-        run: npm run ui & echo "UI Server started"
+        run: npm run ui
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
