@@ -42,6 +42,7 @@ build-backend = "setuptools.build_meta"
         "setuptools",
         # For running tests
         "pytest",
+        "httpx",
         # dependency 'requests' module for standalone idaes-ui package
         "requests",
         "nest_asyncio", # support notebook and uvicorn can run asynchronically
