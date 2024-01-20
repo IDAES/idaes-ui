@@ -9,7 +9,7 @@ export default function DiagnosticsDisplay(props:any){
 
     // initial main display
     let config_display: any = "Loading config ...";
-    let diagnostic_severity_container:any = "Loading diagnostic result...";
+    let diagnostic_severity_display:any = "Loading diagnostic result...";
     let next_step_display:any = "Loading suggested next step...";
     
     // populate severity numbers
@@ -101,7 +101,7 @@ export default function DiagnosticsDisplay(props:any){
         })
 
         // build main display
-        diagnostic_severity_container = Object.keys(severityStore).map((eachSeverity:any, index:number)=>{
+        diagnostic_severity_display = Object.keys(severityStore).map((eachSeverity:any, index:number)=>{
             return(
                 <div key={`issue_title_severity_${index}`} className={`${css.diagnostics_display_each_severity_main_container}`}>
                     <div className={`${css.diagnostic_display_each_severity_title} ${css[eachSeverity]}`}>
@@ -131,7 +131,7 @@ export default function DiagnosticsDisplay(props:any){
                 {config_display}
             </div>
             <div className={css.diagnostic_display_each_section_container}>
-                {diagnostic_severity_container}
+                {diagnostic_severity_display}
             </div>
             <div className={css.diagnostic_display_each_section_container}>
                 {next_step_display}
