@@ -12,6 +12,10 @@
     margin-bottom: 5px;
 }
 
+.diagnostics_display_each_severity_main_container{
+    margin-bottom: 25px;
+}
+
 .diagnostic_display_each_severity_title{
     display: flex;
     flex-direction: row;
