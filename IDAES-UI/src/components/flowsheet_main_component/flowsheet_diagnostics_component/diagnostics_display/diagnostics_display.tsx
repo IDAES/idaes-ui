@@ -54,7 +54,12 @@ export default function DiagnosticsDisplay(props:any){
             }
         }
 
-        // build display here
+        /**
+         * build display here
+         * 1. config display
+         * 2. build each severity detail content
+         * 3. build container for each severity and insert each severity detail content init
+         */
         // build config display
         const config = diagnosticData.config;
         if(config && Object.keys(config).length > 0){
@@ -70,8 +75,32 @@ export default function DiagnosticsDisplay(props:any){
             config_display = "Diagnostic config not found."
         }
 
-        // build main display
+
+        // build diagnostics each severity detail content
         let issueObj:any = {}
+        const diagnostic_content_detail = diagnosticData.issues.issues.map((eachIssue:any, eachIssueIndex:number)=>{
+            for(let i in eachIssue.objects){
+                // use to build issueObj to contain what type of issueObj and how many of them
+                // example {var: 166, constraint: 153}
+                if(issueObj[eachIssue.objects[i].type]){
+                    issueObj[eachIssue.objects[i].type] += 1
+                }else{
+                    issueObj[eachIssue.objects[i].type] = 1
+                }
+            }
+
+            if(eachIssue.type == currentIssueName){
+                return (
+                    <div key={eachIssueIndex} className={`${css.diagnostic_display_each_issue_container}`}>
+                        <p>{`${issueObj[Object.keys(issueObj)[eachIssueIndex]]} `}</p>
+                        <p>{`${Object.keys(issueObj)[eachIssueIndex]} `}</p>
+                        <p >{eachIssue.name.replace("-", " ")}</p>
+                    </div>
+                )
+            }
+        })
+
+        // build main display
         diagnostic_main_display = Object.keys(severityStore).map((eachSeverity:any, index:number)=>{
             return(
                 <div key={`issue_title_severity_${index}`} className={`${css.diagnostics_display_each_severity_main_container}`}>
@@ -79,32 +108,15 @@ export default function DiagnosticsDisplay(props:any){
                         {eachSeverity}
                         <span>{severityStore[eachSeverity]}</span>
                     </div>
-                    {
+                    {   
+                        /*if severityStore's some severity is 0 then display this kind of severity not found! */
                         severityStore[eachSeverity] > 0 ?
                         <div className={css.diagnostic_display_diagnostic_content_container}>
-                            {diagnosticData.issues.issues.map((eachIssue:any, eachIssueIndex:number)=>{
-                                for(let i in eachIssue.objects){
-                                    // use to build issueObj to contain what type of issueObj and how many of them
-                                    // example {var: 166, constraint: 153}
-                                    if(issueObj[eachIssue.objects[i].type]){
-                                        issueObj[eachIssue.objects[i].type] += 1
-                                    }else{
-                                        issueObj[eachIssue.objects[i].type] = 1
-                                    }
-                                }
-
-                                if(eachIssue.type == currentIssueName){
-                                    return (
-                                        <div key={eachIssueIndex} className={`${css.diagnostic_display_each_issue_container}`}>
-                                            <p>{`${issueObj[Object.keys(issueObj)[eachIssueIndex]]} `}</p>
-                                            <p>{`${Object.keys(issueObj)[eachIssueIndex]} `}</p>
-                                            <p >{eachIssue.name.replace("-", " ")}</p>
-                                        </div>
-                                    )
-                                }
-                            })} 
+                            {diagnostic_content_detail} 
                         </div> :
-                        <div className={css.diagnostic_display_diagnostic_content_container}>No {eachSeverity} found!</div>
+                        <div className={css.diagnostic_display_diagnostic_content_container}>
+                            No {eachSeverity} found!
+                        </div>
                     }
                 </div>
             )
