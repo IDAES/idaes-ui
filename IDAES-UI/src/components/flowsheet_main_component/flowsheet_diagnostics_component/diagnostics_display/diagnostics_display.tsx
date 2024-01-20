@@ -74,7 +74,7 @@ export default function DiagnosticsDisplay(props:any){
         let issueObj:any = {}
         diagnostic_main_display = Object.keys(severityStore).map((eachSeverity:any, index:number)=>{
             return(
-                <div key={`issue_title_severity_${index}`}>
+                <div key={`issue_title_severity_${index}`} className={`${css.diagnostics_display_each_severity_main_container}`}>
                     <div className={`${css.diagnostic_display_each_severity_title} ${css[eachSeverity]}`}>
                         {eachSeverity}
                         <span>{severityStore[eachSeverity]}</span>
