@@ -3,6 +3,8 @@ import { AppContext } from '@/context/appMainContext';
 import { Mosaic, MosaicWindow } from 'react-mosaic-component';
 import { Button, Classes, Intent, Icon } from '@blueprintjs/core';
 import { IconNames, IconName } from '@blueprintjs/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlassPlus, faMagnifyingGlassMinus,faExpand, faUpRightAndDownLeftFromCenter, faMinus, faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons'
 
 import 'react-mosaic-component/react-mosaic-component.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
@@ -13,10 +15,12 @@ import "./mosaic.css";
 
 // import flowsheet componets
 import MinimizedBar from '../flowsheet_main_component/minimized_bar_component/minimized_bar_component';
-import FlowsheetHeader from '../flowsheet_main_component/flowsheet_component/flowsheet_header/flowsheet_header_component';
 import Flowsheet from '../flowsheet_main_component/flowsheet_component/flowsheet_component';
 import FlowsheetDiagnostics from '../flowsheet_main_component/flowsheet_diagnostics_component/flowsheet_diagnostics_component';
 import StreamTable from '../flowsheet_main_component/stream_table_component/stream_table';
+
+// interface
+import { FvHeaderStateInterface } from '@/interface/appMainContext_interface';
 
 export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'streamTable' |'new';
 
@@ -28,7 +32,7 @@ function Components (){
 
 const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
     components: <div><Components /></div>,
-    flowsheet: <><FlowsheetHeader/><Flowsheet /></>,
+    flowsheet: <Flowsheet />,
     diagnostics: <FlowsheetDiagnostics />,
     streamTable: <StreamTable />,
 };
@@ -41,12 +45,19 @@ const TITLE_MAP:any = {
 };
 
 const MosaicApp = () => {
-    const {panelState} = useContext(AppContext)
+    // extract context
+    const {panelState, fvHeaderState, setFvHeaderState} = useContext(AppContext)
+    const isShowSteamName = fvHeaderState.isShowSteamName;
+    const isShowLabels = fvHeaderState.isShowLabels;
+
+    console.log(isShowSteamName)
+    console.log(isShowLabels)
+
     const renderTile = (id:any, path:any) => {
         // initial default toobarBtn use fragment
         let toolBarBtn = <></> 
         // conditionally render toolbarBtn
-        toolBarBtn = conditionallyRenderBtn(id)
+        toolBarBtn = conditionallyRenderBtn(id, showSteamNameHandler, showLabelsHandler, isShowSteamName, isShowLabels)
         
         return (
             <MosaicWindow<ViewId>
@@ -62,6 +73,25 @@ const MosaicApp = () => {
             </MosaicWindow>
         );
     };
+
+    /**
+     * Here setState fns to toggle stream name and lable
+     */
+    //toggle show steam names
+    function showSteamNameHandler(){
+        setFvHeaderState((prev:FvHeaderStateInterface)=>{
+        let copyPrev = {...prev, isShowSteamName : !prev.isShowSteamName};
+        return copyPrev;
+        })
+    }
+
+    //toggle show labels
+    function showLabelsHandler(){
+        setFvHeaderState((prev:FvHeaderStateInterface)=>{
+        let copyPrev = {...prev, isShowLabels : !prev.isShowLabels};
+        return copyPrev;
+        })
+    }
 
     return (
         <Mosaic<ViewId>
@@ -86,7 +116,7 @@ const MosaicApp = () => {
     );
 };
 
-function conditionallyRenderBtn(id:string){
+function conditionallyRenderBtn(id:string, showSteamNameHandler:any, showLabelsHandler:any, isShowSteamName:boolean, isShowLabels:boolean){
     /**
      *  use id from Mosaic > renderTile callback to conditionally render toolbar btn
      *  Args:
@@ -109,28 +139,43 @@ function conditionallyRenderBtn(id:string){
             break;
         case "flowsheet":
             return<div className="mosaic_toolbar_btn_container">
-                <Button minimal>
+                {/*zoom*/}
+                <Button id="zoom-in-btn" minimal>
                     <Icon icon={IconNames.ZOOM_IN} size={20} />
                 </Button>
-                <Button minimal>
+                <Button id="zoom-out-btn" minimal>
                     <Icon icon={IconNames.ZOOM_OUT} size={20} />
                 </Button>
-                <Button minimal>
+                <Button id="zoom-to-fit" minimal>
                     <Icon icon={IconNames.ZOOM_TO_FIT} size={20} />
                 </Button>
+                {/*views*/}
                 <Button className="mosaic_flowsheet_header_view" minimal>
                     <Icon icon={IconNames.EYE_OPEN} size={20} />
                     <ul className="mosaic_dropdown_view">
-                        <li className="">
-                            <input type="checkbox" name="" id="" />
+                        <li id="stream-names-toggle" onClick={showSteamNameHandler} data-toggle={`${isShowSteamName}`}>
+                        {
+                            isShowSteamName
+                            ?
+                            <FontAwesomeIcon icon={faSquareCheck} className="flowsheetHader_icon_stroke_only"/>
+                            :
+                            <FontAwesomeIcon icon={faSquare} className="flowsheetHader_icon_stroke_only"/>
+                        }
                             <span>Stream Name</span>
                         </li>
-                        <li className="">
-                            <input type="checkbox" name="" id="" />
+                        <li id="show-label-toggle" onClick={showLabelsHandler} data-toggle={isShowLabels ? "false" : "true"}>
+                            {
+                                isShowLabels 
+                                ?
+                                <FontAwesomeIcon icon={faSquareCheck} className="flowsheetHader_icon_stroke_only"/>
+                                :
+                                <FontAwesomeIcon icon={faSquare} className="flowsheetHader_icon_stroke_only"/>
+                            }
                             <span>Labels</span>
                         </li>
                     </ul>
                 </Button>
+                {/*download*/}
                 <Button className="mosaic_flowsheet_header_download" minimal>
                     <Icon icon={IconNames.BRING_DATA} size={20} />
                     <ul className="mosaic_dropdown_download">
