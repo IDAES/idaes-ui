@@ -6,6 +6,11 @@
     min-height:50px;
 }
 
+.clickable_btn:hover{
+    cursor: pointer;
+    background-color: #8f99a826;
+}
+
 /*Toolbar*/
 .mosaic_toolbar_btn_container {
     display: flex;
@@ -14,6 +19,28 @@
     align-items: center;
     gap: 5px;
 }
+
+.mosaic_diagnostic_toolbar_content{
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.mosaic_toobar_btn_icon_with_text{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: auto 10px;
+    padding: 8px;
+}
+
+.mosaic_toobar_btn_icon_with_text_text{
+    font-size: 14px;
+    font-weight: bold;
+}
+
 
 /*download btn*/
 .mosaic_flowsheet_header_download,
