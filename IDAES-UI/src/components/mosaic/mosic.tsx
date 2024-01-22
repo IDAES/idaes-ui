@@ -6,13 +6,29 @@ import 'react-mosaic-component/react-mosaic-component.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 
+import "./mosaic.css";
+
+
+// import flowsheet componets
+import MinimizedBar from '../flowsheet_main_component/minimized_bar_component/minimized_bar_component';
+import FlowsheetHeader from '../flowsheet_main_component/flowsheet_component/flowsheet_header/flowsheet_header_component';
+import Flowsheet from '../flowsheet_main_component/flowsheet_component/flowsheet_component';
+import FlowsheetDiagnostics from '../flowsheet_main_component/flowsheet_diagnostics_component/flowsheet_diagnostics_component';
+import StreamTable from '../flowsheet_main_component/stream_table_component/stream_table';
+
 export type ViewId = 'a' | 'b' | 'c' | 'd' |'new';
 
+function Components (){
+    return (
+        <p>Components should render here</p>
+    )
+}
+
 const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
-    a: <div>Components</div>,
-    b: <div>Diagram</div>,
-    c: <div>Diagnostics</div>,
-    d: <div>Stream Table</div>,
+    a: <div><Components /></div>,
+    b: <><FlowsheetHeader/><Flowsheet /></>,
+    c: <FlowsheetDiagnostics />,
+    d: <StreamTable />,
 };
 
 const TITLE_MAP:any = {
@@ -38,7 +54,7 @@ const MosaicApp = () => {
         //   </>
         // }
       >
-        {/* Content */}
+        {ELEMENT_MAP[id]}
       </MosaicWindow>
     );
   };
