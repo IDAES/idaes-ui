@@ -112,11 +112,20 @@ const MosaicApp = () => {
     );
 };
 
-function conditionallyRenderBtn(id:string, showSteamNameHandler:any, showLabelsHandler:any, isShowSteamName:boolean, isShowLabels:boolean){
+/**
+ * @description use id from Mosaic > renderTile callback to conditionally render toolbar btn
+ * @param id string panel id defined in ELEMENT_MAP
+ * @param showSteamNameHandler callback update state in context showSteamName
+ * @param showLabelsHandler callback update state in context showLabels
+ * @param isShowSteamName bool
+ * @param isShowLabels bool
+ * @returns 
+ */
+function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, showLabelsHandler:() => void, isShowSteamName:boolean, isShowLabels:boolean){
     /**
      *  use id from Mosaic > renderTile callback to conditionally render toolbar btn
      *  Args:
-     *      id: string panel id defined in 
+     *      id: string panel id defined in ELEMENT_MAP
      *      showSteamNameHandler: callback update state in context showSteamName
      *      showLabelsHandler: callback update state in context showLabels
      *      isShowSteamName: bool
