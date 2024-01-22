@@ -1,14 +1,8 @@
 import { useContext, useEffect } from "react";
 import {AppContext} from "../../context/appMainContext";
-
-import { PanelGroup, Panel, PanelResizeHandle} from "react-resizable-panels";
-import FlowsheetHeader from "./flowsheet_component/flowsheet_header/flowsheet_header_component";
-import MinimizedBar from "./minimized_bar_component/minimized_bar_component";
-import Flowsheet from "./flowsheet_component/flowsheet_component";
-import FlowsheetDiagnostics from "./flowsheet_diagnostics_component/flowsheet_diagnostics_component";
-import StreamTable from "./stream_table_component/stream_table";
-
 import { MainFV } from "./flowsheet_component/flowsheet_functions/mainFV";
+import MosaicApp from "../mosaic/mosic";
+import MinimizedBar from "./minimized_bar_component/minimized_bar_component";
 
 import css from "./flowsheet_wrapper.module.css";
 
@@ -35,34 +29,12 @@ export default function FlowsheetWrapper(){
 
 	return(
 		<div id="flowsheet-wrapper" className={css.flowsheetWrapper}>
-			<MinimizedBar />
-			<PanelGroup direction="horizontal">
-				<Panel defaultSize={65}>
-					<PanelGroup direction="vertical">
-						{
-							isFvShow && 
-							<Panel defaultSize={isFvShow ? 65 : 0} maxSize={100} >
-								<FlowsheetHeader />
-								<Flowsheet />
-							</Panel>
-						}
-						<PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
-						{
-							isStreamTableShow &&
-							<Panel maxSize={100} defaultSize={35} style={isStreamTableShow ? panelShow : panelHide}>
-								<StreamTable />
-							</Panel>
-						}
-					</PanelGroup>
-				</Panel>
-				<PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
-					{
-						isDiagnosticsShow && 
-						<Panel defaultSize={isFvShow ? 35 : 100} minSize={0}>
-						<FlowsheetDiagnostics />
-						</Panel>
-					}
-			</PanelGroup>
+			{/**
+			 * 	The MosaicApp is return mosaic dragable panels
+			 * 	it contains the wrapper mosaic window which is render:
+			 * 	components, flowsheet, diagnostics, stream table
+			 */}
+			<MosaicApp />
 		</div>
 	)
 }
