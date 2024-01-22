@@ -22,6 +22,7 @@ import StreamTable from '../flowsheet_main_component/stream_table_component/stre
 // interface
 import { FvHeaderStateInterface } from '@/interface/appMainContext_interface';
 
+// define ViewId
 export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'streamTable' |'new';
 
 const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
@@ -63,6 +64,7 @@ const MosaicApp = () => {
                     toolBarBtn
                 }
             >
+                {/*Content is render here*/}
                 {ELEMENT_MAP[id]}
             </MosaicWindow>
         );
