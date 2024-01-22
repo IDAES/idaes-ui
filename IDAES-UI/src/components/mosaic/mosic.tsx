@@ -4,7 +4,7 @@ import { Mosaic, MosaicWindow } from 'react-mosaic-component';
 import { Button, Classes, Intent, Icon } from '@blueprintjs/core';
 import { IconNames, IconName } from '@blueprintjs/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlassPlus, faMagnifyingGlassMinus,faExpand, faUpRightAndDownLeftFromCenter, faMinus, faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons'
+import { faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons'
 
 import 'react-mosaic-component/react-mosaic-component.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
@@ -24,14 +24,8 @@ import { FvHeaderStateInterface } from '@/interface/appMainContext_interface';
 
 export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'streamTable' |'new';
 
-function Components (){
-    return (
-        <p>Components should render here</p>
-    )
-}
-
 const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
-    components: <div><Components /></div>,
+    components: <p>Components should render here</p>,
     flowsheet: <Flowsheet />,
     diagnostics: <FlowsheetDiagnostics />,
     streamTable: <StreamTable />,
@@ -157,9 +151,9 @@ function conditionallyRenderBtn(id:string, showSteamNameHandler:any, showLabelsH
                         {
                             isShowSteamName
                             ?
-                            <FontAwesomeIcon icon={faSquareCheck} className="flowsheetHader_icon_stroke_only"/>
+                            <FontAwesomeIcon icon={faSquareCheck} className="mosaic_toolbar_diagram_view_icon_stroke_only"/>
                             :
-                            <FontAwesomeIcon icon={faSquare} className="flowsheetHader_icon_stroke_only"/>
+                            <FontAwesomeIcon icon={faSquare} className="mosaic_toolbar_diagram_view_icon_stroke_only"/>
                         }
                             <span>Stream Name</span>
                         </li>
@@ -167,9 +161,9 @@ function conditionallyRenderBtn(id:string, showSteamNameHandler:any, showLabelsH
                             {
                                 isShowLabels 
                                 ?
-                                <FontAwesomeIcon icon={faSquareCheck} className="flowsheetHader_icon_stroke_only"/>
+                                <FontAwesomeIcon icon={faSquareCheck} className="mosaic_toolbar_diagram_view_icon_stroke_only"/>
                                 :
-                                <FontAwesomeIcon icon={faSquare} className="flowsheetHader_icon_stroke_only"/>
+                                <FontAwesomeIcon icon={faSquare} className="mosaic_toolbar_diagram_view_icon_stroke_only"/>
                             }
                             <span>Labels</span>
                         </li>
