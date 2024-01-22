@@ -196,9 +196,11 @@ function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, show
             break;
         case "diagnostics":
             return<div className="mosaic_toolbar_btn_container">
-                <Button icon={IconNames.MINIMIZE} minimal title="Close Window"/>
-                <Button icon={IconNames.MAXIMIZE} minimal/>
-                <Button icon={IconNames.CROSS} minimal />
+                <p className="mosaic_diagnostic_toolbar_content">BLOCK: FLOWSHEET</p>
+                <div className="mosaic_toobar_btn_icon_with_text clickable_btn">
+                    <Icon icon={IconNames.REFRESH} size={20} />
+                    <span className="mosaic_toobar_btn_icon_with_text_text">Refresh</span>
+                </div>
             </div>
             break;
         case "streamTable":
