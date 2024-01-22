@@ -116,7 +116,11 @@ function conditionallyRenderBtn(id:string, showSteamNameHandler:any, showLabelsH
     /**
      *  use id from Mosaic > renderTile callback to conditionally render toolbar btn
      *  Args:
-     *      id: panel id defined in 
+     *      id: string panel id defined in 
+     *      showSteamNameHandler: callback update state in context showSteamName
+     *      showLabelsHandler: callback update state in context showLabels
+     *      isShowSteamName: bool
+     *      isShowLabels: bool
      */
     switch (id){
         // render toolbar btn base on panel id
