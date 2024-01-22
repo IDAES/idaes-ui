@@ -59,3 +59,9 @@
 .mosaic_dropdown_view {
     display: block;
 }
+
+.mosaic_toolbar_diagram_view_icon_stroke_only{
+    color: white;
+    stroke: black;
+    stroke-width: 40px;
+}
