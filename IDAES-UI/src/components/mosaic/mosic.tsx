@@ -46,9 +46,6 @@ const MosaicApp = () => {
     const isShowSteamName = fvHeaderState.isShowSteamName;
     const isShowLabels = fvHeaderState.isShowLabels;
 
-    console.log(isShowSteamName)
-    console.log(isShowLabels)
-
     const renderTile = (id:any, path:any) => {
         // initial default toobarBtn use fragment
         let toolBarBtn = <></> 
