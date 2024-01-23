@@ -15,6 +15,7 @@ import "./mosaic.css";
 
 // import flowsheet componets
 import MinimizedBar from '../flowsheet_main_component/minimized_bar_component/minimized_bar_component';
+import StreamTableHeader from '../flowsheet_main_component/stream_table_component/stream_table_header/stream_table_header';
 import Flowsheet from '../flowsheet_main_component/flowsheet_component/flowsheet_component';
 import FlowsheetDiagnostics from '../flowsheet_main_component/flowsheet_diagnostics_component/flowsheet_diagnostics_component';
 import StreamTable from '../flowsheet_main_component/stream_table_component/stream_table';
@@ -205,15 +206,7 @@ function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, show
             break;
         case "streamTable":
             return<div className="mosaic_toolbar_btn_container">
-                <Button minimal>
-                    <Icon icon={IconNames.MINIMIZE} size={20} />
-                </Button>
-                <Button minimal>
-                    <Icon icon={IconNames.MAXIMIZE} size={20} />
-                </Button>
-                <Button minimal>
-                    <Icon icon={IconNames.CROSS} size={20} />
-                </Button>
+                <StreamTableHeader />
             </div>
             break;
         default:
