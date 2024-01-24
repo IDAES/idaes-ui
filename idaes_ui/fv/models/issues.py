@@ -16,6 +16,10 @@ from pydantic import BaseModel
 # Import IDAES functionality (use shortened names, i=IDAES m=model)
 from idaes.core.util import model_statistics as ims
 from idaes.core.util import model_diagnostics as imd
+from idaes.core.util.scaling import (
+    get_jacobian,
+    jacobian_cond,
+)
 
 # Import other needed IDAES types
 from pyomo.core.base.block import _BlockData
@@ -28,8 +32,8 @@ from .base import DiagnosticsException
 
 
 class DiagnosticsUpdateException(DiagnosticsException):
-    """Error updating diagnostics
-    """
+    """Error updating diagnostics"""
+
     def __init__(self, name="unknown", details=None):
         super().__init__(name=name, details=details)
 
@@ -108,8 +112,17 @@ class ModelIssue(BaseModel):
     modifiers: Dict[str, str] = {}  # additional semi-structured info
     name: str = ""
     description: str = ""
+    jacobian_condation: str = ""
+    next_steps: List = []
+    toolbox_warning: List = []
+    toolbox_caution: List = []
     objects: List[
-        Union[ModelIssueVariable, ModelIssueVariableBounded, ModelIssueConstraint, ModelIssueComponent]
+        Union[
+            ModelIssueVariable,
+            ModelIssueVariableBounded,
+            ModelIssueConstraint,
+            ModelIssueComponent,
+        ]
     ] = []
 
 
@@ -132,6 +145,7 @@ class ModelIssues(BaseModel):
         self._add_extreme_values()
         self._add_variables_near_bounds()
         self._add_not_in_act_constr()
+        self._add_next_steps()
 
     def _add_extreme_values(self):
         c = self._config
@@ -222,7 +236,7 @@ class ModelIssues(BaseModel):
                 severity=Severity.warning,
                 modifiers={"constrained": name, "object-type": thing},
                 description=f"Structural singularity: "
-                            f"{name}-constrained {thing}{plural}",
+                f"{name}-constrained {thing}{plural}",
             )
             for obj in obj_set:
                 obj_list = []
@@ -269,4 +283,43 @@ class ModelIssues(BaseModel):
             issue.objects.append(obj)
         self.issues.append(issue)
 
+    def _add_next_steps(self):
+        """
+        use DiagnosticsToolbox functions to get next steps
+        also get warnings and cautions to put in: (as a backup output for UI)
+            issues[i].toolbox_warning
+            issues[i].toolbox_caution
+        """
+        # read structural warning cautions next stpes from toolbox
+        (
+            structural_warnings,
+            structural_next_steps,
+        ) = self._tbx._collect_structural_warnings()
+        structural_cautions = self._tbx._collect_structural_cautions()
 
+        # read numerical warning cautions next stpes from toolbox
+        jac, nlp = get_jacobian(self._block, scaled=False)
+        (
+            numerical_warnings,
+            numerical_next_steps,
+        ) = self._tbx._collect_numerical_warnings(jac=jac, nlp=nlp)
+        numerical_cautions = self._tbx._collect_numerical_cautions(jac=jac, nlp=nlp)
+
+        for item in self.issues:
+            # build jacobian condation number
+            if not item.jacobian_condation:
+                item.jacobian_condation = f"Jacobian Condition Number: {jacobian_cond(jac=jac, scaled=False):.3E}"
+
+            # structural
+            if item.type == "structural" and item.severity == "warning":
+                item.toolbox_warning = structural_warnings
+                item.next_steps = structural_next_steps
+            if item.type == "structural" and item.severity == "caution":
+                item.toolbox_caution = structural_cautions
+
+            # numerical
+            if item.type == "numerical" and item.severity == "warning":
+                item.toolbox_warning = numerical_warnings
+                item.next_steps = numerical_next_steps
+            if item.type == "numerical" and item.severity == "caution":
+                item.toolbox_caution = numerical_cautions
