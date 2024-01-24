@@ -1,4 +1,6 @@
 import { config } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import css from "./diagnostics_display.module.css";
 
 export default function DiagnosticsDisplay(props:any){
@@ -8,9 +10,10 @@ export default function DiagnosticsDisplay(props:any){
     const whichIssue = props.whichIssue;
 
     // initial main display
-    let config_display: any = "Loading config ...";
-    let diagnostic_severity_display:any = "Loading diagnostic result...";
-    let next_step_display:any = "Loading suggested next step...";
+    let jocabianCondationDisplay: any = "Loading jocabian condation"
+    let configDisplay: any = "Loading config ...";
+    let diagnosticSeverityDisplay:any = "Loading diagnostic result...";
+    let nextStepDisplay:any = "Loading suggested next step...";
     
     // populate severity numbers
     let currentIssues = null;
@@ -56,14 +59,32 @@ export default function DiagnosticsDisplay(props:any){
 
         /**
          * build display here
-         * 1. config display
-         * 2. build each severity detail content
-         * 3. build container for each severity and insert each severity detail content init
+         * > jacobian_condation display
+         * > config display
+         * > build each severity detail content
+         * > build container for each severity and insert each severity detail content init
          */
+
+        //build jacobian_condation display
+        const jacobian_condation_arr : Array<string> = [];
+        for(let i in issues){
+            if(issues[i].jacobian_condation && !jacobian_condation_arr.includes(issues[i].jacobian_condation)){
+                jacobian_condation_arr.push(issues[i].jacobian_condation)
+            }
+        }
+
+        jocabianCondationDisplay = jacobian_condation_arr.map((each_jacobian_condation:string, index:number)=>{
+            return(
+                <p key={`jacobian_condation_${index}_value_${each_jacobian_condation}`}>
+                    {each_jacobian_condation}
+                </p>
+            )
+        })
+
         // build config display
         const config = diagnosticData.config;
         if(config && Object.keys(config).length > 0){
-            config_display = Object.keys(config).map((eachConfigKey: string, index:number)=>{
+            configDisplay = Object.keys(config).map((eachConfigKey: string, index:number)=>{
                 return(
                     <div key={`diagnostic_config_key_${index}`} className={`${css.diagnostic_display_each_config_container}`}>
                         <p>{eachConfigKey}: </p>
@@ -72,7 +93,7 @@ export default function DiagnosticsDisplay(props:any){
                 )
             })
         }else{
-            config_display = "Diagnostic config not found."
+            configDisplay = "Diagnostic config not found."
         }
 
 
@@ -100,8 +121,54 @@ export default function DiagnosticsDisplay(props:any){
             }
         })
 
+        //build next step
+        // read from diagnostics data issues to check if has next step
+        let hasNextStep: boolean = false;
+        for(let i in issues){
+            if(issues[i].next_steps){
+                hasNextStep = true;
+                break;
+            }
+        }
+
+        // when no next step, display default line from diagnostics toolbox
+        // when has next step, populate next steps and display them
+        if(!hasNextStep){
+            // structural default
+            if(whichIssue == "structural") nextStepDisplay = "Try to initialize/solve your model and then call report_structural_issues()";
+            // numerical default
+            if(whichIssue == "numerical") nextStepDisplay = "Try to initialize/solve your model and then call report_numerical_issues()";
+        }else{
+            // array store unique next step, and read from each issue assign them to nextStepDisplayArray
+            // TODO: n^2? too slow, a way to fix this is to build next steps as a key in diagnostics obj as a key value pair, not in each issue
+            let nextStepDisplayArr: Array<string>= [];
+            for(let i in issues){
+                if(issues[i].next_steps){
+                    let eachIssuesNextStep = issues[i].next_steps;
+                    for(let j in eachIssuesNextStep){
+                        if(!nextStepDisplayArr.includes(eachIssuesNextStep[j])){
+                            nextStepDisplayArr.push(eachIssuesNextStep[j])
+                        }
+                    }
+                }
+            }
+            nextStepDisplay = nextStepDisplayArr.map((eachNextStep: string, index:number)=>{
+                return(
+                    <p key={`diagnostics_suggested_next_step_${eachNextStep}`}
+                        className={`${css.diagnostics_display_each_next_step_content}`}
+                        onClick={clickCopyToClipboard}
+                    >
+                        <span className="function_name">{eachNextStep}</span> 
+                        <FontAwesomeIcon icon={faCopy} />
+                    </p>
+                )
+            })
+        }
+
+        //
+
         // build main display
-        diagnostic_severity_display = Object.keys(severityStore).map((eachSeverity:any, index:number)=>{
+        diagnosticSeverityDisplay = Object.keys(severityStore).map((eachSeverity:any, index:number)=>{
             return(
                 <div key={`issue_title_severity_${index}`} className={`${css.diagnostics_display_each_severity_main_container}`}>
                     <div className={`${css.diagnostic_display_each_severity_title} ${css[eachSeverity]}`}>
@@ -128,14 +195,54 @@ export default function DiagnosticsDisplay(props:any){
     return(
         <div className={`${css.diagnostics_display_main_container}`}>
             <div className={css.diagnostic_display_each_section_container}>
-                {config_display}
+                {jocabianCondationDisplay}
             </div>
             <div className={css.diagnostic_display_each_section_container}>
-                {diagnostic_severity_display}
+                {/* {configDisplay} */}
             </div>
             <div className={css.diagnostic_display_each_section_container}>
-                {next_step_display}
+                {diagnosticSeverityDisplay}
+            </div>
+            <div className={css.diagnostic_display_each_section_container}>
+                { 
+                    nextStepDisplay != "Loading suggested next step..." && 
+                    <p className={css.diagnostic_display_next_steps_title}>Suggested next steps:</p>
+                }
+                <div className={css.diagnostic_display_diagnostic_content_container}>
+                    {nextStepDisplay}
+                </div>
             </div>
         </div>
     )
+}
+
+function clickCopyToClipboard(event:React.MouseEvent<HTMLParagraphElement, MouseEvent>){
+    /**
+     * This function use for copy clicked next steps to clipboard and user can use it
+     * Args:
+     *  event: React mouse event
+     */
+    // let contentWillCopy:null | HTMLElement = null;
+    let target = event.currentTarget as HTMLElement;
+    let contentWillCopy = target.querySelector('.function_name');
+
+    // make sure contentWillCopy is there or return
+    if(!contentWillCopy){
+        console.error("There is an issue with click copy next step function")
+        return;
+    }
+
+    const textToCopy = contentWillCopy.textContent || "";
+    // copy to clip board
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // when coping, add class to p tag to create a copied label
+        target.classList.add(css.copied_next_step)
+        // after 1.3s remove that new assigned label
+        let timeOut = setTimeout(()=>{
+            target.classList.remove(css.copied_next_step)
+            clearTimeout(timeOut);
+        },1300)
+    }).catch(err => {
+        console.error("Failed to copy text: ", err);
+    });
 }
