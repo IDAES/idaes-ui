@@ -91,21 +91,34 @@ const MosaicApp = () => {
     return (
         <Mosaic<ViewId>
             renderTile={renderTile}
+            ////mosaic panel with components (variable)
+            // initialValue={{
+            //     direction: 'row',
+            //     first: 'components',
+            //     second: {
+            //     direction: 'column',
+            //     first: {
+            //         direction:'row',
+            //         first:'flowsheet',
+            //         second:'diagnostics',
+            //         splitPercentage: panelState.diagnostics.show ? 70 : 100, //splitPercentage controls how wide split view is
+            //     },
+            //     second: 'streamTable',
+            //     splitPercentage: 70,
+            //     },
+            //     splitPercentage: 15,
+            // }}
+            ////mosaic panel without components (variable)
             initialValue={{
-                direction: 'row',
-                first: 'components',
-                second: {
                 direction: 'column',
                 first: {
-                    direction:'row',
-                    first:'flowsheet',
-                    second:'diagnostics',
-                    splitPercentage: panelState.diagnostics.show ? 70 : 100, //splitPercentage controls how wide split view is
+                    direction: 'row',
+                    first: 'flowsheet',
+                    second: 'diagnostics',
+                    splitPercentage: 70,
                 },
                 second: 'streamTable',
                 splitPercentage: 70,
-                },
-                splitPercentage: 15,
             }}
         />
     );
