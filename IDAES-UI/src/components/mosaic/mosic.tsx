@@ -16,6 +16,7 @@ import "./mosaic.css";
 // import flowsheet componets
 import MinimizedBar from '../flowsheet_main_component/minimized_bar_component/minimized_bar_component';
 import StreamTableHeader from '../flowsheet_main_component/stream_table_component/stream_table_header/stream_table_header';
+import Flowsheet_variable from '../flowsheet_main_component/flowsheet_variables/flowsheet_variable_component';
 import Flowsheet from '../flowsheet_main_component/flowsheet_component/flowsheet_component';
 import FlowsheetDiagnostics from '../flowsheet_main_component/flowsheet_diagnostics_component/flowsheet_diagnostics_component';
 import StreamTable from '../flowsheet_main_component/stream_table_component/stream_table';
@@ -27,7 +28,7 @@ import { FvHeaderStateInterface } from '@/interface/appMainContext_interface';
 export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'streamTable' |'new';
 
 const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
-    components: <p>Components should render here</p>,
+    components: <Flowsheet_variable />,
     flowsheet: <Flowsheet />,
     diagnostics: <FlowsheetDiagnostics />,
     streamTable: <StreamTable />,
