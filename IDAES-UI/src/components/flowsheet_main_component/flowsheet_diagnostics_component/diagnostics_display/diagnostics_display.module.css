@@ -60,3 +60,39 @@
     flex-direction: row;
     gap: 5px;
 }
+
+.diagnostic_display_next_steps_title{
+    font-weight: bold;
+}
+
+.diagnostics_display_each_next_step_content{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    color: #4caaf4;
+}
+
+.diagnostics_display_each_next_step_content:hover{
+    cursor: pointer;
+    color: #3e90ce;
+}
+
+.copied_next_step{
+    position: relative;
+}
+
+.copied_next_step::after{
+    content:"Copied!";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 80px;
+    height: 30px;
+    padding: 5px 10px;
+    z-index: 100;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0px 0px 10px rgb(219, 219, 219);
+    border-radius: 3px;
+}
