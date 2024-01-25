@@ -115,7 +115,7 @@ const MosaicApp = () => {
                     direction: 'row',
                     first: 'flowsheet',
                     second: 'diagnostics',
-                    splitPercentage: 70,
+                    splitPercentage: panelState.diagnostics.show ? 70 : 100, //splitPercentage controls how wide split view is
                 },
                 second: 'streamTable',
                 splitPercentage: 70,
