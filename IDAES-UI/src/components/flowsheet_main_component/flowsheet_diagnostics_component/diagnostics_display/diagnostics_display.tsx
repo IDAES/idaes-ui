@@ -2,6 +2,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import css from "./diagnostics_display.module.css";
+import p from "@blueprintjs/icons/lib/esm/generated/16px/paths/blank";
 
 export default function DiagnosticsDisplay(props:any){
     // initial diagnostics data
@@ -10,7 +11,8 @@ export default function DiagnosticsDisplay(props:any){
     const whichIssue = props.whichIssue;
 
     // initial main display
-    let jocabianCondationDisplay: any = "Loading jocabian condation"
+    let jocabianCondationDisplay: any = "Loading jocabian condation..."
+    let modelStatisticsStructuralDisplay: any = "Loading model statistics structural..."
     let configDisplay: any = "Loading config ...";
     let diagnosticSeverityDisplay:any = "Loading diagnostic result...";
     let nextStepDisplay:any = "Loading suggested next step...";
@@ -64,6 +66,30 @@ export default function DiagnosticsDisplay(props:any){
          * > build each severity detail content
          * > build container for each severity and insert each severity detail content init
          */
+        // build model structral model statistics
+        const structralModelStatisticArr:any = [];
+        for(let i in issues){
+            if(issues[i].toolbox_model_statistics && issues[i].toolbox_model_statistics.length > 0){
+                const statisticsContentArr = issues[i].toolbox_model_statistics;
+                for(let j in statisticsContentArr){
+                    if(!structralModelStatisticArr.includes(statisticsContentArr[j])){
+                        structralModelStatisticArr.push(statisticsContentArr[j])
+                    }
+                }
+            }
+        }
+
+        modelStatisticsStructuralDisplay = structralModelStatisticArr.map((eachStatisticsContent:string, index:number)=>{
+            eachStatisticsContent.replace("'", "`")
+            console.log(eachStatisticsContent)
+            return (
+                <pre key={`model_structural_statistics_content${index}_${eachStatisticsContent}`} className={css.diagnostics_display_pre_tag}>
+                    {eachStatisticsContent}
+                </pre>
+            )
+        })
+
+        console.log(structralModelStatisticArr)
 
         //build jacobian_condation display
         const jacobian_condation_arr : Array<string> = [];
@@ -75,9 +101,9 @@ export default function DiagnosticsDisplay(props:any){
 
         jocabianCondationDisplay = jacobian_condation_arr.map((each_jacobian_condation:string, index:number)=>{
             return(
-                <p key={`jacobian_condation_${index}_value_${each_jacobian_condation}`}>
+                <pre key={`jacobian_condation_${index}_value_${each_jacobian_condation}`}>
                     {each_jacobian_condation}
-                </p>
+                </pre>
             )
         })
 
@@ -195,7 +221,12 @@ export default function DiagnosticsDisplay(props:any){
     return(
         <div className={`${css.diagnostics_display_main_container}`}>
             <div className={css.diagnostic_display_each_section_container}>
-                {jocabianCondationDisplay}
+                <p className={css.diagnostic_display_section_title}>Model Statistics</p>
+                { 
+                    whichIssue == "structural" || !whichIssue ? 
+                        modelStatisticsStructuralDisplay : 
+                        jocabianCondationDisplay
+                }
             </div>
             <div className={css.diagnostic_display_each_section_container}>
                 {/* {configDisplay} */}
@@ -206,7 +237,7 @@ export default function DiagnosticsDisplay(props:any){
             <div className={css.diagnostic_display_each_section_container}>
                 { 
                     nextStepDisplay != "Loading suggested next step..." && 
-                    <p className={css.diagnostic_display_next_steps_title}>Suggested next steps:</p>
+                    <p className={css.diagnostic_display_section_title}>Suggested next steps:</p>
                 }
                 <div className={css.diagnostic_display_diagnostic_content_container}>
                     {nextStepDisplay}
