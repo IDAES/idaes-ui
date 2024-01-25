@@ -6,13 +6,18 @@ import "./flowsheet_diagnostics.css";
 import DiagnosticIssues from "./diagnostics_issues/diagnostics_issues";
 import DiagnosticsDisplay from "./diagnostics_display/diagnostics_display";
 
+interface DiagnosticsDataInterface {
+    config: {key:any, value:any},
+    issues:{issues:any}
+    statistics:any
+}
 
 export default function FlowsheetDiagnostics(){
     let {server_port} = useContext(AppContext);
     // this use to hold all diagnostic data fetched from api end point pass down to sub components
-    const [diagnosticData, setDiagnosticsData] = useState(null);
+    const [diagnosticData, setDiagnosticsData] = useState<DiagnosticsDataInterface | null>(null);
     // use to hold which issue currently is displayed on screen setWhichIssue to update diagnostics display
-    const [whichIssue, setWhichIssue] = useState(null); 
+    const [whichIssue, setWhichIssue] = useState<string | null>(null); 
 
     const toggleIssueHandler = (issue:any) =>{
         // this function use in issues component's each issue tab
@@ -37,6 +42,28 @@ export default function FlowsheetDiagnostics(){
         }
         fetchDiagnosticData(getDiagnosticUrl);
     },[]);
+
+    useEffect(()=>{
+        // After diagnostics data fetch and updated, read through issues, assign first type as default whichIssue
+        let defaultWhichIssue: string | null = null;
+
+        if(diagnosticData && diagnosticData.issues.issues){
+            const issues = diagnosticData.issues.issues
+            for(let i in issues){
+               if(issues[i].type){
+                defaultWhichIssue = issues[i].type
+                break;
+               }else{
+                console.error("In diagnostics data, there is no issue type found!")
+               }
+            }
+        }
+        
+        // update state whichIssue as defaultWhichIssue
+        if(defaultWhichIssue){
+            setWhichIssue(defaultWhichIssue)
+        }
+    },[diagnosticData])
 
     return (
         <>
