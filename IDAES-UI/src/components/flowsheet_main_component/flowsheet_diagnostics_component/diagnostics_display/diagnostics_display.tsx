@@ -81,15 +81,12 @@ export default function DiagnosticsDisplay(props:any){
 
         modelStatisticsStructuralDisplay = structralModelStatisticArr.map((eachStatisticsContent:string, index:number)=>{
             eachStatisticsContent.replace("'", "`")
-            console.log(eachStatisticsContent)
             return (
                 <pre key={`model_structural_statistics_content${index}_${eachStatisticsContent}`} className={css.diagnostics_display_pre_tag}>
                     {eachStatisticsContent}
                 </pre>
             )
         })
-
-        console.log(structralModelStatisticArr)
 
         //build jacobian_condation display
         const jacobian_condation_arr : Array<string> = [];
@@ -191,9 +188,18 @@ export default function DiagnosticsDisplay(props:any){
             })
         }
 
-        //
+        // build severity display
+        const currentIssuesArray:Array<any> = [];
+        for(let i in issues){
+            if(issues[i].type == whichIssue){
+                currentIssuesArray.push(issues[i])
+            }
+        }
 
-        // build main display
+
+
+
+
         diagnosticSeverityDisplay = Object.keys(severityStore).map((eachSeverity:any, index:number)=>{
             return(
                 <div key={`issue_title_severity_${index}`} className={`${css.diagnostics_display_each_severity_main_container}`}>
