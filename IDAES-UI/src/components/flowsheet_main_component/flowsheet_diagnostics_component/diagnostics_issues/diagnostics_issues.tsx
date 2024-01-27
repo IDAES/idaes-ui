@@ -9,23 +9,18 @@ export default function DiagnosticIssues(props:any) {
     if (diagnosticData) {
         // when diagnostics is loaded populate how many kinds of issues and update issue component display
         // get issues array
-        let issues = diagnosticData.issues.issues;
+        let structuralIssues = diagnosticData.diagnostics_toolbox_report.structural_report.warning[0];
+        let numericalIssues = diagnosticData.diagnostics_toolbox_report.numerical_report.warning[0];
         // initial issueTypes
-        let issueTypes:any = {};
-        // loop through issues and assign unique issue type to issueType array
-        for(let i in issues){
-            let issue = issues[i].type;
-            if(issueTypes[issue]){
-                issueTypes[issue] += 1
-            }else{
-                issueTypes[issue] = 1
-            }
-        }
+        let issueTypes:any = {
+            structural : structuralIssues.length,
+            numerical: numericalIssues.length
+        };
 
         // setup default issue when whichIssue is null
         const issueArray = Object.keys(issueTypes);
         let currentIssueName = ""
-        if(!props.whichIssue && issueArray.length >= 1){
+        if(!props.whichIssue && issueArray.length > 0){
             currentIssueName = issueArray[0];
         }else{
             currentIssueName = props.whichIssue;
