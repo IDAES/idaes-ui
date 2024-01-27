@@ -100,9 +100,9 @@ export default function DiagnosticsDisplay(props:any){
         // when has next step, populate next steps and display them
         if(!hasNextStep){
             // structural default
-            if(whichIssue == "structural") nextStepDisplay = "Try to initialize solve your model and then call report_structural_issues()";
+            if(whichIssue == "structural") nextStepDisplay = "Try to initialize / solve your model and then call report_numerical_issues()";
             // numerical default
-            if(whichIssue == "numerical") nextStepDisplay = "Try to initialize solve your model and then call report_numerical_issues()";
+            if(whichIssue == "numerical") nextStepDisplay = "Try to initialize / solve your model and then call report_numerical_issues()";
         }else{
             // base on nextStepData build nextStepDisplay
             nextStepDisplay = nextStepsData.map((eachNextStep: string, index:number)=>{
