@@ -32,7 +32,7 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     },
     diagnostics:{
       panelName : "Diagnostics",
-      show : true,
+      show : false,
       size: {
         minSize : 100,
         defaultSize: 70
