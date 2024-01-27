@@ -13,169 +13,99 @@ export default function DiagnosticsDisplay(props:any){
     // initial main display
     let jocabianCondationDisplay: any = "Loading jocabian condation..."
     let modelStatisticsStructuralDisplay: any = "Loading model statistics structural..."
+    let warningDisplay:any = "Loading warning...";
+    let cautionDisplay:any = "Loading caution...";
     let configDisplay: any = "Loading config ...";
     let diagnosticSeverityDisplay:any = "Loading diagnostic result...";
     let nextStepDisplay:any = "Loading suggested next step...";
-    
-    // populate severity numbers
-    let currentIssues = null;
-    if(diagnosticData && diagnosticData.issues.issues){
-        // initial severity store to store { severityType : numbers }
-        const severityStore:any = {warning: 0, caution: 0};
-        // initial issueTypes store to store { issueType : numbers }
-        const issueTypes:any={}
-        // initial issues read from diagnosticData
-        let issues = diagnosticData.issues.issues;
 
-        // build issueTypes
-        // default issue is null in here we build obj to hold what issues we have
-        for(let i in issues){
-            const type = issues[i].type;
-            if(issueTypes[type]){
-                issueTypes[type] += 1;
-            }else{
-                issueTypes[type] = 1
-            }
-        }
+    let numberOfWarnings:number = 0;
+    let numberOfCautions:number = 0;
 
-        // setup default issue when whichIssue is null
-        const issueArray = Object.keys(issueTypes);
-        let currentIssueName = ""
-        if(!props.whichIssue && issueArray.length >= 1){
-            currentIssueName = issueArray[0];
-        }else{
-            currentIssueName = props.whichIssue;
-        }
 
-        // build severity
-        for(let i in issues){
-            if(issues[i].type == currentIssueName){
-                const severity = issues[i].severity;
-                if(severityStore[severity]){
-                    severityStore[severity] += 1;
-                }else{
-                    severityStore[severity] = 1;
-                }
-            }
-        }
+    if(whichIssue && diagnosticData && diagnosticData.diagnostics_toolbox_report){
+        // start populate diagnostics each display
+        const tbxReport = diagnosticData.diagnostics_toolbox_report;
 
-        /**
-         * build display here
-         * > jacobian_condation display
-         * > config display
-         * > build each severity detail content
-         * > build container for each severity and insert each severity detail content init
-         */
-        // build model structral model statistics
-        const structralModelStatisticArr:any = [];
-        for(let i in issues){
-            if(issues[i].toolbox_model_statistics && issues[i].toolbox_model_statistics.length > 0){
-                const statisticsContentArr = issues[i].toolbox_model_statistics;
-                for(let j in statisticsContentArr){
-                    if(!structralModelStatisticArr.includes(statisticsContentArr[j])){
-                        structralModelStatisticArr.push(statisticsContentArr[j])
-                    }
-                }
-            }
-        }
+        
+        // build jocabian condation
+        jocabianCondationDisplay = <pre className={css.diagnostics_display_pre_tag}>{tbxReport.toolbox_jacobian_condation}</pre>
 
-        modelStatisticsStructuralDisplay = structralModelStatisticArr.map((eachStatisticsContent:string, index:number)=>{
-            eachStatisticsContent.replace("'", "`")
-            return (
-                <pre key={`model_structural_statistics_content${index}_${eachStatisticsContent}`} className={css.diagnostics_display_pre_tag}>
-                    {eachStatisticsContent}
-                </pre>
-            )
-        })
-
-        //build jacobian_condation display
-        const jacobian_condation_arr : Array<string> = [];
-        for(let i in issues){
-            if(issues[i].jacobian_condation && !jacobian_condation_arr.includes(issues[i].jacobian_condation)){
-                jacobian_condation_arr.push(issues[i].jacobian_condation)
-            }
-        }
-
-        jocabianCondationDisplay = jacobian_condation_arr.map((each_jacobian_condation:string, index:number)=>{
-            return(
-                <pre key={`jacobian_condation_${index}_value_${each_jacobian_condation}`}>
-                    {each_jacobian_condation}
-                </pre>
-            )
-        })
-
-        // build config display
-        const config = diagnosticData.config;
-        if(config && Object.keys(config).length > 0){
-            configDisplay = Object.keys(config).map((eachConfigKey: string, index:number)=>{
+        // populate model statistics
+        const modelStatisticsData = tbxReport.toolbox_model_statistics;
+        if(modelStatisticsData && modelStatisticsData.length > 0){
+            modelStatisticsStructuralDisplay = modelStatisticsData.map((eachStatisticsContent:string, index:number)=>{
                 return(
-                    <div key={`diagnostic_config_key_${index}`} className={`${css.diagnostic_display_each_config_container}`}>
-                        <p>{eachConfigKey}: </p>
-                        <p>{config[eachConfigKey]}</p>
-                    </div>
+                    <pre key={`model_structural_statistics_content${index}_${eachStatisticsContent}`} 
+                    className={css.diagnostics_display_pre_tag}
+                    >
+                        {eachStatisticsContent}
+                    </pre>
                 )
             })
         }else{
-            configDisplay = "Diagnostic config not found."
+            modelStatisticsStructuralDisplay =
+            <>
+                <pre className={css.diagnostics_display_pre_tag}>   Model Statistics is not generate by diagnostics toolbox, please run: </pre>
+                <pre className={css.diagnostics_display_pre_tag}>   dt = DiagnosticsToolbox(model)</pre>
+                <pre className={css.diagnostics_display_pre_tag}>   dt.report_structural_issues()</pre>
+                <pre className={css.diagnostics_display_pre_tag}>   dt.report_numerical_issues()</pre>
+            </>;
         }
 
+        // build warning display
+        const warningData = tbxReport[whichIssue == "structural" ? "structural_report" : "numerical_report"].warning[0];
+        numberOfWarnings = warningData.length;
+        if(warningData && warningData.length > 0){
+            warningDisplay = warningData.map((eachWarning:string, index:number)=>{
+                                eachWarning = eachWarning.replace("WARNING", "Warning")
+                                return (
+                                    <pre key={`eachWarning_${index}_${eachWarning}`}
+                                        className={css.diagnostics_display_pre_tag}
+                                    >
+                                        {eachWarning}
+                                    </pre>
+                                )
+                            })
+        }else{
+            warningDisplay = <pre className={css.diagnostics_display_pre_tag}>No warning.</pre>
+        }
 
-        // build diagnostics each severity detail content
-        let issueObj:any = {}
-        const diagnostic_content_detail = diagnosticData.issues.issues.map((eachIssue:any, eachIssueIndex:number)=>{
-            for(let i in eachIssue.objects){
-                // use to build issueObj to contain what type of issueObj and how many of them
-                // example {var: 166, constraint: 153}
-                if(issueObj[eachIssue.objects[i].type]){
-                    issueObj[eachIssue.objects[i].type] += 1
-                }else{
-                    issueObj[eachIssue.objects[i].type] = 1
-                }
-            }
+        // build caution display
+        const cautionData = tbxReport[whichIssue == "structural" ? "structural_report" : "numerical_report"].caution;
+        numberOfCautions = cautionData.length;
+        if(cautionData && cautionData.length > 0){
+            cautionDisplay = cautionData.map((eachCaution:string, index:number)=>{
+                                eachCaution = eachCaution.replace("CAUTION", "Caution")
+                                return (
+                                    <pre key={`eachCaution_${index}_${eachCaution}`}
+                                    className={css.diagnostics_display_pre_tag}
+                                    >
+                                        {eachCaution}
+                                    </pre>
+                                )
+                            })
+        }else{
+            cautionDisplay = <pre className={css.diagnostics_display_pre_tag}>No caution.</pre>;
+        }
 
-            if(eachIssue.type == currentIssueName){
-                return (
-                    <div key={eachIssueIndex} className={`${css.diagnostic_display_each_issue_container}`}>
-                        <p>{`${issueObj[Object.keys(issueObj)[eachIssueIndex]]} `}</p>
-                        <p>{`${Object.keys(issueObj)[eachIssueIndex]} `}</p>
-                        <p >{eachIssue.name.replace("-", " ")}</p>
-                    </div>
-                )
-            }
-        })
-
-        //build next step
-        // read from diagnostics data issues to check if has next step
+        // build next steps display
         let hasNextStep: boolean = false;
-        for(let i in issues){
-            if(issues[i].next_steps){
-                hasNextStep = true;
-                break;
-            }
+        const nextStepsData = tbxReport["next_steps"][whichIssue == "structural" ? "structural" : "numerical"];
+        if(nextStepsData.length > 0){
+            hasNextStep = true;
         }
 
         // when no next step, display default line from diagnostics toolbox
         // when has next step, populate next steps and display them
         if(!hasNextStep){
             // structural default
-            if(whichIssue == "structural") nextStepDisplay = "Try to initialize/solve your model and then call report_structural_issues()";
+            if(whichIssue == "structural") nextStepDisplay = "Try to initialize solve your model and then call report_structural_issues()";
             // numerical default
-            if(whichIssue == "numerical") nextStepDisplay = "Try to initialize/solve your model and then call report_numerical_issues()";
+            if(whichIssue == "numerical") nextStepDisplay = "Try to initialize solve your model and then call report_numerical_issues()";
         }else{
-            // array store unique next step, and read from each issue assign them to nextStepDisplayArray
-            // TODO: n^2? too slow, a way to fix this is to build next steps as a key in diagnostics obj as a key value pair, not in each issue
-            let nextStepDisplayArr: Array<string>= [];
-            for(let i in issues){
-                if(issues[i].next_steps){
-                    let eachIssuesNextStep = issues[i].next_steps;
-                    for(let j in eachIssuesNextStep){
-                        if(!nextStepDisplayArr.includes(eachIssuesNextStep[j])){
-                            nextStepDisplayArr.push(eachIssuesNextStep[j])
-                        }
-                    }
-                }
-            }
-            nextStepDisplay = nextStepDisplayArr.map((eachNextStep: string, index:number)=>{
+            // base on nextStepData build nextStepDisplay
+            nextStepDisplay = nextStepsData.map((eachNextStep: string, index:number)=>{
                 return(
                     <p key={`diagnostics_suggested_next_step_${eachNextStep}`}
                         className={`${css.diagnostics_display_each_next_step_content}`}
@@ -187,45 +117,12 @@ export default function DiagnosticsDisplay(props:any){
                 )
             })
         }
-
-        // build severity display
-        const currentIssuesArray:Array<any> = [];
-        for(let i in issues){
-            if(issues[i].type == whichIssue){
-                currentIssuesArray.push(issues[i])
-            }
-        }
-
-
-
-
-
-        diagnosticSeverityDisplay = Object.keys(severityStore).map((eachSeverity:any, index:number)=>{
-            return(
-                <div key={`issue_title_severity_${index}`} className={`${css.diagnostics_display_each_severity_main_container}`}>
-                    <div className={`${css.diagnostic_display_each_severity_title} ${css[eachSeverity]}`}>
-                        {eachSeverity}
-                        <span>{severityStore[eachSeverity]}</span>
-                    </div>
-                    {   
-                        /*if severityStore's some severity is 0 then display this kind of severity not found! */
-                        severityStore[eachSeverity] > 0 ?
-                        <div className={css.diagnostic_display_diagnostic_content_container}>
-                            {diagnostic_content_detail} 
-                        </div> :
-                        <div className={css.diagnostic_display_diagnostic_content_container}>
-                            No {eachSeverity} found!
-                        </div>
-                    }
-                </div>
-            )
-        })
+        
     }
-
-    //
 
     return(
         <div className={`${css.diagnostics_display_main_container}`}>
+            {/*Model Statistics*/}
             <div className={css.diagnostic_display_each_section_container}>
                 <p className={css.diagnostic_display_section_title}>Model Statistics</p>
                 { 
@@ -234,12 +131,28 @@ export default function DiagnosticsDisplay(props:any){
                         jocabianCondationDisplay
                 }
             </div>
+            {/*Warning and Cautions*/}
             <div className={css.diagnostic_display_each_section_container}>
-                {/* {configDisplay} */}
+                <div className={css.diagnostics_warning_caution_main_container}>
+                    <div className={`${css.diagnostic_display_each_severity_title} ${css.warning}`}>
+                        WARNINGS
+                        <span>{numberOfWarnings}</span>
+                    </div>
+                    <div className={css.diagnostics_warning_caution_display_container}>
+                        {warningDisplay}
+                    </div>
+                </div>
+                <div className={css.diagnostics_warning_caution_main_container}>
+                    <div className={`${css.diagnostic_display_each_severity_title} ${css.caution}`}>
+                        CAUTIONS
+                        <span>{numberOfCautions}</span>
+                    </div>
+                    <div className={css.diagnostics_warning_caution_display_container}>
+                        {cautionDisplay}
+                    </div>
+                </div>
             </div>
-            <div className={css.diagnostic_display_each_section_container}>
-                {diagnosticSeverityDisplay}
-            </div>
+            {/*next steps*/}
             <div className={css.diagnostic_display_each_section_container}>
                 { 
                     nextStepDisplay != "Loading suggested next step..." && 

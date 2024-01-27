@@ -30,10 +30,13 @@
     margin-left: 20px;
 }
 
+.diagnostics_warning_caution_main_container{
+    margin-bottom: 20px;
+}
+
 .diagnostics_display_pre_tag{
     font-family: sans-serif;
     margin-bottom: 5px;
-    
 }
 
 .diagnostic_display_each_severity_title > span{
@@ -43,6 +46,10 @@
     width: 29px;
     height: 29px;
     border-radius: 50%;
+}
+
+.diagnostics_warning_caution_display_container{
+    margin-left: 20px;
 }
 
 .warning{
