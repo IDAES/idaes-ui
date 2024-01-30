@@ -6,6 +6,7 @@ import { context_parse_url } from "./contextFN_parse_url";
 export const AppContext = createContext<any>({});
 
 export function AppContextProvider({ children }: { children: ReactNode }){
+  const idaesUILocalStorage = {}
   //get which env app is running on
   const currentENV = import.meta.env.VITE_MODE;
   //get python server running port;
@@ -101,8 +102,32 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     }
   }
 
+  /**
+   * context handler for diagnostics
+   */
+  
+
   useEffect(()=>{
     loadDemoFlowsheet();
+    // initial loacl storage if not there, if has local storage load it
+    // this part read local storage as user's preference and base on value to update UI
+    if(localStorage.getItem("idaesUIGeneral")){
+      // when has localStorage
+      const idaesUIGeneralLocalStorage : any = JSON.parse(localStorage.getItem("idaesUIGeneral"));
+      const showDiagnosticsPanelLoaclStorage:boolean = idaesUIGeneralLocalStorage.showDiagnosticsPanel;
+      setPanelState((prevState)=>{
+        let copyState = {...prevState}
+        copyState.diagnostics.show = showDiagnosticsPanelLoaclStorage;
+        return copyState
+      })
+      // console.log(idaesUIGeneralLocalStorage)
+    }else{
+      // when no localStorage 
+      const localStorageData = JSON.stringify({
+        showDiagnosticsPanel: false
+      })
+      localStorage.setItem("idaesUIGeneral", localStorageData)
+  }
   },[])
 
   return(

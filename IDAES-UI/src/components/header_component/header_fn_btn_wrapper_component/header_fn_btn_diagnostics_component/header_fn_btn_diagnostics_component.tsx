@@ -9,7 +9,16 @@ export default function HeaderFNBtnDiagnostics(){
     function toggleDiagnosticHandler(){
         setPanelState((prev:any)=>{
             const copyState = {...prev};
-            copyState.diagnostics.show = !copyState.diagnostics.show;
+            const currentDiagnosticsPanelShow = !copyState.diagnostics.show;
+            copyState.diagnostics.show = currentDiagnosticsPanelShow
+
+            //update loacl storage 
+            const localStorageItem = localStorage.getItem("idaesUIGeneral");
+            const idaesUIGeneralLocalStorage : any = localStorageItem ? JSON.parse(localStorageItem): null;
+            idaesUIGeneralLocalStorage.showDiagnosticsPanel = currentDiagnosticsPanelShow;
+            localStorage.setItem("idaesUIGeneral",JSON.stringify(idaesUIGeneralLocalStorage))
+
+            //update state
             return copyState;
         })
     }
