@@ -1,5 +1,7 @@
 .diagnostics_display_main_container{
+    height: 100%;
     padding: 30px;
+    overflow: scroll;
 }
 
 .diagnostic_display_each_section_container{
