@@ -14,7 +14,7 @@ export default function HeaderFNBtnDiagnostics(){
 
             //update loacl storage 
             const localStorageItem = localStorage.getItem("idaesUIGeneral");
-            const idaesUIGeneralLocalStorage : any = localStorageItem ? JSON.parse(localStorageItem): null;
+            const idaesUIGeneralLocalStorage : any = localStorageItem ? JSON.parse(localStorageItem): "";
             idaesUIGeneralLocalStorage.showDiagnosticsPanel = currentDiagnosticsPanelShow;
             localStorage.setItem("idaesUIGeneral",JSON.stringify(idaesUIGeneralLocalStorage))
 

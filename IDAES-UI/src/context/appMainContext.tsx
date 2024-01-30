@@ -113,7 +113,8 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     // this part read local storage as user's preference and base on value to update UI
     if(localStorage.getItem("idaesUIGeneral")){
       // when has localStorage
-      const idaesUIGeneralLocalStorage : any = JSON.parse(localStorage.getItem("idaesUIGeneral"));
+      const localStorageItem = localStorage.getItem("idaesUIGeneral");
+      const idaesUIGeneralLocalStorage : any = localStorageItem ? JSON.parse(localStorageItem): "";
       const showDiagnosticsPanelLoaclStorage:boolean = idaesUIGeneralLocalStorage.showDiagnosticsPanel;
       setPanelState((prevState)=>{
         let copyState = {...prevState}
