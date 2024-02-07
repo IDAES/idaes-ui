@@ -92,6 +92,7 @@ export class Toolbar {
         //call registerZoomEvent function, register 3 zoom events to zoom in zoom out zoom to fit btn on dom
         //when button is not exist it should not register event, one example is isFvShow = false
         if(this.zoomInBtn && this.zoomOutBtn && this.zoomToFitBtn){
+            console.log(`register event`)
             this.registerZoomEvent(this.zoomInBtn, this.zoomOutBtn, this.zoomToFitBtn);
         }
     }
@@ -106,19 +107,57 @@ export class Toolbar {
    */
   registerZoomEvent(zoomInBtn:HTMLElement, zoomOutBtn:HTMLElement, zoomToFitBtn:HTMLElement){
     // Zoom in event listener
-    zoomInBtn.addEventListener("click", () => {
-        this._paper.paperScroller.zoom(0.2, { max: 4 });
-    });
-
+    zoomInBtn.addEventListener("click", this.zoomInEvent);
+    
     // Zoom out event listener
-    zoomOutBtn.addEventListener("click", () => {
-        this._paper.paperScroller.zoom(-0.2, { min: 0.2 });
-    });
-
+    zoomOutBtn.addEventListener("click", this.zoomOutEvent);
+    
     // Zoom to fit event listener
-    zoomToFitBtn.addEventListener("click", () => {
-        this._paper.zoomToFit();
-    });
+    zoomToFitBtn.addEventListener("click", this.zoomFitEvent);
+  }
+
+  /**
+   * create zoom events handler
+   */
+  zoomInEvent = () =>{
+        this.zoomClearExtraFvElement() // this clear extra fv display stack on top of newest one
+        this._paper.paperScroller.zoom(0.2, { max: 100 });
+  }
+
+  zoomOutEvent = () =>{
+    this.zoomClearExtraFvElement() // this clear extra fv display stack on top of newest one
+    this._paper.paperScroller.zoom(-0.2, { min: 0 });
+  }
+
+  zoomFitEvent = () =>{
+    this._paper.zoomToFit();
+        console.log(`working zoom fit`)
+  }
+
+  /**
+   * @Description This function help check if fv has mutiple children,
+   * if has will remove all children and keep the last one.
+   * 
+   * @Reason When react render, will create a new instence of MainFv,
+   * it will create a new fv display stack under the old one.
+   * this behivor cause zoom in and out btn not working so we need to clear all
+   * fv display other than the last one.
+   * 
+   * @returns void
+   */
+  zoomClearExtraFvElement = () =>{
+    let fv = document.getElementById("fv");
+
+    //validation if fv and fv has mutiple child
+    if(!fv || fv.childNodes.length <= 1){
+        return;
+    }
+    
+    //get fv last child and remove others
+    let lastFvChild = fv.childNodes[fv?.childNodes.length - 1]
+    while(fv.firstChild !== fv.lastChild){
+        fv.removeChild(fv.firstChild as Node)
+    }
   }
 
   /**
