@@ -1,12 +1,10 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
-import axios from 'axios';
-
 import { context_parse_url } from "./contextFN_parse_url";
 
 export const AppContext = createContext<any>({});
-
 export function AppContextProvider({ children }: { children: ReactNode }){
-  const idaesUILocalStorage = {}
+  //read app setting from localstorage
+  const appSettingObj = readFromLocalStorage();
   //get which env app is running on
   const currentENV = import.meta.env.VITE_MODE;
   //get python server running port;
@@ -33,7 +31,8 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     },
     diagnostics:{
       panelName : "Diagnostics",
-      show : false,
+      // panel show state read from loacl storage.
+      show : appSettingObj.diagnosticsPanelShow == undefined ? false : appSettingObj.diagnosticsPanelShow,
       size: {
         minSize : 100,
         defaultSize: 70
@@ -74,63 +73,6 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     expandState : {}
   });
 
-  //get demo flowsheet state
-  const [flowsheetState, setFlowsheetState] = useState({
-    cells : null,
-    model: null,
-    routing_config: null,
-  });
-
-  const cells = flowsheetState.cells;
-  const model = flowsheetState.model;
-  const routing_config = flowsheetState.routing_config;
-
-  async function loadDemoFlowsheet(){
-    try {
-      const res = await axios.get('/data/demo_flowsheet.json');
-      const JSON = res.data
-      setFlowsheetState((prev)=>{
-        return {
-          ...prev, 
-          cells : JSON.cells,
-          model : JSON.model,
-          routing_config : JSON.routing_config
-        }
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  /**
-   * context handler for diagnostics
-   */
-  
-
-  useEffect(()=>{
-    loadDemoFlowsheet();
-    // initial loacl storage if not there, if has local storage load it
-    // this part read local storage as user's preference and base on value to update UI
-    if(localStorage.getItem("idaesUIGeneral")){
-      // when has localStorage
-      const localStorageItem = localStorage.getItem("idaesUIGeneral");
-      const idaesUIGeneralLocalStorage : any = localStorageItem ? JSON.parse(localStorageItem): "";
-      const showDiagnosticsPanelLoaclStorage:boolean = idaesUIGeneralLocalStorage.showDiagnosticsPanel;
-      setPanelState((prevState)=>{
-        let copyState = {...prevState}
-        copyState.diagnostics.show = showDiagnosticsPanelLoaclStorage;
-        return copyState
-      })
-      // console.log(idaesUIGeneralLocalStorage)
-    }else{
-      // when no localStorage 
-      const localStorageData = JSON.stringify({
-        showDiagnosticsPanel: false
-      })
-      localStorage.setItem("idaesUIGeneral", localStorageData)
-  }
-  },[])
-
   return(
     <AppContext.Provider value={{
       //from url
@@ -149,12 +91,20 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       variablesExpandState,
       setVariablesExpandState,
       // expandVariablesHandler,
-      //flowsheet data
-      cells,
-      model,
-      routing_config
     }}>
       {children}
     </AppContext.Provider>
   )
+}
+
+
+/**
+ * @description this function read app setting from local storage and 
+ * return the js obj format of app setting
+ * @returns js object contains app settings
+ */
+function readFromLocalStorage(){
+  const appSettingLocalStorage = localStorage.getItem("appSetting")!;
+  const appSettingObj = JSON.parse(appSettingLocalStorage)
+  return appSettingObj;
 }

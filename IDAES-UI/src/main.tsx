@@ -5,6 +5,10 @@ import './index.css';
 
 import { AppContextProvider } from "./context/appMainContext";
 
+if(!localStorage.getItem("appSetting")){
+  localStorage.setItem("appSetting", "{}")
+}
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <AppContextProvider>
       <App />
