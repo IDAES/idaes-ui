@@ -33,138 +33,166 @@ class PostSaveFlowsheet:
 
         @fastAPIApp.post("/api/post_save_flowsheet", tags=["Save Flowsheet"])
         def post_save_flowsheet(req_body: save_flowsheet_model):
-            # return when save == False
-            if type(self.save) == bool and self.save == False:
-                return {"mesage": "No flowsheet is saved, because param save = False"}
+            # initial save_flowsheet_name variable and save path
+            save_path = "./"
+            save_flowsheet_name = ""
 
-            # TODO: check save params is valid
-            if type(self.save) == "number":
-                return {
-                    "message": f"invalid save param, {self.save} is type {type(self.save)}",
-                    "saved": False,
-                }
-            if self.save == "/no/such/file/exists.I.hope":
-                print("omg it passed")
-                return {
-                    "message": f"invalid save param, {self.save} is type {type(self.save)}",
-                    "saved": False,
-                }
+            # check save or not and where to save depends on param save and save_dir
+            # when undefined save, save to current folder
 
-            # initial save_path
-            save_path = None
+            # when save is False won't save anything
+            if self.save == False:
+                return {"message": "No flowsheet is saved, because param save = False"}
 
-            # check save is abs path or not
-            save_is_abs = os.path.isabs(self.save)
+            # when save is None or save is True save to current folder and saved file name will be flowsheet_name.json
+            if self.save == None or self.save == True:
+                save_flowsheet_name = self.flowsheet_name
+                save_path = f"{save_path}{save_flowsheet_name}.json"
 
-            # populate save path and get save path
-            # 1. when save is abs path
-            if save_is_abs:
+            # when save is abs path use save as save path ignore save_dir
+            if type(self.save) == str and pathlib.Path.absolute(self.save):
                 save_path = self.save
+                save_flowsheet_name = self.flowsheet_name
 
-            # 2. when save is not abs path
-            if not save_is_abs:
-                # in fsvis comment defined how to use save_dir when save is not abs path
-                # define default save path as cwd/saved_flowsheet/
-                cwd = pathlib.Path(os.getcwd()) / "saved_flowsheet"
-                print(
-                    f"Your param save: '{save}' is not a abs path, will use '{cwd}' as default saving location "
-                )
-                save_path = cwd
+                # when save == True
 
-            # check save path exist or not
-            # 1. when save path is not a dir, it maybe a path/filename.json
-            if not save_path.is_dir():
-                # get parent dir as save_path_parent
-                save_path_parent = save_path.parent
-                # check parent if not exist create one
-                if not os.path.exists(save_path_parent):
-                    save_path_parent.mkdir(parents=True, exist_ok=True)
+                if type(self.save) == bool and self.save == True:
+                    save_flowsheet_name = flowsheet_name
 
-            # 2. when save path is dir, check path exist or not then add file name and extension to this path
-            if save_path.is_dir():
-                # check if path not exist create path
-                if not os.path.exists(save_path):
-                    save_path.mkdir(parents=True, exist_ok=True)
-                    # add file name and extension
-                save_path = (
-                    pathlib.Path(save_path)
-                    / f"{flowsheet_manager.get_flowsheet_name()}.json"
-                )
+                if type(self.save) == str and pathlib.Path.absolute(self.save):
+                    return {"message": "abs path"}
 
-            # write to json
-            # get current flowsheet
-            current_flowsheet = FlowsheetSerializer(
-                flowsheet_manager.get_original_flowsheet(),
-                f"{self.flowsheet_name}",
-                True,
-            ).as_dict()
-            # when overwrite is True directly over write saved flowsheet
-            if self.overwrite:
-                with open(save_path, "w") as file:
-                    data = json.dump(current_flowsheet, file)
+                if type(self.save) == str and not pathlib.Path.absolute(self.save):
+                    return {"message": "relative path"}
 
-            if not self.overwrite:
-                # 1. check save path flowsheetName.json file exist or not
-                # if not exist directly write file with the save_path
-                # if exist read max version number and + 1 as current version number then write to file
+            # # TODO: check save params is valid
+            # if type(self.save) == "number":
+            #     return {
+            #         "message": f"invalid save param, {self.save} is type {type(self.save)}",
+            #         "saved": False,
+            #     }
+            # if self.save == "/no/such/file/exists.I.hope":
+            #     print("omg it passed")
+            #     return {
+            #         "message": f"invalid save param, {self.save} is type {type(self.save)}",
+            #         "saved": False,
+            #     }
 
-                if not save_path.exists():
-                    with open(save_path, "w") as file:
-                        data = json.dump(current_flowsheet, file)
-                        print(
-                            f"Successfully saved flowsheet: '{self.flowsheet_name}' to location: {save_path}"
-                        )
+            # # initial save_path
+            # save_path = None
 
-                else:
-                    # create regex pattern use to read file version numbers
-                    pattern = re.compile(
-                        rf"{re.escape(self.flowsheet_name)}-(\d+)\.json$"
-                    )
+            # # check save is abs path or not
+            # save_is_abs = os.path.isabs(self.save)
 
-                    # base on version number create array versions
-                    versions = [
-                        int(match.group(1))
-                        for file in save_path.parent.iterdir()
-                        if (match := pattern.match(file.name))
-                    ]
+            # # populate save path and get save path
+            # # 1. when save is abs path
+            # if save_is_abs:
+            #     save_path = self.save
 
-                    # assign version number to saved file
-                    if versions:
-                        # get latest version of saved use to build file path to compare with current_flowsheet
-                        latest_version = max(versions)
-                        # when file with same flowsheet_name and has version number, add current_version is largest number + 1
-                        current_version = max(versions) + 1
-                    else:
-                        # when no version number latest should be empty
-                        latest_version = ""
-                        # when no version number spcified current_version = 1
-                        current_version = 1
+            # # 2. when save is not abs path
+            # if not save_is_abs:
+            #     # in fsvis comment defined how to use save_dir when save is not abs path
+            #     # define default save path as cwd/saved_flowsheet/
+            #     cwd = pathlib.Path(os.getcwd()) / "saved_flowsheet"
+            #     print(
+            #         f"Your param save: '{save}' is not a abs path, will use '{cwd}' as default saving location "
+            #     )
+            #     save_path = cwd
 
-                    # read latest saved flowsheet
-                    version_number = (
-                        "" if latest_version == "" else f"-{latest_version}"
-                    )
-                    latest_path = (
-                        save_path.parent / f"{self.flowsheet_name}{version_number}.json"
-                    )
+            # # check save path exist or not
+            # # 1. when save path is not a dir, it maybe a path/filename.json
+            # if not save_path.is_dir():
+            #     # get parent dir as save_path_parent
+            #     save_path_parent = save_path.parent
+            #     # check parent if not exist create one
+            #     if not os.path.exists(save_path_parent):
+            #         save_path_parent.mkdir(parents=True, exist_ok=True)
 
-                    # read latest saved flowsheet use to compare with current_flowsheet
-                    with open(latest_path, "r") as file:
-                        latest_saved_flowsheet = json.load(file)
+            # # 2. when save path is dir, check path exist or not then add file name and extension to this path
+            # if save_path.is_dir():
+            #     # check if path not exist create path
+            #     if not os.path.exists(save_path):
+            #         save_path.mkdir(parents=True, exist_ok=True)
+            #         # add file name and extension
+            #     save_path = (
+            #         pathlib.Path(save_path)
+            #         / f"{flowsheet_manager.get_flowsheet_name()}.json"
+            #     )
 
-                    # check if latest flowsheet is different with current flowsheet if same return, if different write in file and save
-                    if current_flowsheet == latest_saved_flowsheet:
-                        print("Nothing is changed, no need to save flowsheet")
-                        return
-                    else:
-                        new_saved_flowsheet_file_name = (
-                            f"{self.flowsheet_name}-{current_version}.json"
-                        )
+            # # write to json
+            # # get current flowsheet
+            # current_flowsheet = FlowsheetSerializer(
+            #     flowsheet_manager.get_original_flowsheet(),
+            #     f"{self.flowsheet_name}",
+            #     True,
+            # ).as_dict()
+            # # when overwrite is True directly over write saved flowsheet
+            # if self.overwrite:
+            #     with open(save_path, "w") as file:
+            #         data = json.dump(current_flowsheet, file)
 
-                        save_path = save_path.parent / new_saved_flowsheet_file_name
+            # if not self.overwrite:
+            #     # 1. check save path flowsheetName.json file exist or not
+            #     # if not exist directly write file with the save_path
+            #     # if exist read max version number and + 1 as current version number then write to file
 
-                        with open(save_path, "w") as file:
-                            data = json.dump(current_flowsheet, file)
-                            print(
-                                f"Successfully saved flowsheet: '{new_saved_flowsheet_file_name}' to location: {save_path}"
-                            )
+            #     if not save_path.exists():
+            #         with open(save_path, "w") as file:
+            #             data = json.dump(current_flowsheet, file)
+            #             print(
+            #                 f"Successfully saved flowsheet: '{self.flowsheet_name}' to location: {save_path}"
+            #             )
+
+            #     else:
+            #         # create regex pattern use to read file version numbers
+            #         pattern = re.compile(
+            #             rf"{re.escape(self.flowsheet_name)}-(\d+)\.json$"
+            #         )
+
+            #         # base on version number create array versions
+            #         versions = [
+            #             int(match.group(1))
+            #             for file in save_path.parent.iterdir()
+            #             if (match := pattern.match(file.name))
+            #         ]
+
+            #         # assign version number to saved file
+            #         if versions:
+            #             # get latest version of saved use to build file path to compare with current_flowsheet
+            #             latest_version = max(versions)
+            #             # when file with same flowsheet_name and has version number, add current_version is largest number + 1
+            #             current_version = max(versions) + 1
+            #         else:
+            #             # when no version number latest should be empty
+            #             latest_version = ""
+            #             # when no version number spcified current_version = 1
+            #             current_version = 1
+
+            #         # read latest saved flowsheet
+            #         version_number = (
+            #             "" if latest_version == "" else f"-{latest_version}"
+            #         )
+            #         latest_path = (
+            #             save_path.parent / f"{self.flowsheet_name}{version_number}.json"
+            #         )
+
+            #         # read latest saved flowsheet use to compare with current_flowsheet
+            #         with open(latest_path, "r") as file:
+            #             latest_saved_flowsheet = json.load(file)
+
+            #         # check if latest flowsheet is different with current flowsheet if same return, if different write in file and save
+            #         if current_flowsheet == latest_saved_flowsheet:
+            #             print("Nothing is changed, no need to save flowsheet")
+            #             return
+            #         else:
+            #             new_saved_flowsheet_file_name = (
+            #                 f"{self.flowsheet_name}-{current_version}.json"
+            #             )
+
+            #             save_path = save_path.parent / new_saved_flowsheet_file_name
+
+            #             with open(save_path, "w") as file:
+            #                 data = json.dump(current_flowsheet, file)
+            #                 print(
+            #                     f"Successfully saved flowsheet: '{new_saved_flowsheet_file_name}' to location: {save_path}"
+            #                 )
