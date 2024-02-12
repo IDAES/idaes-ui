@@ -35,6 +35,7 @@ export class MainFV {
   baseUrl:string;
   getFSUrl:string;
   putFSUrl:string;
+  saveFSUrl:string;
   getAppSettingUrl:string;
   model:any;
   paper:any;
@@ -57,6 +58,7 @@ export class MainFV {
     this.baseUrl = `http://localhost:${port}`;
     this.getFSUrl = `${this.baseUrl}/api/get_fs?get_which=flowsheet`;
     this.putFSUrl = `${this.baseUrl}/api/put_fs`;
+    this.saveFSUrl = `${this.baseUrl}/api/post_save_flowsheet`;
     this.getAppSettingUrl = `${this.baseUrl}/api/get_app_setting`;
 
     //Define model
@@ -303,7 +305,6 @@ export class MainFV {
      * @param model The model to save
      */
     saveModel(url:any, model:any) {
-      console.log(model)
       let modelData = {
           "flowsheet_type": "jjs_fs",
           "flowsheet": model //data type in python is dict
@@ -321,5 +322,7 @@ export class MainFV {
       .catch((error) => {
         this.informUser(2, "Fatal error: cannot save current model: " + error);
       });
+
+      axios.post(this.saveFSUrl, JSON.stringify({save_flowsheet_model:true})).then(res=>res).then(data => console.log(data))
     }
 }
