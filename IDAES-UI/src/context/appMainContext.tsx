@@ -64,6 +64,10 @@ export function AppContextProvider({ children }: { children: ReactNode }){
     isShowSteamName : true,
     isShowLabels : false
   })
+  /**
+   * Context for diagnostics
+   */
+  const [diagnosticsRunFnState, setDiagnosticsRunFnState] = useState("");
 
   /**
    * Context for variables
@@ -87,6 +91,9 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       //fv
       fvHeaderState,
       setFvHeaderState,
+      //diagnostics run function state
+      diagnosticsRunFnState,
+      setDiagnosticsRunFnState,
       //variables
       variablesExpandState,
       setVariablesExpandState,

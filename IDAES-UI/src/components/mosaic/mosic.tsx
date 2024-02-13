@@ -19,18 +19,21 @@ import StreamTableHeader from '../flowsheet_main_component/stream_table_componen
 import Flowsheet_variable from '../flowsheet_main_component/flowsheet_variables/flowsheet_variable_component';
 import Flowsheet from '../flowsheet_main_component/flowsheet_component/flowsheet_component';
 import FlowsheetDiagnostics from '../flowsheet_main_component/flowsheet_diagnostics_component/flowsheet_diagnostics_component';
+import FlowsheetDiagnosticsRunner from '../flowsheet_main_component/flowsheet_diagnostics_runner_component/flowsheet_diagnostic_runner_component';
 import StreamTable from '../flowsheet_main_component/stream_table_component/stream_table';
 
 // interface
 import { FvHeaderStateInterface } from '@/interface/appMainContext_interface';
 
 // define ViewId
-export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'streamTable' |'new';
+export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'diagnosticsRunner' | 'streamTable' |'new';
 
+// element map: what element will render as mosaic panel
 const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
     components: <Flowsheet_variable />,
     flowsheet: <Flowsheet />,
     diagnostics: <FlowsheetDiagnostics />,
+    diagnosticsRunner: <FlowsheetDiagnosticsRunner />,
     streamTable: <StreamTable />,
 };
 
@@ -38,6 +41,7 @@ const TITLE_MAP:any = {
     components: 'Components',
     flowsheet: 'Diagram',
     diagnostics: 'Diagnostics',
+    diagnosticsRunner: 'Diagnostics Runner',
     streamTable: 'Stream Table'
 };
 
@@ -117,7 +121,12 @@ const MosaicApp = () => {
                     second: 'diagnostics',
                     splitPercentage: panelState.diagnostics.show ? 70 : 100, //splitPercentage controls how wide split view is
                 },
-                second: 'streamTable',
+                second: {
+                    direction: 'row',
+                    first:'streamTable',
+                    second:'diagnosticsRunner',
+                    splitPercentage: panelState.diagnostics.show ? 0 : 100 // diagnostics runner with will only show 100 when diagnostics is enabled
+                },
                 splitPercentage: 70,
             }}
         />
@@ -220,6 +229,16 @@ function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, show
                 <StreamTableHeader />
             </div>
             break;
+        case "diagnosticsRunner":
+            const options = [1,2,3,4,5].map((el, index)=><option value="" key={`diagnosticsRunnerSelection${el}`}>{el}</option>)
+            return(
+                <div className="mosaic_toolbar_btn_container">
+                    <select name="diagnosticsRunnerSelection" id="" className="mosaic_diagnosticsRunner_select">
+                        <option value="default">Select a function</option>
+                        {options}
+                    </select>
+                </div>
+            )
         default:
             return<></>
             break;
