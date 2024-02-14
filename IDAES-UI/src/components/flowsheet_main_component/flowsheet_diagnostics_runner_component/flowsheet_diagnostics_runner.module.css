@@ -1,5 +1,8 @@
 .diagnosticsRunner_content_container{
+    position:relative;
+    min-height: 500px;
+    max-height: 1080px;
     padding: 20px;
-    border: 1px solid red;
-    background-color: blue;
+    overflow-y: scroll !important;
 }
+
