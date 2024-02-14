@@ -83,6 +83,7 @@
 .diagnostics_display_each_next_step_content{
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 10px;
     color: #4caaf4;
 }
@@ -90,6 +91,16 @@
 .diagnostics_display_each_next_step_content:hover{
     cursor: pointer;
     color: #3e90ce;
+}
+
+.next_step_function_btn{
+    padding: 4px 6px;
+    border: 1px solid #3e90ce;
+}
+
+.next_step_function_btn:hover{
+    color: white;
+    background-color: #3e90ce;
 }
 
 .copied_next_step{

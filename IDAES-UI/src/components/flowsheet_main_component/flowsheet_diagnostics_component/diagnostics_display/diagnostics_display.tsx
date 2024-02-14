@@ -1,17 +1,20 @@
+import { useContext, useEffect } from "react";
+import { AppContext } from "@/context/appMainContext";
+import axios from "axios";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import css from "./diagnostics_display.module.css";
-import p from "@blueprintjs/icons/lib/esm/generated/16px/paths/blank";
 
 export default function DiagnosticsDisplay(props:any){
+    // initial context
+    const {diagnosticsNextStepsOutputState, setDiagnosticsNextStepsOutputState, diagnosticsRunFnNameListState, setDiagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState} = useContext(AppContext);
     // initial diagnostics data
     const diagnosticData = props.diagnosticData;
     // initial which issue from props
     const whichIssue = props.whichIssue;
-
     // initial main display
-    let jocabianCondationDisplay: any = "Loading jocabian condation..."
+    let jacobianConditionDisplay: any = "Loading jacobian condition..."
     let modelStatisticsStructuralDisplay: any = "Loading model statistics structural..."
     let warningDisplay:any = "Loading warning...";
     let cautionDisplay:any = "Loading caution...";
@@ -22,14 +25,15 @@ export default function DiagnosticsDisplay(props:any){
     let numberOfWarnings:number = 0;
     let numberOfCautions:number = 0;
 
+    let currentIssueNextStepsNameList:Array<String> = [];
 
     if(whichIssue && diagnosticData && diagnosticData.diagnostics_toolbox_report){
         // start populate diagnostics each display
         const tbxReport = diagnosticData.diagnostics_toolbox_report;
 
         
-        // build jocabian condation
-        jocabianCondationDisplay = <pre className={css.diagnostics_display_pre_tag}>{tbxReport.toolbox_jacobian_condation}</pre>
+        // build jacobian condition
+        jacobianConditionDisplay = <pre className={css.diagnostics_display_pre_tag}>{tbxReport.toolbox_jacobian_condation}</pre>
 
         // populate model statistics
         const modelStatisticsData = tbxReport.toolbox_model_statistics;
@@ -94,6 +98,7 @@ export default function DiagnosticsDisplay(props:any){
         const nextStepsData = tbxReport["next_steps"][whichIssue == "structural" ? "structural" : "numerical"];
         if(nextStepsData.length > 0){
             hasNextStep = true;
+            currentIssueNextStepsNameList = [...nextStepsData];
         }
 
         // when no next step, display default line from diagnostics toolbox
@@ -109,16 +114,74 @@ export default function DiagnosticsDisplay(props:any){
                 return(
                     <p key={`diagnostics_suggested_next_step_${eachNextStep}`}
                         className={`${css.diagnostics_display_each_next_step_content}`}
-                        onClick={clickCopyToClipboard}
+                        // onClick={clickCopyToClipboard}
                     >
-                        <span className="function_name">{eachNextStep}</span> 
-                        <FontAwesomeIcon icon={faCopy} />
+                        <span className="function_name">{eachNextStep}</span>
+                        <span className={`${css.next_step_function_btn}`} onClick={()=>{runDiagnostics(eachNextStep)}}>Run</span>
+                        <span className={`${css.next_step_function_btn}`} onClick={clickCopyToClipboard}>
+                            Copy
+                        </span>
                     </p>
                 )
             })
         }
         
+        // basic on currentIssueNextStepsNameList which is nextSteps function name array to update setDiagnosticsRunFnNameListState
+        // this is in useEffect, to prevent warning error update other component will render this component
     }
+
+    /**
+     * @description click run diagnostics by pass suggested next function name to api and return running result
+     * @param whichFunction when click on suggested next steps function name will auto pass in this functions
+     */
+    async function runDiagnostics(whichFunction:string){
+        try{
+            // validate if whichFunction param is there
+            if(!whichFunction) return;
+            setDiagnosticsRunnerDisplayState(whichFunction)
+            // initial function name by remove () in function
+            let functionName:string = whichFunction.replace("(", "").replace(")", "");
+            // build api call url
+            const post_diagnostics_runner_url:string = `http://localhost:49999/api/post_diagnostics_runner`;
+            // build api call body
+            const body = {function_name: functionName};
+            // api call return diagnostics runner result or error
+            const result = await axios.post(post_diagnostics_runner_url, body);
+            const diagnosticsFunctionRunnerResult = result.data;
+            // update diagnosticsNextStepsOutPut
+            setDiagnosticsNextStepsOutputState((prev:any)=>{
+                // copy state
+                const copyState = {...prev}
+                // when there has no whichFunction as key in state make one value as empty array
+                if(!copyState[whichFunction]){
+                    copyState[whichFunction] = [];
+                }
+                // when there is whichFunction as key in state, just push the diagnosticsFunctionRunnerResult to it
+                if(copyState[whichFunction]){
+                    copyState[whichFunction].push(diagnosticsFunctionRunnerResult)
+                }
+                // update state by return copyState
+                return copyState
+            })
+
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    useEffect(()=>{
+        // basic on currentIssueNextStepsNameList which is nextSteps function name array to update setDiagnosticsRunFnNameListState
+        for(let i = 0; i < currentIssueNextStepsNameList.length; i++){
+            if(!diagnosticsRunFnNameListState.includes(currentIssueNextStepsNameList[i])){
+                const newDiagnosticsNextStepsFunctionName = currentIssueNextStepsNameList[i];
+                setDiagnosticsRunFnNameListState((prev: Array<String>)=>{
+                    const copyState = prev.map(el=>el);
+                    copyState.push(newDiagnosticsNextStepsFunctionName)
+                    return copyState
+                })
+            }
+        }
+    },[currentIssueNextStepsNameList])
 
     return(
         <div className={`${css.diagnostics_display_main_container}`}>
@@ -128,7 +191,7 @@ export default function DiagnosticsDisplay(props:any){
                 { 
                     whichIssue == "structural" || !whichIssue ? 
                         modelStatisticsStructuralDisplay : 
-                        jocabianCondationDisplay
+                        jacobianConditionDisplay
                 }
             </div>
             {/*Warning and Cautions*/}
@@ -174,7 +237,7 @@ function clickCopyToClipboard(event:React.MouseEvent<HTMLParagraphElement, Mouse
      */
     // let contentWillCopy:null | HTMLElement = null;
     let target = event.currentTarget as HTMLElement;
-    let contentWillCopy = target.querySelector('.function_name');
+    let contentWillCopy = target.parentElement!.querySelector('.function_name');
 
     // make sure contentWillCopy is there or return
     if(!contentWillCopy){
