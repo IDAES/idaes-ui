@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AppContext } from '@/context/appMainContext';
 import { Mosaic, MosaicWindow } from 'react-mosaic-component';
 import { Button, Classes, Intent, Icon } from '@blueprintjs/core';
@@ -47,7 +47,7 @@ const TITLE_MAP:any = {
 
 const MosaicApp = () => {
     // extract context
-    const {panelState, fvHeaderState, setFvHeaderState} = useContext(AppContext)
+    const {panelState, fvHeaderState, setFvHeaderState, diagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState} = useContext(AppContext)
     const isShowSteamName = fvHeaderState.isShowSteamName;
     const isShowLabels = fvHeaderState.isShowLabels;
 
@@ -55,7 +55,7 @@ const MosaicApp = () => {
         // initial default toobarBtn use fragment
         let toolBarBtn = <></> 
         // conditionally render toolbarBtn
-        toolBarBtn = conditionallyRenderBtn(id, showSteamNameHandler, showLabelsHandler, isShowSteamName, isShowLabels)
+        toolBarBtn = conditionallyRenderBtn(id, showSteamNameHandler, showLabelsHandler, isShowSteamName, isShowLabels, diagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState)
         
         return (
             <MosaicWindow<ViewId>
@@ -142,7 +142,7 @@ const MosaicApp = () => {
  * @param isShowLabels bool
  * @returns 
  */
-function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, showLabelsHandler:() => void, isShowSteamName:boolean, isShowLabels:boolean){
+function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, showLabelsHandler:() => void, isShowSteamName:boolean, isShowLabels:boolean, nextStepsFunctionNameList:String[], setDiagnosticsRunnerDisplay:any){
     /**
      *  use id from Mosaic > renderTile callback to conditionally render toolbar btn
      *  Args:
@@ -230,10 +230,18 @@ function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, show
             </div>
             break;
         case "diagnosticsRunner":
-            const options = [1,2,3,4,5].map((el, index)=><option value="" key={`diagnosticsRunnerSelection${el}`}>{el}</option>)
+            const options = nextStepsFunctionNameList.map((el, index)=><option value={`${el}`} key={`diagnosticsRunnerSelection${el}`}>{el}</option>)
+            /**
+             * @description handle diagnostics runner displayer header selector change update diagnosticsRunnerDisplay value in context to decide which 
+             * runned next steps to display
+             * @param event select element change event
+             */
+            function diagnosticsRunnerSelectChangeHandler(event:React.ChangeEvent<HTMLSelectElement>){
+                setDiagnosticsRunnerDisplay(event.currentTarget.value)
+            }
             return(
                 <div className="mosaic_toolbar_btn_container">
-                    <select name="diagnosticsRunnerSelection" id="" className="mosaic_diagnosticsRunner_select">
+                    <select name="diagnosticsRunnerSelection" id="" className="mosaic_diagnosticsRunner_select" onChange={diagnosticsRunnerSelectChangeHandler}>
                         <option value="default">Select a function</option>
                         {options}
                     </select>
