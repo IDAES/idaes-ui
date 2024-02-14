@@ -67,7 +67,9 @@ export function AppContextProvider({ children }: { children: ReactNode }){
   /**
    * Context for diagnostics
    */
-  const [diagnosticsRunFnState, setDiagnosticsRunFnState] = useState("");
+  const [diagnosticsNextStepsOutputState, setDiagnosticsNextStepsOutputState] = useState({});
+  const [diagnosticsRunFnNameListState, setDiagnosticsRunFnNameListState] = useState([]);
+  const [diagnosticsRunnerDisplayState, setDiagnosticsRunnerDisplayState] = useState<String>("");
 
   /**
    * Context for variables
@@ -92,8 +94,14 @@ export function AppContextProvider({ children }: { children: ReactNode }){
       fvHeaderState,
       setFvHeaderState,
       //diagnostics run function state
-      diagnosticsRunFnState,
-      setDiagnosticsRunFnState,
+      diagnosticsRunFnNameListState,
+      setDiagnosticsRunFnNameListState,
+      //diagnostics next step output state
+      diagnosticsNextStepsOutputState,
+      setDiagnosticsNextStepsOutputState,
+      // diagnostics display which content to display
+      diagnosticsRunnerDisplayState,
+      setDiagnosticsRunnerDisplayState,
       //variables
       variablesExpandState,
       setVariablesExpandState,
