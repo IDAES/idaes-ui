@@ -29,8 +29,8 @@ export default function FlowsheetHeader(){
   }
 
   return(
-    <div className={`pd-md ${css.flowsheetHeader_main_container}`}>
-      <p className={css.flowsheetHeader_title}>FLOWSHEET</p>
+    <div id="flowsheet-header-component" className={`pd-md ${css.flowsheetHeader_main_container}`}>
+      <p id="flowsheet-header-component-title" className={css.flowsheetHeader_title}>FLOWSHEET</p>
       <div className={css.flowsheetHeader_icon_container}>
         <span id="stream-names-toggle"
               className={`pd-sm ${css.flowsheet_header_icon_container}`}
@@ -70,12 +70,14 @@ export default function FlowsheetHeader(){
           <FontAwesomeIcon icon={faExpand} />
         </span>
         <span 
+          id="maximize-flowsheet-panel-btn"
           className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_small_icon}`}
           onClick={()=>maxmizePanel('fv', setPanelState)}
           >
           <FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
         </span>
         <span 
+          id="minimize-flowsheet-panel-btn"
           className={`pd-sm ${css.flowsheet_header_icon_container} 
           ${css.flowsheetHeader_small_icon}`}
           onClick={()=>minimizePanel('fv', setPanelState)}
