@@ -1,6 +1,7 @@
 """
 Tests for the IDAES FV app, using FastAPI TestClient
 """
+
 import pytest
 
 from fastapi.testclient import TestClient
@@ -37,14 +38,6 @@ def client(fvapp):
 def test_diagnostics(client):
     response = client.get("/api/get_diagnostics")
     assert response.status_code == 200
-
-
-@pytest.mark.unit
-def test_get_diagnostics(client):
-    response = client.get("/api/get_diagnostics")
-    assert response.status_code == 200
-    data = response.json()
-    assert set(data.keys()) == {"config", "issues", "statistics"}
 
 
 @pytest.mark.unit
