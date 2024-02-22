@@ -120,11 +120,11 @@ export class Toolbar {
    * create zoom events handler
    */
   zoomInEvent = () =>{
-        this._paper.paperScroller.zoom(0.2, { max: 100 });
+        this._paper.paperScroller.zoom(0.1, { max: 100 });
   }
 
   zoomOutEvent = () =>{
-    this._paper.paperScroller.zoom(-0.2, { min: 0 });
+    this._paper.paperScroller.zoom(-0.1, { min: 0.01 });
   }
 
   zoomFitEvent = () =>{
