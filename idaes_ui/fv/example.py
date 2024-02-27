@@ -4,6 +4,7 @@ Simple example for Flowsheet Visualizer (FV).
 To change logging level, set the FV_LOG_LEVEL environment variable
 to a numeric or string value that matches one of the standard Python logging levels.
 """
+
 __author__ = "Dan Gunter"
 
 # stdlib
