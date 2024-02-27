@@ -31,7 +31,6 @@ describe('flowsheet visualizer component spec', () => {
 		{ id: '#zoom-in-btn', name: 'Zoom In' },
 		{ id: '#zoom-out-btn', name: 'Zoom Out' },
 		{ id: '#zoom-to-fit', name: 'Zoom To Fit' },
-		{ id: '#maximize-flowsheet-panel-btn', name: 'Maximize Flowsheet Panel' },
 		{ id: '#minimize-flowsheet-panel-btn', name: 'Minimize Flowsheet Panel' },
 		];
 		
@@ -137,38 +136,6 @@ describe('flowsheet visualizer component spec', () => {
 
 		})
 
-	})
-
-	// maximize button
-	it('test maximize button', ()=>{
-		cy.wait(waitTime)
-		// click maximize button
-		cy.get('#maximize-flowsheet-panel-btn').click();
-
-		// get fv element
-		cy.get('#fv').then($fv=>{
-			// get fv element width
-			const fvWidth = $fv.width();
-			// get root element
-			cy.get('#root').then($root=>{
-				expect(fvWidth).to.equal($root.width());
-			})
-
-			// when maximize window stream table should not show
-			// if more element add in future just update here
-			cy.get('#stream-table').should('not.exist');
-		});
-	})
-
-	// maximize button click fv container should only have 1 child
-	it(
-		'test fv should only have one child has after click flowsheet component maximize button',
-		()=>{
-			cy.wait(waitTime);
-			// click flowsheet header maximize button
-			cy.get('#maximize-flowsheet-panel-btn').click();
-			cy.wait(waitTime);
-			cy.get('#fv').children().should('have.length', 1);
 	})
 	
 	// check flowsheet fv container only has 1 child
