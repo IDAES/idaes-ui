@@ -70,13 +70,6 @@ export default function FlowsheetHeader(){
           <FontAwesomeIcon icon={faExpand} />
         </span>
         <span 
-          id="maximize-flowsheet-panel-btn"
-          className={`pd-sm ${css.flowsheet_header_icon_container} ${css.flowsheetHeader_small_icon}`}
-          onClick={()=>maxmizePanel('fv', setPanelState)}
-          >
-          <FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
-        </span>
-        <span 
           id="minimize-flowsheet-panel-btn"
           className={`pd-sm ${css.flowsheet_header_icon_container} 
           ${css.flowsheetHeader_small_icon}`}
