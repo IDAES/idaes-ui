@@ -102,6 +102,9 @@ export class MainFV {
         console.log(error.message);
         console.log(error.response.status);
     });
+
+    // cleanup #fv container extra joint paper element
+    this.fvExtraContentCleanUp()
   }
 
   /**
@@ -324,5 +327,31 @@ export class MainFV {
       });
 
       axios.post(this.saveFSUrl, JSON.stringify({save_flowsheet_model:true})).then(res=>res).then(data => console.log(data))
+    }
+
+    /**
+     * @Description This function help check if fv has mutiple children,
+     * if has will remove all children and keep the last one.
+     * 
+     * @Reason When react render, will create a new instence of MainFv,
+     * it will create a new fv display stack under the old one.
+     * this behivor cause zoom in and out btn not working so we need to clear all
+     * fv display other than the last one.
+     * 
+     * @returns void
+     */
+    fvExtraContentCleanUp(){
+      let fv = document.getElementById("fv");
+
+      //validation if fv and fv has mutiple child
+      if(!fv || fv.childNodes.length <= 1){
+          return;
+      }
+      
+      //get fv last child and remove others
+      let lastFvChild = fv.childNodes[fv?.childNodes.length - 1]
+      while(fv.firstChild !== fv.lastChild){
+          fv.removeChild(fv.firstChild as Node)
+      }
     }
 }
