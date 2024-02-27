@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlassPlus, faMagnifyingGlassMinus,faExpand, faUpRightAndDownLeftFromCenter, faMinus, faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons'
 
 import {FvHeaderStateInterface} from "../../../../interface/appMainContext_interface";
-import {minimizePanel, maxmizePanel} from "../flowsheet_functions/universal_functions";
+import { minimizePanel } from "../flowsheet_functions/universal_functions";
 import css from "./flowsheet_header.module.css";
 
 export default function FlowsheetHeader(){
