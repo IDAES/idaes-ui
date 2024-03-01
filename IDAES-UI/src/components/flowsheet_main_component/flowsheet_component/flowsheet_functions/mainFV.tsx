@@ -43,6 +43,7 @@ export class MainFV {
   _save_time_interval:any;
   stream_table:any;
   toolbar: any;
+  cleanToolBarEvent: any;
 
 
   constructor (flowsheetId:any, port:string | number, isFvShow:boolean, isVariablesShow:boolean, isStreamTableShow:boolean) {
@@ -83,7 +84,6 @@ export class MainFV {
      */
     axios.get(this.getFSUrl)
     .then((response) => {
-        console.log(this.getFSUrl)
         //get data from python server /fs
         this.model = response.data;
         //debug when flowsheet has no position it should not stack on each other
@@ -93,7 +93,10 @@ export class MainFV {
         //render stream table
         //if statment control when stream table not show the stream table should not render
         if(isStreamTableShow) this.stream_table = new StreamTable(this, this.model);
+        // new this.toolbar
         this.toolbar = new Toolbar(this, this.paper, this.stream_table, this.flowsheetId, this.getFSUrl,this.putFSUrl, this.isFvShow);
+        // get toolbar event cleanup function
+        this.cleanToolBarEvent = this.toolbar.cleanUpEvent;
     })
     .catch((error) => {
         console.log(error.message);
