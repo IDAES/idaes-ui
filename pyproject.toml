@@ -7,15 +7,14 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-    name = "idaes-ui"
-    description = "IDAES PSE Platform UI"
+    name = "prommis_workspace"
+    description = "prommis workspace"
     readme = "README.md"
-    version = "0.23.8" #Version format 0.YY.MM
+    version = "0.23.11" #Version format 0.YY.MM
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
-        {name="The IDAES Project"},
-        {name="Dan Gunter", email="dkgunter@lbl.gov"}
+        {name="The Prommis Project"}
     ]
     classifiers = [
             "Development Status :: 3 - Alpha",
@@ -42,8 +41,6 @@ build-backend = "setuptools.build_meta"
         "setuptools",
         # For running tests
         "pytest",
-        # dependency 'requests' module for standalone idaes-ui package
-        "requests"
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
@@ -51,7 +48,8 @@ build-backend = "setuptools.build_meta"
 # Just for developers (they should also add 'jb')
 dev = [
     # For adding copyright headers (see addheader.yml and the readme)
-    "addheader >= 0.3.0"
+    "addheader >= 0.3.0",
+    # Dev versions of idaes/idaes-ui in requirements-dev.txt
 ]
 # For packaging
 pkg = [
@@ -60,8 +58,8 @@ pkg = [
 ]
 
 [project.urls]
-github = "https://github.com/idaes/idaes-ui"
-issues = "https://github.com/idaes/idaes-ui/issues"
+github = "https://github.com/prommis/workspace"
+issues = "https://github.com/prommis/workspace/issues"
 
 [tool.setuptools]
 include-package-data = true
@@ -71,7 +69,7 @@ zip-safe = false
 find = {namespaces = false}
 
 [tool.setuptools.package-data]
-idaes_ui = [
+prommis = [
     "*.template",
     "*.json",
     "*.yaml",
@@ -88,14 +86,13 @@ idaes_ui = [
     "*.dat",
     "*.yml",
     "*.yaml",
-    "fv/static/lib/**/*"
 ]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra"
 testpaths = [
-    "idaes_ui"
+    "prommis_workspace"
 ]
 markers = [
     "component: between unit and integration test",

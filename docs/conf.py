@@ -20,11 +20,12 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # HTML
+static_dir = "static"
 html_theme = "sphinx_book_theme"
-html_static_path = ["_static"]
-html_logo = "_static/logo.png"
+html_static_path = [static_dir]
+html_logo = "static/logo.png"
 html_theme_options = {
-    "logo": {"image_light": "_static/logo.png", "image_dark": "_static/logo.png"},
+    "logo": {"image_light": f"{static_dir}/logo.png", "image_dark": f"{static_dir}/logo.png"},
     "repository_provider": "github",
     "repository_url": "https://github.com/IDAES/idaes-ui",
     "use_repository_button": True,
