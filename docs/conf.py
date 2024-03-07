@@ -36,6 +36,7 @@ html_theme_options = {
 myst_heading_anchors = 3
 myst_enable_extensions = [
     "deflist",  # definition lists
+    "attrs_inline", # inline attributes on images using MD syntax
 ]
 
 # Autodoc

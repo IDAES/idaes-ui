@@ -5,7 +5,7 @@ This documentation describes user interfaces (UIs) for the
 Integrated Platform, which are distributed through the [idaes-pse](https://pypi.org/project/idaes-pse/)
 package on PyPI.
 
-This documentation is divided into two main sections
+This documentation is divided into two main sections:
 
 [User Documentation](#user-documentation)
 : For those who wish to use the UIs, including IDAES and other model developers who are using, e.g., the Flowsheet Visualizer UI for debugging.
@@ -17,6 +17,9 @@ This documentation is divided into two main sections
 ---
 hidden: true
 ---
-user/index.md
-developer/index.md
+user/index
+developer/index
+contacts
 ```
+
+Links and contact information for both users and developers are on the [Contacts](#contacts) page. 
