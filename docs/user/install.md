@@ -1,14 +1,11 @@
 # Installation
 
-Below are installation instructions for installing IDAES UIs.
-More details on overall IDAES installation and usage 
-are on the [IDAES documentation](https://idaes-pse.readthedocs.io/en/stable/) site.
-
-If you want to use the UIs (not develop new code),
-then use `pip` to install the software as part of the 
-IDAES Integrated Platform (IDAES-IP).
+To install the UI as a user, include the optional '[ui]' dependency as you install
+the main IDAES Process Systems (IDAES-PSE) code.
 
 ```shell
 pip install "idaes-pse[ui]"
 ```
+
+Please see the [IDAES-PSE installation instructions](https://idaes-pse.readthedocs.io/en/latest/tutorials/getting_started/) for details on installing IDAES-PSE for your platform.
 
