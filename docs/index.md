@@ -1,9 +1,8 @@
 # IDAES User Interface Documentation
 
 This documentation describes user interfaces (UIs) for the
-<a href="https://idaes.org" target="_blank">Institute for Design of Advanced Energy Systems (IDAES)</a>
-Integrated Platform, which are distributed through the [idaes-pse](https://pypi.org/project/idaes-pse/)
-package on PyPI.
+Institute for Design of Advanced Energy Systems (IDAES)
+Integrated Platform.
 
 This documentation is divided into two main sections:
 
@@ -19,7 +18,8 @@ hidden: true
 ---
 user/index
 developer/index
+collab
 contacts
 ```
 
-Links and contact information for both users and developers are on the [Contacts](#contacts) page. 
+Links and contact information for both users and developers are on the [Contacts](#contacts) page.
