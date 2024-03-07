@@ -1,6 +1,7 @@
 """
 Tests for the diagnostics models
 """
+
 import pytest
 from ..diag import DiagnosticsData
 from . import flowsheet
