@@ -46,7 +46,6 @@ export default function MinimizedBar(){
       const newState = {...prevState}
       Object.keys(newState).forEach((objKey:string)=>{
         if(newState[objKey].panelName === panelName){
-          console.log(newState[objKey])
           newState[objKey].show = !newState[objKey].show
         }
       })
