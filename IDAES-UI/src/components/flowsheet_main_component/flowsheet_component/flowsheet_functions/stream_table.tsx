@@ -143,6 +143,10 @@ export class StreamTable {
         // Get the hide fields list
         const hide_fields_list = document.querySelector("#hide-fields-list");
 
+        // reset hide_fields_list innerHTML to empty for prevent accumulating duplicate list items.
+        if(hide_fields_list){
+            hide_fields_list.innerHTML = "";
+        }
         // Specify the column headers
         let columns = stream_table_data["columns"];
         let column_defs = [];

@@ -31,13 +31,17 @@ export class Toolbar {
   getFSUrl: string;
   putFSUrl:string;
   isFvShow:boolean;
+  zoomRate:number;
 
   toggleStreamNameBtn:HTMLElement | undefined;
   toggleLabelsBtn:HTMLElement | undefined;
 
   zoomInBtn:HTMLElement | undefined;
   zoomOutBtn:HTMLElement | undefined;
-  zoomToFitBtn: HTMLElement | undefined;
+  zoomFitBtn: HTMLElement | undefined;
+  zoomInHandler: (() => void) | undefined;
+  zoomOutHandler: (() => void) | undefined;
+  zoomFitHandler: (() => void) | undefined;
 
   constructor(app:any, paper:any, stream_table:any | undefined, flowsheetId:string, getFSUrl:string, putFSUrl:string, isFvShow:boolean) {
     //initial arguments
@@ -48,6 +52,10 @@ export class Toolbar {
     this.getFSUrl = getFSUrl;
     this.putFSUrl = putFSUrl;
     this.isFvShow = isFvShow;
+    this.zoomRate = 0.2;
+    this.zoomInHandler = undefined;
+    this.zoomOutHandler = undefined;
+    this.zoomFitHandler = undefined;
     // this.setupPageToolbar();
     // this.setupFlowsheetToolbar(); 
 
@@ -60,9 +68,16 @@ export class Toolbar {
 
     //call & register click event to save flowsheet
     this.registerEventSave(this.putFSUrl)
-    
+
+    /**
+     * Tool bar zoom in out and fit
+     */
     //isFvShow repersent stream name, labels, zoom in, zoom out, zoom fit btn
     //if !isFvShow these event has no need to register event
+
+    this.zoomInBtn = document.querySelector("#zoom-in-btn") as HTMLElement;
+    this.zoomOutBtn = document.querySelector("#zoom-out-btn") as HTMLElement;
+    this.zoomFitBtn = document.querySelector("#zoom-to-fit") as HTMLElement;
     if(isFvShow){
         /**
          * Tool bar stream names toggle
@@ -85,14 +100,11 @@ export class Toolbar {
         /**
          * Tool bar zoom in out and fit
          */
-        //initial zoom btn from selector assign to this
-        this.zoomInBtn = document.querySelector("#zoom-in-btn") as HTMLElement;
-        this.zoomOutBtn = document.querySelector("#zoom-out-btn") as HTMLElement;
-        this.zoomToFitBtn = document.querySelector("#zoom-to-fit") as HTMLElement;
+        //registerZoomEvent
         //call registerZoomEvent function, register 3 zoom events to zoom in zoom out zoom to fit btn on dom
         //when button is not exist it should not register event, one example is isFvShow = false
-        if(this.zoomInBtn && this.zoomOutBtn && this.zoomToFitBtn){
-            this.registerZoomEvent(this.zoomInBtn, this.zoomOutBtn, this.zoomToFitBtn);
+        if(this.zoomInBtn && this.zoomOutBtn && this.zoomFitBtn){
+            this.registerZoomEvent(this.zoomInBtn, this.zoomOutBtn, this.zoomFitBtn);
         }
     }
   }
@@ -104,21 +116,32 @@ export class Toolbar {
    * @param zoomOutBtn HTML element, selected by ID zoom-out-btn
    * @param zoomToFitBtn HTML element, selected by ID zoom-to-fit
    */
-  registerZoomEvent(zoomInBtn:HTMLElement, zoomOutBtn:HTMLElement, zoomToFitBtn:HTMLElement){
+  registerZoomEvent(zoomInBtn:HTMLElement, zoomOutBtn:HTMLElement, zoomFitBtn:HTMLElement){
+    this.zoomInHandler = () => this.zoomInEvent(this._paper.paperScroller, this.zoomRate);
+    this.zoomOutHandler = () => this.zoomOutEvent(this._paper.paperScroller, this.zoomRate);
+    this.zoomFitHandler = () => this.zoomFitEvent();
+
     // Zoom in event listener
-    zoomInBtn.addEventListener("click", () => {
-        this._paper.paperScroller.zoom(0.2, { max: 4 });
-    });
-
+    zoomInBtn.addEventListener("click", this.zoomInHandler as EventListener);
     // Zoom out event listener
-    zoomOutBtn.addEventListener("click", () => {
-        this._paper.paperScroller.zoom(-0.2, { min: 0.2 });
-    });
-
+    zoomOutBtn.addEventListener("click", this.zoomOutHandler as EventListener);
     // Zoom to fit event listener
-    zoomToFitBtn.addEventListener("click", () => {
-        this._paper.zoomToFit();
-    });
+    zoomFitBtn.addEventListener("click", this.zoomFitHandler as EventListener);
+  }
+
+  /**
+   * create zoom events handler
+   */
+  zoomInEvent(paperScroller:any, zoomRate:number){
+        paperScroller.zoom(zoomRate, { max: 100 });
+  }
+
+  zoomOutEvent(paperScroller:any, zoomRate:number){
+    paperScroller.zoom(-(zoomRate), { min: 0.01 });
+  }
+
+  zoomFitEvent(){
+    this._paper.zoomToFit();
   }
 
   /**
@@ -216,5 +239,31 @@ export class Toolbar {
         document.querySelector("#save_btn")!.addEventListener("click", () => {
             this._app.saveModel(save_url, this._paper.graph);
         });
+    }
+
+    /**
+     * Description: clean up event, when react update state new class instance will be created
+     * event listener will double registered, have to remove them to prevent multiple event trigger at one click issue.
+     * 
+     * this remove event by clone current node and replace the old node, way to reset event.
+     */
+
+    cleanUpEvent(){
+        let zoomInBtn = document.getElementById('zoom-in-btn');
+        let zoomOutBtn = document.getElementById('zoom-out-btn');
+        let zoomFitBtn = document.getElementById('zoom-to-fit');
+
+        if(zoomInBtn){
+            let zoomInBtnClone = zoomInBtn.cloneNode(true);
+            zoomInBtn.parentNode!.replaceChild(zoomInBtnClone, zoomInBtn);
+        };
+        if(zoomOutBtn){
+            let zoomOutBtnClone = zoomOutBtn.cloneNode(true);
+            zoomOutBtn.parentNode!.replaceChild(zoomOutBtnClone, zoomOutBtn);
+        };
+        if(zoomFitBtn){
+            let zoomFitBtnClone = zoomFitBtn.cloneNode(true);
+            zoomFitBtn.parentNode!.replaceChild(zoomFitBtnClone, zoomFitBtn);
+        };
     }
 }

@@ -25,14 +25,14 @@ export function minimizePanel(panelStatekey:string, setState:setPanelState){
  * @param panelStateKey string, the key of panelState, which panel you want to maxmize
  * @param setState callback fn, setPanelState, read from context
  */
-export function maxmizePanel(panelStateKey:string, setState:setPanelState){
-  setState((prevState:PanelStateInterface)=>{
-    const newState = {...prevState};
-    Object.keys(newState).forEach((objKey:string)=>{
-      if(objKey !== panelStateKey){
-        newState[objKey].show = false;
-      }
-    })
-    return newState;
-  })
-}
+// export function maxmizePanel(panelStateKey:string, setState:setPanelState){
+//   setState((prevState:PanelStateInterface)=>{
+//     const newState = {...prevState};
+//     Object.keys(newState).forEach((objKey:string)=>{
+//       if(objKey !== panelStateKey){
+//         newState[objKey].show = false;
+//       }
+//     })
+//     return newState;
+//   })
+// }
