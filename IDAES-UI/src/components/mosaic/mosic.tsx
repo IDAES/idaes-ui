@@ -127,7 +127,7 @@ const MosaicApp = () => {
                     second:'diagnosticsRunner',
                     splitPercentage: panelState.diagnostics.show ? 0 : 100 // diagnostics runner with will only show 100 when diagnostics is enabled
                 },
-                splitPercentage: 70,
+                splitPercentage: 60,
             }}
         />
     );
