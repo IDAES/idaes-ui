@@ -1,6 +1,6 @@
 # Installation
 
-To install the UI as a user, include the optional '[ui]' dependency as you install
+To install the {{ vistitle }} UI as a user, include the optional '[ui]' dependency as you install
 the main IDAES Process Systems (IDAES-PSE) code.
 
 ```shell
