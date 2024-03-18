@@ -34,7 +34,7 @@ export default function StreamTableHeader(){
             </ul>
           </div>
           <span 
-            id="minimize-flowsheet-panel-btn"
+            id="minimize-streamtable-panel-btn"
             className={`pd-sm ${css.flowsheet_header_icon_container} 
             ${css.flowsheetHeader_small_icon}`}
             onClick={()=>minimizePanel('streamTable', setPanelState)}
