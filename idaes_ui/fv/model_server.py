@@ -42,19 +42,8 @@ _this_dir = Path(__file__).parent.absolute()
 # old web dir
 # this can be switch by add param ?app=old in url to enable old site
 # logic is in do_GET()
-# _static_dir = _this_dir / "static"
-# _template_dir = _this_dir / "templates"
-
-# react app dir
-_static_dir = _this_dir / "../../IDAES-UI/dist/"
-_template_dir = _this_dir / "../../IDAES-UI/dist/"
-
-# Dev switch between old site and new site
-enableOldSite = False
-# enableOldSite = True
-if enableOldSite:
-    _static_dir = _this_dir / "static"
-    _template_dir = _this_dir / "templates"
+_static_dir = _this_dir / "static"
+_template_dir = _this_dir / "static"
 
 
 class FlowsheetServer(http.server.HTTPServer):
@@ -86,12 +75,6 @@ class FlowsheetServer(http.server.HTTPServer):
         """Start the server, which will spawn a thread."""
         self._thr = threading.Thread(target=self._run, daemon=True)
         self._thr.start()
-
-        # create shared JSON file
-        # define file path for shared_variable.json for React
-        root = "./shared_variable.json"
-        IDAES_UI_path = "./IDAES-UI/src/context/shared_variable.json"
-        pathDic = [root, IDAES_UI_path]
 
     def add_setting(self, key: str, value):
         """Add a setting to the flowsheet's settings block. Settings block is

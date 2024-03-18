@@ -27,7 +27,11 @@ export default function FlowsheetWrapper(){
     //get server port base on UI port number, vite running on 5173 on dev
     server_port == "5173" ? server_port ="8099" : server_port = server_port;
     //when template loaded then render flowsheet, variable, stream table to page with minFV class.
-    new MainFV(fv_id, server_port, isFvShow, false, isStreamTableShow); //The false is placeholder for isVariableShow, now variable panel is not show
+    const fv = new MainFV(fv_id, server_port, isFvShow, false, isStreamTableShow); //The false is placeholder for isVariableShow, now variable panel is not show
+    
+    return ()=>{
+        fv.cleanToolBarEvent()
+    }
   },[isFvShow, isStreamTableShow])
 
   return(
