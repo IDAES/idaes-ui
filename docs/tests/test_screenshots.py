@@ -1,5 +1,9 @@
 """
-Generate UI screenshots with Playwright's pytest plugin
+Generate UI screenshots with Playwright's pytest plugin.
+
+Run `pytest -s -m screenshot` to generate the screenshots in the directory 'docs/static/fv'.
+See :class:`Screenshot.filename` for the naming convention.
+
 """
 # stdlib
 from enum import Enum
@@ -61,8 +65,6 @@ class ScreenShot:
             ValueError: if there is not at least 1 element
         """
         self._sorted_elements = [e.value for e in elements]
-        if len(self._sorted_elements) == 0:
-            raise ValueError("At least one value required for 'elements'")
         self._sorted_elements.sort()
         self._mode = mode
         self._cached_filename = None
@@ -79,13 +81,20 @@ class ScreenShot:
 
         Pattern: `fv-<mode>_<element1>_<element2>..._<elementN>.<ext>`
 
+        Where <mode> is the value of an instance of ScreenMode
+        and <elementN> is the value of an instance of ScreenElement.
+        The <element> items are in alphabetical order.
+
         Returns:
             Filename
         """
         if self._cached_filename is None:
             base = f"fv-{self._mode.value}"
-            elements = "_".join(self._sorted_elements)
-            self._cached_filename = f"{base}_{elements}.{self._ext}"
+            if len(self._sorted_elements) == 0:
+                elements = ""
+            else:
+                elements = "_" + "_".join(self._sorted_elements)
+            self._cached_filename = f"{base}{elements}.{self._ext}"
         return self._cached_filename
 
     @property
@@ -115,26 +124,38 @@ def fv():
     return fv
 
 
-def load(page, fv, sleep=5):
+def load(page, fv):
     """Custom wait, for diagram to render after page starts.
     """
     page.goto(fv.url)
-    time.sleep(sleep)  # there should be a better way, but whatever
     loc = page.locator("svg[joint-selector='svg']")
     expect(loc).to_have_id("v-2")
 
 # Generate screenshots with 'tests'
 
 
+@pytest.mark.unit
 def test_basic(page: Page, fv: FVExample):
-    load(page, fv, sleep=1)
+    load(page, fv)
 
     # Expect a title "to contain" a substring.
     expect(page).to_have_title(re.compile("idaes flowsheet visualizer", flags=re.I))
 
 
+def pause():
+    """There *must* be a better way to do this, but this works for screenshots..
+    """
+    print("Begin: pause for page to update")
+    time.sleep(10)
+    print("End: pause for page to update")
+
+
+@pytest.mark.screenshot
 def test_screenshots_view(page: Page, fv: FVExample):
+    """Generate screenshots for different panel view options.
+    """
     load(page, fv)
+    pause()
 
     # default view
     scs = ScreenShot(
@@ -142,7 +163,29 @@ def test_screenshots_view(page: Page, fv: FVExample):
         elements=[ScreenElement.flowsheet_diagram, ScreenElement.stream_table],
     )
     print(f"creating screenshot in path: {scs.filepath}")
+    pause()
     page.screenshot(path=scs.filepath)
 
-    # deactivate the stream table
-    # XXX: not done
+    # minimize stream table
+    btn = page.locator("#minimize-streamtable-panel-btn")
+    btn.wait_for()
+    btn.click()
+    scs = ScreenShot(
+        mode=ScreenMode.view,
+        elements=[ScreenElement.flowsheet_diagram],
+    )
+    print(f"creating screenshot in path: {scs.filepath}")
+    pause()
+    page.screenshot(path=scs.filepath)
+
+    # minimize flowsheet too (!)
+    btn = page.locator("#minimize-flowsheet-panel-btn")
+    btn.wait_for()
+    btn.click()
+    scs = ScreenShot(
+        mode=ScreenMode.view,
+        elements=[],
+    )
+    print(f"creating screenshot in path: {scs.filepath}")
+    pause()
+    page.screenshot(path=scs.filepath)
