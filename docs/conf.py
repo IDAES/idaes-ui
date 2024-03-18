@@ -37,7 +37,13 @@ myst_heading_anchors = 3
 myst_enable_extensions = [
     "deflist",  # definition lists
     "attrs_inline", # inline attributes on images using MD syntax
+    "substitution", # for global substitutions; see myst_substitutions
 ]
+myst_substitutions = {
+    # Change these two lines to rename the Flowsheet Visualizer (!)
+    "vistitle": "Flowsheet Visualizer",
+    "visabbr": "FV",
+}
 
 # Autodoc
 autosummary_generate = True
