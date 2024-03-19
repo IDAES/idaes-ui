@@ -8,3 +8,4 @@ httpx  # fastapi testing
 # for testing w/playwright
 playwright==1.42.0
 pytest-playwright==0.4.4
+requests==2.31.0
