@@ -44,6 +44,7 @@ build-backend = "setuptools.build_meta"
         "playwright==1.42.0",
         "pytest-playwright==0.4.4",
         "requests==2.31.0",
+        "pydantic",
     ]
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
