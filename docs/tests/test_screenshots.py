@@ -18,7 +18,7 @@ import pytest
 
 # package
 from idaes.models.flowsheets.demo_flowsheet import build_flowsheet
-from idaes_ui.fv import visualize
+from idaes_ui.fv import visualize, fsvis
 
 __author__ = "Dan Gunter"
 __created__ = "2024-03-18"
@@ -111,6 +111,10 @@ class FVExample:
 
     def __init__(self):
         model = build_flowsheet()
+        # shutdown any running instance before we start
+        if fsvis.web_server and fsvis.web_server.port != self.port:
+            fsvis.web_server.shutdown()
+            fsvis.web_server = None
         visualize(model.fs, self.app, port=self.port, browser=False)
 
     @property

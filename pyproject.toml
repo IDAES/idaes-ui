@@ -7,14 +7,14 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-    name = "prommis_workspace"
-    description = "prommis workspace"
+    name = "idaes-ui"
+    description = "IDAES UI"
     readme = "README.md"
-    version = "0.23.11" #Version format 0.YY.MM
+    version = "0.24.03" #Version format 0.YY.MM
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
-        {name="The Prommis Project"}
+        {name="The IDAES Project"}
     ]
     classifiers = [
             "Development Status :: 3 - Alpha",
@@ -58,8 +58,8 @@ pkg = [
 ]
 
 [project.urls]
-github = "https://github.com/prommis/workspace"
-issues = "https://github.com/prommis/workspace/issues"
+github = "https://github.com/idaes/idaes-ui"
+issues = "https://github.com/idaes/idaes-ui/issues"
 
 [tool.setuptools]
 include-package-data = true
@@ -69,7 +69,7 @@ zip-safe = false
 find = {namespaces = false}
 
 [tool.setuptools.package-data]
-prommis = [
+idaes_ui = [
     "*.template",
     "*.json",
     "*.yaml",
@@ -90,12 +90,14 @@ prommis = [
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra"
+addopts = "-q"
 testpaths = [
-    "prommis_workspace"
+    "idaes_ui",
+    "docs"
 ]
 markers = [
     "component: between unit and integration test",
     "unit: test one small unit of functionality",
-    "integration: test integrated functionality"
+    "integration: test integrated functionality",
+    "screenshot: screenshots"
 ]
