@@ -45,7 +45,6 @@ build-backend = "setuptools.build_meta"
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
 [project.optional-dependencies]
-# Just for developers (they should also add 'jb')
 dev = [
     # For adding copyright headers (see addheader.yml and the readme)
     "addheader >= 0.3.0",
