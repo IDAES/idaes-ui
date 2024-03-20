@@ -9,6 +9,7 @@
   "scripts": {
     "test": "cypress run",
     "ui": "python -m idaes_ui.fv.example",
+    "ui-test": "python -m idaes_ui.fv.example --headless",
     "ui-dev": "watchmedo auto-restart --directory=\"./\" --pattern=\"*.py\" --recursive -- python -m idaes_ui.fv.example"
   },
   "repository": {
@@ -22,6 +23,6 @@
   },
   "homepage": "https://github.com/IDAES/idaes-ui#readme",
   "devDependencies": {
-    "cypress": "^12.15.0"
+    "cypress": "^12.17.4"
   }
 }
