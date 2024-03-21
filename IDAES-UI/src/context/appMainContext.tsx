@@ -38,6 +38,14 @@ export function AppContextProvider({ children }: { children: ReactNode }){
         defaultSize: 70
       }
     },
+    diagnosticsLogs: {
+      panelName : "Stream Table",
+      show : false,
+      size: {
+        maxSize : 100,
+        defaultSize: 30
+      }
+    },
     streamTable: {
       panelName : "Stream Table",
       show : true,

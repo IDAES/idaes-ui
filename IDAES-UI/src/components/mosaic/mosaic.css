@@ -12,13 +12,38 @@
 }
 
 /*Toolbar*/
+.mosaic_customized_toolbar_header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.mosaic_customized_toolbar_title_container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
 .mosaic_toolbar_btn_container {
+    align-self: flex-end;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
     gap: 5px;
     margin-right: 10px;
+}
+
+
+.mosaic_header_toolbar_title{
+    margin-bottom: 0;
+    font-weight: bold;
+    color: rgb(67, 67, 67);
 }
 
 .mosaic_diagnostic_toolbar_content{
@@ -97,4 +122,19 @@
 .mosaic_diagnosticsRunner_select{
     font-size: 18px;
     border: none;
+}
+
+/*diagnostics runner panel*/
+.diagnostics_runner_panel_title:hover{
+    cursor: pointer;
+    color: rgb(67, 67, 67);
+    transition: .3s ease;
+}
+
+.mosaic_header_toolbar_title_activate{
+    color: rgb(67, 67, 67);
+}
+
+.mosaic_header_toolbar_title_deactivate{
+    color: rgb(173, 173, 173);
 }
