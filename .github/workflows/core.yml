@@ -119,10 +119,9 @@ jobs:
 #      - name: Start UI
 #        run: npm run ui-test & echo "UI Server started"
       - name: Cypress tests
+        uses: cypress-io/github-action@v5
         with:
-#         working-directory: ./
-          build: npm run build
-          run: npm run ui-test
+          command: npm run ui-test
           wait-on: 'http://localhost:49999'
       - name: Cypress run
         uses: cypress-io/github-action@v5
