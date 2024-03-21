@@ -119,7 +119,7 @@ jobs:
 #      - name: Start UI
 #        run: npm run ui-test & echo "UI Server started"
       - name: Start FV server
-        run: python -m idaes_ui.fv.example --headless &
+        run: python -m idaes_ui.fv.example &
       - name: Cypress tests
         uses: cypress-io/github-action@v5
         with:
