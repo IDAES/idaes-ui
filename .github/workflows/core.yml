@@ -123,7 +123,7 @@ jobs:
       - name: Cypress tests
         uses: cypress-io/github-action@v5
         with:
-          wait-on: 'http://localhost:49999'
+          wait-on: 'http://localhost:49999/app?id=sample_visualization'
           wait-on-timeout: 30
           command: npm run test
           browser: chrome
