@@ -116,8 +116,15 @@ jobs:
             cypress.config.js
       - name: Install node packages
         run: npm install
-      - name: Start UI
-        run: npm run ui-test & echo "UI Server started"
+#      - name: Start UI
+#        run: npm run ui-test & echo "UI Server started"
+      - name: Cypress tests
+        uses: ./
+        with:
+          working-directory: ./
+          build: npm run build
+          start: npm run ui-test
+          wait-on: 'http://localhost:49999'
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
