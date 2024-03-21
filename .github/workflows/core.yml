@@ -118,14 +118,12 @@ jobs:
         run: npm install
 #      - name: Start UI
 #        run: npm run ui-test & echo "UI Server started"
+      - name: Start FV server
+        run: python -m idaes_ui.fv.example --headless
       - name: Cypress tests
         uses: cypress-io/github-action@v5
         with:
-          command: npm run ui-test
           wait-on: 'http://localhost:49999'
-      - name: Cypress run
-        uses: cypress-io/github-action@v5
-        with:
-          wait-on-timeout: 20
+          wait-on-timeout: 30
           command: npm run test
           browser: chrome
