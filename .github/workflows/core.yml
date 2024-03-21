@@ -120,7 +120,7 @@ jobs:
 #        run: npm run ui-test & echo "UI Server started"
       - name: Cypress tests
         with:
-#          working-directory: ./
+#         working-directory: ./
           build: npm run build
           start: npm run ui-test
           wait-on: 'http://localhost:49999'
