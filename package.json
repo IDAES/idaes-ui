@@ -17,7 +17,7 @@
     "url": "https://github.com/IDAES/idaes-ui.git"
   },
   "author": "Sheng",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/IDAES/idaes-ui/issues"
   },

@@ -97,13 +97,14 @@ jobs:
           - os: win64
             runner-image: windows-2022
     steps:
-      #python starts here
       - name: Install python code
         uses: IDAES/idaes-ui/.github/actions/install@main
         with:
           variant: ${{ matrix.install-variant }}
           python-version: ${{ matrix.python-version }}
-      #cypress starts here
+
+      # Cypress starts here
+
       - name: Check out files needed to run cypress tests
         if: matrix.install-variant != 'dev'
         uses: actions/checkout@v4
@@ -114,18 +115,19 @@ jobs:
             package.json
             package-lock.json
             cypress.config.js
+
       - name: Install node packages
         run: npm install
-      - name: Start FV server
-        run: python -m idaes_ui.fv.example &
-      - name: Sleep for 60s
-        # Do it with Python to be cross-platform
-        run: python -c 'import time; time.sleep(60)'
+
       - name: Run Cypress tests
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
-          command: npm run test
-          browser: firefox
+            start: npm run ui-test
+            wait-on: http://localhost:49999/app?id=sample_visualization
+            wait-on-timeout: 120
+            command: npm run test
+            browser: firefox
+
       - name: Upload screenshots
         if: ${{ always() }}
         uses: actions/upload-artifact@v4

@@ -7,7 +7,6 @@ describe(
         }
     },
     () => {
-        // initial wait time for cypress delay give fetch api some time to call backend
         const waitTime = 300;
 
         // define visit app url before each test
