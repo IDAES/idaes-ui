@@ -125,3 +125,9 @@ jobs:
           wait-on-timeout: 30
           command: npm run test
           browser: chrome
+      - name: Upload screenshots on failure
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots

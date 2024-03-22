@@ -2,8 +2,8 @@ describe(
     'flowsheet visualizer component spec',
     {
         retries: {
-            runMode: 5,
-            openMode: 5
+            runMode: 2,
+            openMode: 2
         }
     },
     () => {
