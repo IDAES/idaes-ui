@@ -116,11 +116,9 @@ jobs:
             cypress.config.js
       - name: Install node packages
         run: npm install
-#      - name: Start UI
-#        run: npm run ui-test & echo "UI Server started"
       - name: Start FV server
         run: python -m idaes_ui.fv.example &
-      - name: Cypress tests
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v5
         with:
           wait-on: 'http://localhost:49999/app?id=sample_visualization'
