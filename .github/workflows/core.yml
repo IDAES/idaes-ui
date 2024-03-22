@@ -118,16 +118,15 @@ jobs:
         run: npm install
       - name: Start FV server
         run: python -m idaes_ui.fv.example &
+        run: python -c 'import time; time.sleep(60)'
       - name: Run Cypress tests
         uses: cypress-io/github-action@v5
         with:
-          wait-on: 'http://localhost:49999/app?id=sample_visualization'
-          wait-on-timeout: 30
           command: npm run test
-          browser: chrome
+          browser: firefox
       - name: Upload screenshots
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-screenshots-${{ matrix.install-variant }}-py${{ matrix.python-version }}-${{ matrix.os }})
+          name: cypress-screenshots-${{ matrix.install-variant }}-py${{ matrix.python-version }}-${{ matrix.os }}
           path: cypress/screenshots
