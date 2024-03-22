@@ -118,6 +118,8 @@ jobs:
         run: npm install
       - name: Start FV server
         run: python -m idaes_ui.fv.example &
+      - name: Sleep for 60s
+        # Do it with Python to be cross-platform
         run: python -c 'import time; time.sleep(60)'
       - name: Run Cypress tests
         uses: cypress-io/github-action@v5
