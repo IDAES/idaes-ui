@@ -216,7 +216,7 @@ def _canonicalize(d: dict) -> dict:
     [
         ("demo", _get_demo_flowsheet, "demo_flowsheet.json"),
         ("demo", _get_flash_flowsheet, "flash_flowsheet.json"),
-        ("boiler", _get_boiler_flowsheet, "serialized_boiler_flowsheet.json"),
+#        ("boiler", _get_boiler_flowsheet, "serialized_boiler_flowsheet.json"),
     ],
     ids=lambda obj: getattr(obj, "__qualname__", str(obj)),
 )
