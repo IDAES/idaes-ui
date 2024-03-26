@@ -251,13 +251,16 @@ function clickCopyToClipboard(event:React.MouseEvent<HTMLParagraphElement, Mouse
     const textToCopy = contentWillCopy.textContent || "";
     // copy to clip board
     navigator.clipboard.writeText(textToCopy).then(() => {
-        // when coping, add class to p tag to create a copied label
-        target.classList.add(css.copied_next_step)
-        // after 1.3s remove that new assigned label
-        let timeOut = setTimeout(()=>{
-            target.classList.remove(css.copied_next_step)
-            clearTimeout(timeOut);
-        },1300)
+        let updateCopyTextTimeout;
+        if(updateCopyTextTimeout){
+            clearTimeout(updateCopyTextTimeout);
+        }else{
+            // when click on copy, update the target innerText to copied
+            // then roll back to copy after .9 sec
+            target.innerText = "Copied"
+            updateCopyTextTimeout = setTimeout(()=>{target.innerText = "Copy"},900);
+        }
+        
     }).catch(err => {
         console.error("Failed to copy text: ", err);
     });

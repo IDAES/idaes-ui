@@ -110,8 +110,9 @@
 .copied_next_step::after{
     content:"Copied!";
     position: absolute;
+    color: black;
     top: 50%;
-    right: 0;
+    right: -180%;
     transform: translateY(-50%);
     width: 80px;
     height: 30px;
