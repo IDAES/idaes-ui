@@ -1,0 +1,50 @@
+.headerDiagnosticsBtnContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.headerDiagnosticsBtnContainer > p{
+    color: white;
+}
+
+.taggleBtn{
+    width: 60px;
+    height: 30px;
+    position: relative;
+    display: inline-block;
+    border-radius: 15px;
+    border: 1px solid white;
+    background-color: white;
+}
+
+.taggleBtn:hover{
+    cursor: pointer;
+}
+
+.toggleBtnInnerOn,
+.toggleBtnInnerOff{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    transition: .3s ease-in-out;
+}
+
+.toggleBtnInnerOn{
+    right: 0;
+    background-color: green;
+}
+
+.toggleBtnInnerOff{
+    left: 0;
+    background-color: red;
+}
+
+.faIcon{
+    color: white;
+}

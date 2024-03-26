@@ -1,0 +1,559 @@
+{
+    "config": {
+        "variable_bounds_absolute_tolerance": 0.0001,
+        "variable_bounds_relative_tolerance": 0.0001,
+        "variable_bounds_violation_tolerance": 0.0,
+        "constraint_residual_tolerance": 0.00001,
+        "variable_large_value_tolerance": 10000.0,
+        "variable_small_value_tolerance": 0.0001,
+        "variable_zero_value_tolerance": 1e-8,
+        "jacobian_large_value_caution": 10000.0,
+        "jacobian_large_value_warning": 100000000.0,
+        "jacobian_small_value_caution": 0.0001,
+        "jacobian_small_value_warning": 1e-8
+    },
+    "statistics": {
+        "dof": {
+            "value": 0
+        },
+        "var": {
+            "value": 166,
+            "unused": {
+                "value": 0
+            },
+            "fixed": {
+                "value": 13,
+                "unused": {
+                    "value": 0
+                }
+            },
+            "ineq": {
+                "value": 0,
+                "fixed": {
+                    "value": 0
+                }
+            }
+        },
+        "ineq": {
+            "value": 0
+        },
+        "constr": {
+            "value": 153,
+            "eq": {
+                "value": 153,
+                "deact": {
+                    "value": 0
+                }
+            },
+            "ineq": {
+                "value": 0,
+                "deact": {
+                    "value": 0
+                }
+            }
+        },
+        "obj": {
+            "value": 0,
+            "deact": {
+                "value": 0
+            }
+        },
+        "block": {
+            "value": 21,
+            "deact": {
+                "value": 0
+            }
+        },
+        "expr": {
+            "value": 118
+        }
+    },
+    "issues": {
+        "issues": [
+            {
+                "type": "numerical",
+                "severity": "caution",
+                "name": "extreme_values",
+                "description": "variables with extreme values",
+                "objects": [
+                    {
+                        "type": "var",
+                        "name": "fs.M01.minimum_pressure[0.0,1]",
+                        "value": 101324.99999999999
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.minimum_pressure[0.0,2]",
+                        "value": 101324.99999999997
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_comp[toluene]",
+                        "value": 0.00001
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].pressure",
+                        "value": 101325.0
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_comp[benzene]",
+                        "value": 0.00001
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].pressure",
+                        "value": 130000.0
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].pressure",
+                        "value": 101324.99999999997
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_phase_comp[Liq,toluene]",
+                        "value": 0.00004226501650736347
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_phase_comp[Vap,toluene]",
+                        "value": 0.000016239937390247786
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].pressure_sat_comp[benzene]",
+                        "value": 101327.63707622685
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].pressure_sat_comp[toluene]",
+                        "value": 38933.18380178968
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].enth_mol_phase[Liq]",
+                        "value": 59403.464839923574
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].enth_mol_phase[Vap]",
+                        "value": 89602.98646808404
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].enth_mol_phase_comp[Liq,benzene]",
+                        "value": 59404.366946131
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].enth_mol_phase_comp[Liq,toluene]",
+                        "value": 24005.117152243132
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].enth_mol_phase_comp[Vap,benzene]",
+                        "value": 89602.59458088383
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_1_state[0.0].enth_mol_phase_comp[Vap,toluene]",
+                        "value": 58559.44869427196
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_phase_comp[Liq,benzene]",
+                        "value": 0.000018948688821340677
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_phase_comp[Vap,benzene]",
+                        "value": 0.00004334161298390463
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].pressure_sat_comp[benzene]",
+                        "value": 297350.9006893184
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].pressure_sat_comp[toluene]",
+                        "value": 129996.82889148161
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].enth_mol_phase[Liq]",
+                        "value": 25813.44309761046
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].enth_mol_phase[Vap]",
+                        "value": 59876.807741757904
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].enth_mol_phase_comp[Liq,benzene]",
+                        "value": 60968.170946131
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].enth_mol_phase_comp[Liq,toluene]",
+                        "value": 25812.518818909797
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].enth_mol_phase_comp[Vap,benzene]",
+                        "value": 90653.83510796717
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.inlet_2_state[0.0].enth_mol_phase_comp[Vap,toluene]",
+                        "value": 59874.87498323029
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].pressure_sat_comp[benzene]",
+                        "value": 156860.8353206145
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].pressure_sat_comp[toluene]",
+                        "value": 63534.71863733716
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].enth_mol_phase[Liq]",
+                        "value": 38039.7329520597
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].enth_mol_phase[Vap]",
+                        "value": 77818.48958992377
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].enth_mol_phase_comp[Liq,benzene]",
+                        "value": 59130.24754889732
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].enth_mol_phase_comp[Liq,toluene]",
+                        "value": 23688.342072640477
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].enth_mol_phase_comp[Vap,benzene]",
+                        "value": 89419.03516967919
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.M01.mixed_state[0.0].enth_mol_phase_comp[Vap,toluene]",
+                        "value": 58329.53049329868
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].pressure",
+                        "value": 101324.99999999999
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].pressure",
+                        "value": 101324.99999999999
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.heat[0.0]",
+                        "value": 17104.453471312678
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].pressure_sat_comp[benzene]",
+                        "value": 156860.83532061445
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].pressure_sat_comp[toluene]",
+                        "value": 63534.71863733713
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].enth_mol_phase[Liq]",
+                        "value": 38039.73295205973
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].enth_mol_phase[Vap]",
+                        "value": 77818.4895899238
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].enth_mol_phase_comp[Liq,benzene]",
+                        "value": 59130.24754889732
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].enth_mol_phase_comp[Liq,toluene]",
+                        "value": 23688.34207264048
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].enth_mol_phase_comp[Vap,benzene]",
+                        "value": 89419.03516967919
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_in[0.0].enth_mol_phase_comp[Vap,toluene]",
+                        "value": 58329.530493298684
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].pressure_sat_comp[benzene]",
+                        "value": 164782.76443198565
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].pressure_sat_comp[toluene]",
+                        "value": 67140.0171010206
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].enth_mol_phase[Liq]",
+                        "value": 36398.48769863901
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].enth_mol_phase[Vap]",
+                        "value": 76234.32057232512
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].enth_mol_phase_comp[Liq,benzene]",
+                        "value": 59404.366946131006
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].enth_mol_phase_comp[Liq,toluene]",
+                        "value": 24005.117152243132
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].enth_mol_phase_comp[Vap,benzene]",
+                        "value": 89602.59458088383
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.H02.control_volume.properties_out[0.0].enth_mol_phase_comp[Vap,toluene]",
+                        "value": 58559.44869427196
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].pressure",
+                        "value": 101324.99999999999
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].pressure_sat_comp[benzene]",
+                        "value": 164782.7644319857
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].pressure_sat_comp[toluene]",
+                        "value": 67140.01710102062
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].enth_mol_phase[Liq]",
+                        "value": 36398.48769863898
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].enth_mol_phase[Vap]",
+                        "value": 76234.32057232509
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].enth_mol_phase_comp[Liq,benzene]",
+                        "value": 59404.366946130984
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].enth_mol_phase_comp[Liq,toluene]",
+                        "value": 24005.117152243118
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].enth_mol_phase_comp[Vap,benzene]",
+                        "value": 89602.59458088382
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_in[0.0].enth_mol_phase_comp[Vap,toluene]",
+                        "value": 58559.44869427195
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].pressure",
+                        "value": 101324.99999999999
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].pressure_sat_comp[benzene]",
+                        "value": 164782.76443198556
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].pressure_sat_comp[toluene]",
+                        "value": 67140.01710102067
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].enth_mol_phase[Liq]",
+                        "value": 36398.48769863897
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].enth_mol_phase[Vap]",
+                        "value": 76234.32057232506
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].enth_mol_phase_comp[Liq,benzene]",
+                        "value": 59404.36694613099
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].enth_mol_phase_comp[Liq,toluene]",
+                        "value": 24005.117152243103
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].enth_mol_phase_comp[Vap,benzene]",
+                        "value": 89602.59458088382
+                    },
+                    {
+                        "type": "var",
+                        "name": "fs.F03.control_volume.properties_out[0.0].enth_mol_phase_comp[Vap,toluene]",
+                        "value": 58559.448694271945
+                    }
+                ]
+            },
+            {
+                "type": "numerical",
+                "severity": "caution",
+                "name": "var_near_bounds",
+                "description": "variables close to their bounds",
+                "objects": [
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_comp[benzene]",
+                        "value": 1.0,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_comp[toluene]",
+                        "value": 0.00001,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_comp[benzene]",
+                        "value": 0.00001,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_comp[toluene]",
+                        "value": 1.0,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_phase_comp[Liq,benzene]",
+                        "value": 0.9999677349834927,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_phase_comp[Liq,toluene]",
+                        "value": 0.00004226501650736347,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_phase_comp[Vap,benzene]",
+                        "value": 0.9999937600626098,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_1_state[0.0].mole_frac_phase_comp[Vap,toluene]",
+                        "value": 0.000016239937390247786,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_phase_comp[Liq,benzene]",
+                        "value": 0.000018948688821340677,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_phase_comp[Liq,toluene]",
+                        "value": 0.9999910513111787,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_phase_comp[Vap,benzene]",
+                        "value": 0.00004334161298390463,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    },
+                    {
+                        "type": "var+bounds",
+                        "name": "fs.M01.inlet_2_state[0.0].mole_frac_phase_comp[Vap,toluene]",
+                        "value": 0.9999666583870161,
+                        "lower": 0.0,
+                        "has_lower": true,
+                        "upper": 1.0,
+                        "has_upper": true
+                    }
+                ]
+            }
+        ]
+    }
+}

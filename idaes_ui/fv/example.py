@@ -4,6 +4,7 @@ Simple example for Flowsheet Visualizer (FV).
 To change logging level, set the FV_LOG_LEVEL environment variable
 to a numeric or string value that matches one of the standard Python logging levels.
 """
+
 __author__ = "Dan Gunter"
 
 # stdlib
@@ -24,6 +25,7 @@ _log.setLevel(logging.INFO)
 
 def fv_example():
     m = build_flowsheet()
+    # visualize(m.fs, "sample_visualization", port=49999, clean_up=True)
     visualize(m.fs, "sample_visualization", port=49999)
     _log.info("Starting Flowsheet Visualizer")
     _log.info("Press Control-C to stop")
@@ -35,8 +37,10 @@ def fv_example():
     return 0
 
 
-level_map = {logging.getLevelName(n): n for n in (logging.DEBUG, logging.INFO,
-                                                  logging.WARN, logging.ERROR)}
+level_map = {
+    logging.getLevelName(n): n
+    for n in (logging.DEBUG, logging.INFO, logging.WARN, logging.ERROR)
+}
 
 
 def parse_logging_level(s: str, level: int) -> int:
