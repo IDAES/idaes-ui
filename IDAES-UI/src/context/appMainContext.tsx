@@ -90,8 +90,8 @@
 
 	// context for toggle stream table and diagnostics in diagnostics runner panel
 	const [viewInLogPanel, setViewInLogPanel] = useState<ToggleStreamTableInLogInterface>({
-		streamTable: false,
-		diagnosticsLogs:true,
+		streamTable: true,
+		diagnosticsLogs: false,
 	});
 
 	return(

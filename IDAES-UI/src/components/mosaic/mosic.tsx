@@ -34,22 +34,31 @@ export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'diagnosticsRu
 const MosaicApp = () => {
     // extract context
     const {
-        panelState, 
-        fvHeaderState, 
+        panelState, // which panel is show
+        fvHeaderState, // stream name labels show: true false
         setFvHeaderState, 
-        diagnosticsRunFnNameListState, 
+        diagnosticsRunFnNameListState, // array of diagnostics function names
         setDiagnosticsRunnerDisplayState,
-        viewInLogPanel,
+        viewInLogPanel, // bottom panel toggle stream table or diagnostics logs
 		setViewInLogPanel,
     } = useContext(AppContext);
 
     const isShowSteamName = fvHeaderState.isShowSteamName;
     const isShowLabels = fvHeaderState.isShowLabels;
 
+    /**
+     * @Description this function use to update context "viewInLogPanel"
+     * it controls bottom panel to render between diagnostics or stream table
+     * it take one param.
+     * @param clickedElementName use this clickedElementName to set viewInLogPanel.clickedElementName = true otherwise false
+     */
     function toggleStreamTableDiagnosticsRunnerHandler(clickedElementName:string){
+        // validation when passed in param is not a valid viewInLogPanel key name, log and return.
         if(!Object.keys(viewInLogPanel).includes(clickedElementName)){
-            console.log(`key not found`)
+            console.log(`key not found`);
+            return;
         }
+        // update state set viewInLogPanel.clickedElementName = true then show this panel, other false.
         setViewInLogPanel((prevState:ToggleStreamTableInLogInterface)=>{
             const copyState = {...prevState};
             Object.keys(copyState).forEach((el:string)=>{
@@ -64,16 +73,35 @@ const MosaicApp = () => {
     }
 
     /**
-     * @description conditionally render JSX element to bottom log panel.
+     * @description conditionally render JSX element to bottom log panel, 
+     * it base on panelState.diagnostics.show and viewInLogPanel.
      * @param None
-     * @returns JSX element use to display in bottom mosaic panel. now is flowsheet diagnostics panel or stream table panel
+     * @returns JSX element use to display in bottom mosaic panel. now is flowsheet diagnostics panel or stream table panel.
      */
     function diagnosticsRunnerOrStreamTableDisplay(){
-        if(panelState.diagnostics.show && viewInLogPanel.diagnosticsLogs){
+        /**
+         * 1.panelState.diagnostics.show == true, viewInLogPanel.diagnosticsLogs == true, bottom shows diagnostics log element.
+         * 2.panelState.diagnostics.show == true, viewInLogPanel.streamTable == true, bottom shows streamTable element.
+         * 3.panelState.diagnostics.show == false, bottom should only show stream table.
+         */
+        if(panelState.diagnostics.show === true && viewInLogPanel.diagnosticsLogs){
+            console.log(panelState.diagnostics.show)
+            console.log(`in 1`)
             return <FlowsheetDiagnosticsRunner/>
-        }else{
+        }
+        
+        if(panelState.diagnostics.show === true && viewInLogPanel.streamTable === true){
+            console.log(`in 2`)
             return <StreamTable/>
         }
+
+        if(panelState.diagnostics.show === false){
+            console.log(`in 2`)
+            return <StreamTable/>
+        }
+
+        // default return a react fragment element contain error message.
+        return <>Bottom panel display error cause by diagnosticsRunnerOrStreamTableDisplay</>;
     }
 
     // element map: what element will render as mosaic panel
@@ -81,8 +109,6 @@ const MosaicApp = () => {
         components: <Flowsheet_variable />,
         flowsheet: <Flowsheet />,
         diagnostics: <FlowsheetDiagnostics />,
-        // diagnosticsRunner: <FlowsheetDiagnosticsRunner />,
-        // streamTable: <StreamTable />,
         streamTableAndDiagnostics: diagnosticsRunnerOrStreamTableDisplay(),
     };
 
@@ -99,7 +125,7 @@ const MosaicApp = () => {
         // initial default toolbarBtn use fragment
         let toolBarBtn = <></>;
         // conditionally render toolbarBtn
-        toolBarBtn = conditionallyRenderBtn(id, showSteamNameHandler, showLabelsHandler, isShowSteamName, isShowLabels, diagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState,viewInLogPanel)
+        toolBarBtn = conditionallyRenderPanelHeaderBtn(id, showSteamNameHandler, showLabelsHandler, isShowSteamName, isShowLabels, diagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState,viewInLogPanel)
         
         return (
             <MosaicWindow<ViewId>
@@ -154,7 +180,7 @@ const MosaicApp = () => {
                         <div className="mosaic_customized_toolbar_btn_container">
                             {   
                                 // return toolbar elements template and render on page
-                                conditionallyRenderBtn(
+                                conditionallyRenderPanelHeaderBtn(
                                     id, 
                                     showSteamNameHandler, 
                                     showLabelsHandler, 
@@ -250,7 +276,7 @@ const MosaicApp = () => {
  * @param isShowLabels bool
  * @returns 
  */
-function conditionallyRenderBtn(
+function conditionallyRenderPanelHeaderBtn(
     id:string, 
     showSteamNameHandler:() => void, 
     showLabelsHandler:() => void, 
