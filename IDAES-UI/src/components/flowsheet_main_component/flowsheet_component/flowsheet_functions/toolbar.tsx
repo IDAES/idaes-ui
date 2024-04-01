@@ -286,6 +286,9 @@ export class Toolbar {
      */
 
     cleanUpEvent(){
+        /**
+         * TODO: since these reset function are identical, fix them later by use a loop to generate.
+         */
         // zoom btns
         let zoomInBtn = document.getElementById('zoom-in-btn');
         let zoomOutBtn = document.getElementById('zoom-out-btn');
@@ -339,6 +342,17 @@ export class Toolbar {
                 saveBtn.parentNode.replaceChild(saveBtnClone, saveBtn);
             }else{
                 console.log(`error save btn replacement error handle in toolbar, parent not found!`);
+            }
+        }
+
+        // reset header refresh btn event listener
+        let refreshBtn = document.getElementById('refresh_btn');
+        if(refreshBtn){
+            let refreshBtnClone = refreshBtn.cloneNode(true);
+            if(refreshBtn.parentNode){
+                refreshBtn.parentNode.replaceChild(refreshBtnClone, refreshBtn);
+            }else{
+                console.log(`error refresh btn replacement error handle in toolbar, parent not found!`);
             }
         }
     }
