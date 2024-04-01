@@ -6,6 +6,9 @@ import { IconNames, IconName } from '@blueprintjs/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons'
 
+//interface
+import {ToggleStreamTableInLogInterface} from '@/interface/appMainContext_interface';
+
 import 'react-mosaic-component/react-mosaic-component.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
@@ -26,47 +29,28 @@ import StreamTable from '../flowsheet_main_component/stream_table_component/stre
 import { FvHeaderStateInterface } from '@/interface/appMainContext_interface';
 
 // define ViewId
-export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'diagnosticsRunner' | 'streamTable' |'new';
-
-// element map: what element will render as mosaic panel
-const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
-    components: <Flowsheet_variable />,
-    flowsheet: <Flowsheet />,
-    diagnostics: <FlowsheetDiagnostics />,
-    diagnosticsRunner: <FlowsheetDiagnosticsRunner />,
-    streamTable: <StreamTable />,
-};
-
-const TITLE_MAP:any = {
-    components: 'Components',
-    flowsheet: 'Diagram',
-    diagnostics: 'Diagnostics',
-    diagnosticsRunner: 'Diagnostics Runner',
-    streamTable: 'Stream Table'
-};
+export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'diagnosticsRunner' | 'streamTable' | 'streamTableAndDiagnostics' | 'new' ;
 
 const MosaicApp = () => {
     // extract context
-    const {panelState, fvHeaderState, setFvHeaderState, diagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState} = useContext(AppContext)
+    const {
+        panelState, 
+        fvHeaderState, 
+        setFvHeaderState, 
+        diagnosticsRunFnNameListState, 
+        setDiagnosticsRunnerDisplayState,
+        viewInLogPanel,
+		setViewInLogPanel,
+    } = useContext(AppContext);
+
     const isShowSteamName = fvHeaderState.isShowSteamName;
     const isShowLabels = fvHeaderState.isShowLabels;
 
-    //state for toggle stream table and diagnostics in diagnostics runner panel
-    interface ToggleStreamTableInLogInterface {
-        streamTable:boolean, 
-        diagnosticsRunner:boolean
-    }
-    const [showStreamTableInLog, setShowStreamTableInLog] = useState<ToggleStreamTableInLogInterface>({
-        streamTable: false,
-        diagnosticsRunner:true,
-    });
-
     function toggleStreamTableDiagnosticsRunnerHandler(clickedElementName:string){
-        console.log(showStreamTableInLog)
-        if(!Object.keys(showStreamTableInLog).includes(clickedElementName)){
+        if(!Object.keys(viewInLogPanel).includes(clickedElementName)){
             console.log(`key not found`)
         }
-        setShowStreamTableInLog((prevState:ToggleStreamTableInLogInterface)=>{
+        setViewInLogPanel((prevState:ToggleStreamTableInLogInterface)=>{
             const copyState = {...prevState};
             Object.keys(copyState).forEach((el:string)=>{
                 if(el == clickedElementName){
@@ -79,11 +63,43 @@ const MosaicApp = () => {
         })
     }
 
+    /**
+     * @description conditionally render JSX element to bottom log panel.
+     * @param None
+     * @returns JSX element use to display in bottom mosaic panel. now is flowsheet diagnostics panel or stream table panel
+     */
+    function diagnosticsRunnerOrStreamTableDisplay(){
+        if(panelState.diagnostics.show && viewInLogPanel.diagnosticsLogs){
+            return <FlowsheetDiagnosticsRunner/>
+        }else{
+            return <StreamTable/>
+        }
+    }
+
+    // element map: what element will render as mosaic panel
+    const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
+        components: <Flowsheet_variable />,
+        flowsheet: <Flowsheet />,
+        diagnostics: <FlowsheetDiagnostics />,
+        // diagnosticsRunner: <FlowsheetDiagnosticsRunner />,
+        // streamTable: <StreamTable />,
+        streamTableAndDiagnostics: diagnosticsRunnerOrStreamTableDisplay(),
+    };
+
+    const TITLE_MAP:any = {
+        components: 'Components',
+        flowsheet: 'Diagram',
+        diagnostics: 'Diagnostics',
+        diagnosticsRunner: 'Diagnostics Runner',
+        streamTable: 'Stream Table',
+        streamTableAndDiagnostics: "Diagnostics Logs"
+    };
+
     const renderTile = (id:any, path:any) => {
         // initial default toolbarBtn use fragment
         let toolBarBtn = <></>;
         // conditionally render toolbarBtn
-        toolBarBtn = conditionallyRenderBtn(id, showSteamNameHandler, showLabelsHandler, isShowSteamName, isShowLabels, diagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState)
+        toolBarBtn = conditionallyRenderBtn(id, showSteamNameHandler, showLabelsHandler, isShowSteamName, isShowLabels, diagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState,viewInLogPanel)
         
         return (
             <MosaicWindow<ViewId>
@@ -99,18 +115,18 @@ const MosaicApp = () => {
                                 /**
                                  * Base on which title to render title display in panel header.
                                  * 
-                                 * only when title is diagnostics runner which is means is the diagnostics panel
+                                 * only when title is "diagnostics runner" which is means is the diagnostics panel
                                  * it needs to display 2 title stream table, and diagnostics runner
                                  * these two title use to click and toggle show diagnostics runner and stream table.
                                  */
-                                TITLE_MAP[id] == TITLE_MAP.diagnosticsRunner ?
+                                TITLE_MAP[id] == TITLE_MAP.streamTableAndDiagnostics ?
                                     // for diagnostics runner panel
                                     <>
                                         <p 
                                             onClick={()=>toggleStreamTableDiagnosticsRunnerHandler('streamTable')}
                                             className={`
                                                 ${
-                                                    showStreamTableInLog.streamTable ?      "mosaic_header_toolbar_title_activate" :
+                                                    viewInLogPanel.streamTable ?      "mosaic_header_toolbar_title_activate" :
                                                     "mosaic_header_toolbar_title_deactivate"
                                                 }
                                                 mosaic_header_toolbar_title diagnostics_runner_panel_title
@@ -119,10 +135,10 @@ const MosaicApp = () => {
                                             Stream Table
                                         </p>
                                         <p 
-                                            onClick={()=>toggleStreamTableDiagnosticsRunnerHandler('diagnosticsRunner')}
+                                            onClick={()=>toggleStreamTableDiagnosticsRunnerHandler('diagnosticsLogs')}
                                             className={`
                                                 ${
-                                                    showStreamTableInLog.diagnosticsRunner ?      "mosaic_header_toolbar_title_activate" :
+                                                    viewInLogPanel.diagnosticsLogs ?      "mosaic_header_toolbar_title_activate" :
                                                     "mosaic_header_toolbar_title_deactivate"
                                                 }
                                                 mosaic_header_toolbar_title diagnostics_runner_panel_title
@@ -131,8 +147,8 @@ const MosaicApp = () => {
                                             {TITLE_MAP[id]}
                                         </p>
                                     </> :
-                                    // for other panels
-                                        <p className="mosaic_header_toolbar_title">{TITLE_MAP[id]}</p>
+                                    // for other panels render one title only
+                                    <p className="mosaic_header_toolbar_title">{TITLE_MAP[id]}</p>
                             }
                         </div>
                         <div className="mosaic_customized_toolbar_btn_container">
@@ -145,7 +161,8 @@ const MosaicApp = () => {
                                     isShowSteamName, 
                                     isShowLabels, 
                                     diagnosticsRunFnNameListState, 
-                                    setDiagnosticsRunnerDisplayState
+                                    setDiagnosticsRunnerDisplayState,
+                                    viewInLogPanel
                                 )
                             }
                         </div>
@@ -217,12 +234,7 @@ const MosaicApp = () => {
                     second: 'diagnostics',
                     splitPercentage: panelState.diagnostics.show ? 70 : 100, //splitPercentage controls how wide split view is
                 },
-                second: {
-                    direction: 'row',
-                    first:'streamTable',
-                    second:'diagnosticsRunner',
-                    splitPercentage: panelState.diagnostics.show ? 0 : 100 // diagnostics runner with will only show 100 when diagnostics is enabled
-                },
+                second:'streamTableAndDiagnostics',
                 splitPercentage: 60,
             }}
         />
@@ -238,7 +250,16 @@ const MosaicApp = () => {
  * @param isShowLabels bool
  * @returns 
  */
-function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, showLabelsHandler:() => void, isShowSteamName:boolean, isShowLabels:boolean, nextStepsFunctionNameList:String[], setDiagnosticsRunnerDisplay:any){
+function conditionallyRenderBtn(
+    id:string, 
+    showSteamNameHandler:() => void, 
+    showLabelsHandler:() => void, 
+    isShowSteamName:boolean, 
+    isShowLabels:boolean, 
+    nextStepsFunctionNameList:String[], 
+    setDiagnosticsRunnerDisplay:any,
+    viewInLogPanel:any
+){
     /**
      *  use id from Mosaic > renderTile callback to conditionally render toolbar btn
      *  Args:
@@ -325,6 +346,11 @@ function conditionallyRenderBtn(id:string, showSteamNameHandler:() => void, show
                 <StreamTableHeader />
             </div>
             break;
+        case "streamTableAndDiagnostics":
+            return<div className="mosaic_toolbar_btn_container">
+                {!viewInLogPanel.diagnosticsLogs && <StreamTableHeader />}
+            </div>
+            break
         case "diagnosticsRunner":
             const options = nextStepsFunctionNameList.map((el, index)=><option value={`${el}`} key={`diagnosticsRunnerSelection${el}`}>{el}</option>)
             /**

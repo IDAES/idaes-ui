@@ -8,7 +8,7 @@ import css from "./flowsheet_wrapper.module.css";
 
 export default function FlowsheetWrapper(){
 
-	let {server_port, fv_id, panelState} = useContext(AppContext);
+	let {server_port, fv_id, panelState, viewInLogPanel} = useContext(AppContext);
 	const isFvShow:boolean = panelState.fv.show;
 	const isDiagnosticsShow:boolean = panelState.diagnostics.show;
 	const isStreamTableShow = panelState.streamTable.show;
@@ -17,15 +17,22 @@ export default function FlowsheetWrapper(){
 	const panelHide = {display:"none"};
 
   useEffect(()=>{
-    //get server port base on UI port number, vite running on 5173 on dev
-    server_port == "5173" ? server_port = 8000 : server_port = server_port;
-    //when template loaded then render flowsheet, variable, stream table to page with minFV class.
-    const fv = new MainFV(fv_id, server_port, isFvShow, false, isStreamTableShow); //The false is placeholder for isVariableShow, now variable panel is not show
+	let fv:any;
+	if(!fv){
+		//get server port base on UI port number, vite running on 5173 on dev
+		server_port == "5173" ? server_port = 8000 : server_port = server_port;
+		//when template loaded then render flowsheet, variable, stream table to page with minFV class.
+		fv = new MainFV(fv_id, server_port, isFvShow, false, isStreamTableShow); //The false is placeholder for isVariableShow, now variable panel is not show
+	}else{
+		fv = undefined;
+	}
     
     return ()=>{
-        fv.cleanToolBarEvent()
+        if (fv && typeof fv.cleanToolBarEvent === 'function') {
+            fv.cleanToolBarEvent();
+        }
     }
-  },[isFvShow, isStreamTableShow])
+  },[isFvShow, isStreamTableShow, isDiagnosticsShow, viewInLogPanel]);
 
 	return(
 		<div id="flowsheet-wrapper" className={css.flowsheetWrapper}>

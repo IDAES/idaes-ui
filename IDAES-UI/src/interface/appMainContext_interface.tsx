@@ -20,3 +20,9 @@ export interface VariablesExpandStateInterface{
 	expand : false,
 	expandState : any
 }
+
+export interface ToggleStreamTableInLogInterface {
+	streamTable:boolean;
+	diagnosticsLogs:boolean;
+	[key: string]: boolean;
+};
