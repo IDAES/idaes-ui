@@ -375,7 +375,7 @@ function conditionallyRenderPanelHeaderBtn(
             break;
         case "diagnostics":
             function diagnosticsRefreshHandler(){
-                setDiagnosticsRefreshState(prev => !prev);
+                setDiagnosticsRefreshState((prev:boolean) => !prev);
             }
 
             return<div className="mosaic_toolbar_btn_container">
