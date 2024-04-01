@@ -176,7 +176,7 @@ export class Toolbar {
     //this element is static and 100% there.
     const headerExportImageBtn = document.querySelector("#headerExportImageBtn") as HTMLElement;
     const headerExportSvgBtn = document.querySelector("#headerExportSvgBtn") as HTMLElement;
-
+    console.log(`event reged`)
     headerExportImageBtn.addEventListener("click", () => {
         let p = this._paper.paper;
         const model_id = this.flowsheetId
@@ -286,10 +286,12 @@ export class Toolbar {
      */
 
     cleanUpEvent(){
+        // zoom btns
         let zoomInBtn = document.getElementById('zoom-in-btn');
         let zoomOutBtn = document.getElementById('zoom-out-btn');
         let zoomFitBtn = document.getElementById('zoom-to-fit');
 
+        
         if(zoomInBtn){
             let zoomInBtnClone = zoomInBtn.cloneNode(true);
             zoomInBtn.parentNode!.replaceChild(zoomInBtnClone, zoomInBtn);
@@ -302,5 +304,42 @@ export class Toolbar {
             let zoomFitBtnClone = zoomFitBtn.cloneNode(true);
             zoomFitBtn.parentNode!.replaceChild(zoomFitBtnClone, zoomFitBtn);
         };
+        
+        // reset image download btns to reset event listener
+        // image export btns
+        let flowsheetComponentHeaderDropdownContainer = document.getElementById('flowsheet_component_header_dropdown_container');
+        let headerExportImageBtn = document.getElementById('headerExportImageBtn');
+        let headerExportSvgBtn = document.getElementById('headerExportSvgBtn');
+
+        // 1. download png btn
+        if(headerExportImageBtn){
+            let headerExportImageBtnClone = headerExportImageBtn.cloneNode(true)
+            if(flowsheetComponentHeaderDropdownContainer){
+                flowsheetComponentHeaderDropdownContainer.replaceChild(headerExportImageBtnClone, headerExportImageBtn);
+            }else{
+                console.log(`error no parent nodes`)
+            }
+        };
+
+        // 2 download svg btn
+        if(headerExportSvgBtn){
+            let headerExportSvgBtnClone = headerExportSvgBtn.cloneNode(true);
+            if(flowsheetComponentHeaderDropdownContainer){
+                flowsheetComponentHeaderDropdownContainer.replaceChild(headerExportSvgBtnClone, headerExportSvgBtn);
+            }else{
+                console.log(`error download svg btn replacement failed, in toolbar, parent not found!`);
+            }
+        };
+
+        // reset save btn event listener
+        let saveBtn = document.getElementById('save_btn');
+        if(saveBtn){
+            let saveBtnClone = saveBtn.cloneNode(true);
+            if(saveBtn.parentNode){
+                saveBtn.parentNode.replaceChild(saveBtnClone, saveBtn);
+            }else{
+                console.log(`error save btn replacement error handle in toolbar, parent not found!`);
+            }
+        }
     }
 }

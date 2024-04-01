@@ -351,7 +351,7 @@ function conditionallyRenderPanelHeaderBtn(
                 {/*download*/}
                 <Button className="mosaic_flowsheet_header_download" minimal>
                     <Icon icon={IconNames.BRING_DATA} size={20} />
-                    <ul className="mosaic_dropdown_download">
+                    <ul id="flowsheet_component_header_dropdown_container" className="mosaic_dropdown_download">
                         <li id="headerExportImageBtn">Export PNG</li>
                         <li id="headerExportSvgBtn">Export SVG</li>
                     </ul>
