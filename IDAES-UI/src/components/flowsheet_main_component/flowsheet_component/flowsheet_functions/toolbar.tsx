@@ -62,6 +62,7 @@ export class Toolbar {
     //call & register click event to export flowsheet to png function
     //this is a header element its always there
     this.registerEventExportFlowsheetToPng();
+    this.registerEventExportFlowsheetToSvg();
     
     //call & register click event to refresh model
     this.registerEventRefresh(this.getFSUrl, this.putFSUrl);
@@ -174,6 +175,8 @@ export class Toolbar {
   registerEventExportFlowsheetToPng(){
     //this element is static and 100% there.
     const headerExportImageBtn = document.querySelector("#headerExportImageBtn") as HTMLElement;
+    const headerExportSvgBtn = document.querySelector("#headerExportSvgBtn") as HTMLElement;
+
     headerExportImageBtn.addEventListener("click", () => {
         let p = this._paper.paper;
         const model_id = this.flowsheetId
@@ -186,6 +189,40 @@ export class Toolbar {
                 image: png,
                 downloadable: true,
                 fileName: model_id.concat(".png")
+            }).open();
+        }, {
+            scale:2,
+            pixelRatio:2,
+            preserveDimensions: true,
+            convertImagesToDataUris: true,
+            useComputedStyles: true,
+            stylesheet: '.scalable * { vector-effect: non-scaling-stroke }'
+        });
+    });
+  }
+  
+  /**
+   * Button event handler register
+   * Export flowsheet to to SVG
+   */
+  registerEventExportFlowsheetToSvg(){
+    const headerExportSvgBtn = document.querySelector("#headerExportSvgBtn") as HTMLElement;
+    headerExportSvgBtn.addEventListener("click", () => {
+        let p = this._paper.paper;
+        const model_id = this.flowsheetId
+
+        // Make sure to hide all of the vertices and bars on the links
+        // so they don't show up in the PNG
+        p.hideTools();
+        p.toSVG((svg:string) =>{
+            // convert svg to blob
+            const blob = new Blob([svg], {type: 'image/svg+xml;charset=utf-8'});
+            // create url for svg blob use for jjs lightbox to download
+            const svgUrl = URL.createObjectURL(blob);
+            new joint.ui.Lightbox({
+                image: svgUrl,
+                downloadable: true,
+                fileName: model_id.concat(".svg")
             }).open();
         }, {
             scale:2,

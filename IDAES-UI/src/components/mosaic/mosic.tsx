@@ -353,7 +353,7 @@ function conditionallyRenderPanelHeaderBtn(
                     <Icon icon={IconNames.BRING_DATA} size={20} />
                     <ul className="mosaic_dropdown_download">
                         <li id="headerExportImageBtn">Export PNG</li>
-                        <li>Export SVG</li>
+                        <li id="headerExportSvgBtn">Export SVG</li>
                     </ul>
                 </Button>
             </div>
