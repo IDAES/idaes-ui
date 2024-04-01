@@ -13,7 +13,7 @@ interface DiagnosticsDataInterface {
 }
 
 export default function FlowsheetDiagnostics(){
-    let {server_port} = useContext(AppContext);
+    let {server_port, diagnosticsRefreshState} = useContext(AppContext);
     // this use to hold all diagnostic data fetched from api end point pass down to sub components
     const [diagnosticData, setDiagnosticsData] = useState<DiagnosticsDataInterface | null>(null);
     // use to hold which issue currently is displayed on screen setWhichIssue to update diagnostics display
@@ -27,6 +27,7 @@ export default function FlowsheetDiagnostics(){
     }
 
     useEffect(()=>{
+        console.log(`loading diagnostics data`)
         // const getDiagnosticUrl = `http://127.0.0.1:${server_port}/api/get_diagnostics`;
         const windowURL = new URL(window.location.href);
         const id = windowURL.searchParams.get("id");
@@ -43,7 +44,13 @@ export default function FlowsheetDiagnostics(){
             }
         }
         fetchDiagnosticData(getDiagnosticUrl);
-    },[]);
+    },
+    /**
+     * useEffect triggers:
+     * 1. onload
+     * 2. on diagnosticsRefreshState changed (click handler in mosaic to toggle this bool state)
+     */
+    [diagnosticsRefreshState]);
 
     return (
         <>

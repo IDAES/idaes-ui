@@ -79,6 +79,8 @@
 	const [diagnosticsNextStepsOutputState, setDiagnosticsNextStepsOutputState] = useState({});
 	const [diagnosticsRunFnNameListState, setDiagnosticsRunFnNameListState] = useState([]);
 	const [diagnosticsRunnerDisplayState, setDiagnosticsRunnerDisplayState] = useState<String>("");
+	//use to switch between true and false to control useEffect to refetch backend to get the most recent diagnostics data
+	const [diagnosticsRefreshState, setDiagnosticsRefreshState] = useState<Boolean>(true);
 
 	/**
 	 * Context for variables
@@ -112,6 +114,9 @@
 				//diagnostics run function state
 				diagnosticsRunFnNameListState,
 				setDiagnosticsRunFnNameListState,
+				//diagnostics refresh btn control state
+				diagnosticsRefreshState,
+				setDiagnosticsRefreshState,
 				//diagnostics next step output state
 				diagnosticsNextStepsOutputState,
 				setDiagnosticsNextStepsOutputState,

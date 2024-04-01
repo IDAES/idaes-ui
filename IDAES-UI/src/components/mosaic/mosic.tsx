@@ -41,6 +41,7 @@ const MosaicApp = () => {
         setDiagnosticsRunnerDisplayState,
         viewInLogPanel, // bottom panel toggle stream table or diagnostics logs
 		setViewInLogPanel,
+        setDiagnosticsRefreshState, // update diagnostics refresh by changing state bool to control useEffect
     } = useContext(AppContext);
 
     const isShowSteamName = fvHeaderState.isShowSteamName;
@@ -125,7 +126,17 @@ const MosaicApp = () => {
         // initial default toolbarBtn use fragment
         let toolBarBtn = <></>;
         // conditionally render toolbarBtn
-        toolBarBtn = conditionallyRenderPanelHeaderBtn(id, showSteamNameHandler, showLabelsHandler, isShowSteamName, isShowLabels, diagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState,viewInLogPanel)
+        toolBarBtn = conditionallyRenderPanelHeaderBtn(
+                        id, 
+                        showSteamNameHandler, 
+                        showLabelsHandler, 
+                        isShowSteamName, 
+                        isShowLabels, 
+                        diagnosticsRunFnNameListState, 
+                        setDiagnosticsRunnerDisplayState,
+                        viewInLogPanel, 
+                        setDiagnosticsRefreshState
+                    );
         
         return (
             <MosaicWindow<ViewId>
@@ -188,7 +199,8 @@ const MosaicApp = () => {
                                     isShowLabels, 
                                     diagnosticsRunFnNameListState, 
                                     setDiagnosticsRunnerDisplayState,
-                                    viewInLogPanel
+                                    viewInLogPanel,
+                                    setDiagnosticsRefreshState
                                 )
                             }
                         </div>
@@ -284,7 +296,8 @@ function conditionallyRenderPanelHeaderBtn(
     isShowLabels:boolean, 
     nextStepsFunctionNameList:String[], 
     setDiagnosticsRunnerDisplay:any,
-    viewInLogPanel:any
+    viewInLogPanel:any,
+    setDiagnosticsRefreshState:any
 ){
     /**
      *  use id from Mosaic > renderTile callback to conditionally render toolbar btn
@@ -351,7 +364,9 @@ function conditionallyRenderPanelHeaderBtn(
                 {/*download*/}
                 <Button className="mosaic_flowsheet_header_download" minimal>
                     <Icon icon={IconNames.BRING_DATA} size={20} />
-                    <ul id="flowsheet_component_header_dropdown_container" className="mosaic_dropdown_download">
+                    <ul 
+                        id="flowsheet_component_header_dropdown_container" className="mosaic_dropdown_download"
+                    >
                         <li id="headerExportImageBtn">Export PNG</li>
                         <li id="headerExportSvgBtn">Export SVG</li>
                     </ul>
@@ -359,9 +374,16 @@ function conditionallyRenderPanelHeaderBtn(
             </div>
             break;
         case "diagnostics":
+            function diagnosticsRefreshHandler(){
+                setDiagnosticsRefreshState(prev => !prev);
+            }
+
             return<div className="mosaic_toolbar_btn_container">
                 <p className="mosaic_diagnostic_toolbar_content">BLOCK: FLOWSHEET</p>
-                <div className="mosaic_toobar_btn_icon_with_text clickable_btn">
+                <div 
+                    className="mosaic_toobar_btn_icon_with_text clickable_btn" 
+                    onClick={()=>diagnosticsRefreshHandler()}
+                >
                     <Icon icon={IconNames.REFRESH} size={20} />
                     <span className="mosaic_toobar_btn_icon_with_text_text">Refresh</span>
                 </div>
