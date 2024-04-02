@@ -243,6 +243,56 @@ const MosaicApp = () => {
         })
     }
 
+    /**
+     * Everything about handle layout on change
+     * the mosaic layout will auto save to local storage 'mosaicLayout' when user make changes in UI 
+     * handle by function mosaicLayoutChangeHandler, call in return Mosaic component onChange
+     */
+
+    /**
+     * @Description Use for update current mosaic layout to local storage as a string format.
+     * @param layout Current mosaic layout obj
+     * @triggers Mosaic component onChange event handler
+     * @returns None
+     */
+    function mosaicLayoutChangeHandler(layout:any){
+        let currentLayout = JSON.stringify(layout);
+        localStorage.setItem('mosaicLayout', currentLayout);
+    }
+    
+    /**
+     * @Description read mosaic layout from local storage to initial layoutInLocalStorage.
+     * if has layout in local storage get it parse it and return it 
+     * if no layout in local storage return default layout
+     * @returns mosaic layout obj
+     */
+    function getMosaicLayout(){
+        let mosaicLayout:any = localStorage.getItem('mosaicLayout');
+        // if has layoutInLocalStorage means there is a stored layout then parse it to Obj use as most recent layout.
+        // layout is frequently updated when mosaic window on change
+        if(mosaicLayout){
+            mosaicLayout = JSON.parse(mosaicLayout);
+        }else{
+            // default mosaic layout
+            const defaultLayout = {
+                "direction": "column",
+                "first": {
+                    "direction": "row",
+                    "first": "flowsheet",
+                    "second": "diagnostics",
+                    "splitPercentage": 55.01008742434432
+                },
+                "second": "streamTableAndDiagnostics",
+                "splitPercentage": 60
+            };
+
+            mosaicLayout = defaultLayout;
+        }
+
+        return mosaicLayout
+    }
+
+
     return (
         <Mosaic<ViewId>
             renderTile={renderTile}
@@ -264,17 +314,21 @@ const MosaicApp = () => {
             //     splitPercentage: 15,
             // }}
             ////mosaic panel without components (variable)
-            initialValue={{
-                direction: 'column',
-                first: {
-                    direction: 'row',
-                    first: 'flowsheet',
-                    second: 'diagnostics',
-                    splitPercentage: panelState.diagnostics.show ? 70 : 100, //splitPercentage controls how wide split view is
-                },
-                second:'streamTableAndDiagnostics',
-                splitPercentage: 60,
-            }}
+            onChange={mosaicLayoutChangeHandler}
+            initialValue = {
+                getMosaicLayout() // this function returns mosaic layout
+                    // : {
+                    //     direction: 'column',
+                    //     first: {
+                    //         direction: 'row',
+                    //         first: 'flowsheet',
+                    //         second: 'diagnostics',
+                    //         splitPercentage: panelState.diagnostics.show ? 70 : 100, //splitPercentage controls how wide split view is
+                    //     },
+                    //     second:'streamTableAndDiagnostics',
+                    //     splitPercentage: 60,
+                    // }
+            }
         />
     );
 };
