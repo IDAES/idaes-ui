@@ -138,3 +138,7 @@
 .mosaic_header_toolbar_title_deactivate{
     color: rgb(173, 173, 173);
 }
+
+.mosaic_header_tool_bar_fully_deactivate{
+    display: none;
+}

@@ -172,11 +172,19 @@ const MosaicApp = () => {
                                             Stream Table
                                         </p>
                                         <p 
-                                            onClick={()=>toggleStreamTableDiagnosticsRunnerHandler('diagnosticsLogs')}
+                                            onClick={()=>{
+                                                panelState.diagnostics.show && toggleStreamTableDiagnosticsRunnerHandler('diagnosticsLogs');
+                                            }}
                                             className={`
-                                                ${
+                                                ${  
                                                     viewInLogPanel.diagnosticsLogs ?      "mosaic_header_toolbar_title_activate" :
                                                     "mosaic_header_toolbar_title_deactivate"
+                                                }
+
+                                                ${
+                                                    // css when diagnostics panel not open, the log tab in log panel should not display
+                                                    !panelState.diagnostics.show &&
+                                                    "mosaic_header_tool_bar_fully_deactivate"
                                                 }
                                                 mosaic_header_toolbar_title diagnostics_runner_panel_title
                                             `}
