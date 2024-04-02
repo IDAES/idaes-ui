@@ -280,7 +280,7 @@ const MosaicApp = () => {
                     "direction": "row",
                     "first": "flowsheet",
                     "second": "diagnostics",
-                    "splitPercentage": 55.01008742434432
+                    "splitPercentage": 55
                 },
                 "second": "streamTableAndDiagnostics",
                 "splitPercentage": 60
@@ -317,17 +317,6 @@ const MosaicApp = () => {
             onChange={mosaicLayoutChangeHandler}
             initialValue = {
                 getMosaicLayout() // this function returns mosaic layout
-                    // : {
-                    //     direction: 'column',
-                    //     first: {
-                    //         direction: 'row',
-                    //         first: 'flowsheet',
-                    //         second: 'diagnostics',
-                    //         splitPercentage: panelState.diagnostics.show ? 70 : 100, //splitPercentage controls how wide split view is
-                    //     },
-                    //     second:'streamTableAndDiagnostics',
-                    //     splitPercentage: 60,
-                    // }
             }
         />
     );
