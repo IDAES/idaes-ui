@@ -23,6 +23,7 @@ import Flowsheet_variable from '../flowsheet_main_component/flowsheet_variables/
 import Flowsheet from '../flowsheet_main_component/flowsheet_component/flowsheet_component';
 import FlowsheetDiagnostics from '../flowsheet_main_component/flowsheet_diagnostics_component/flowsheet_diagnostics_component';
 import FlowsheetDiagnosticsRunner from '../flowsheet_main_component/flowsheet_diagnostics_runner_component/flowsheet_diagnostic_runner_component';
+import DiagnosticsLogHeader from '../flowsheet_main_component/flowsheet_diagnostics_component/diagnostics_log_header/diagnostics_log_header_component';
 import StreamTable from '../flowsheet_main_component/stream_table_component/stream_table';
 
 // interface
@@ -448,6 +449,7 @@ function conditionallyRenderPanelHeaderBtn(
         case "streamTableAndDiagnostics":
             return<div className="mosaic_toolbar_btn_container">
                 {!viewInLogPanel.diagnosticsLogs && <StreamTableHeader />}
+                {viewInLogPanel.diagnosticsLogs && <DiagnosticsLogHeader />}
             </div>
             break
         case "diagnosticsRunner":

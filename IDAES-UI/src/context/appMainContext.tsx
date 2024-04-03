@@ -81,6 +81,7 @@
 	const [diagnosticsRunnerDisplayState, setDiagnosticsRunnerDisplayState] = useState<String>("");
 	//use to switch between true and false to control useEffect to refetch backend to get the most recent diagnostics data
 	const [diagnosticsRefreshState, setDiagnosticsRefreshState] = useState<Boolean>(true);
+	const [diagnosticsHistoryState, setDiagnosticsHistory] = useState(0);
 
 	/**
 	 * Context for variables
@@ -123,6 +124,9 @@
 				// diagnostics display which content to display
 				diagnosticsRunnerDisplayState,
 				setDiagnosticsRunnerDisplayState,
+				// this records which diagnostics output is display in the log panel
+				diagnosticsHistoryState,
+				setDiagnosticsHistory,
 				// bottom view panel display stream table or diagnostics panel
 				viewInLogPanel,
 				setViewInLogPanel,
