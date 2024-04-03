@@ -288,8 +288,8 @@ const MosaicApp = () => {
                 "first": {
                     "direction": "row",
                     "first": "flowsheet",
-                    "second": "diagnostics",
-                    "splitPercentage": 55
+                    "second": panelState.diagnostics.show ? "diagnostics" : "",
+                    "splitPercentage": panelState.diagnostics.show ? 55 : 100
                 },
                 "second": "streamTableAndDiagnostics",
                 "splitPercentage": 60
