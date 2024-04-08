@@ -75,30 +75,61 @@ class FlowsheetApp:
         # get diagnostics json
         self.diag_data = DiagnosticsData(flowsheet)
 
-        # API router
-        Router(
-            fastAPIApp=self.app,
-            flowsheet=self.flowsheet,
-            flowsheet_name=self.flowsheet_name,
-            save_time_interval=self.save_time_interval,
-            save=self.save,
-            save_dir=self.save_dir,
-            load_from_saved=self.load_from_saved,
-            overwrite=self.overwrite,
-        )
+        # API
+        # get flowsheet
+        @self.app.get("/api/get_fs/")
+        def get_flowsheet() -> Flowsheet:
+            # todo: check 1st time for saved one (merge if found)
+            return self.flowsheet
 
-        # print message why browser not start
-        if self.test:
-            print("Test mode enabled with 'test = True', browser won't start!")
-        if not browser:
-            print(
-                "Browser mode disenabled with 'browser = False', browser won't start!"
-            )
+        # save flowsheet
+        @self.app.put("/api/put_fs/")
+        def put_flowsheet(fs: Flowsheet):
+            self.flowsheet = merge_flowsheets(self.flowsheet, fs)
+            # todo: save result
+            return self.flowsheet
 
-        # # Uvicorn serve fastAPI app
-        # # condation not test only not test case will start uvicorn
-        if not self.test and browser:
-            WebUvicorn(self.app, self.port, self.flowsheet_name)
+        @self.app.get("/api/get_diagnostics/")
+        async def get_diagnostics() -> DiagnosticsData:
+            try:
+                return self.diag_data
+            except DiagnosticsException as exc:
+                error_json = DiagnosticsError.from_exception(exc).model_dump_json()
+                raise HTTPException(status_code=500, detail=error_json)
 
-    def get_fast_api_app(self):
-        return self.app
+        @self.app.get("/api/get_settings/")
+        def get_settings() -> AppSettings:
+            return self.settings
+
+        @self.app.put("/api/put_settings/")
+        def put_settings(settings: AppSettings):
+            self.settings = settings
+
+        # mount static file
+        # define root route
+        @self.app.get("/")
+        async def read_root():
+            index_path = self._static_dir / "index.html"
+            if not index_path.is_file():
+                raise HTTPException(status_code=404, detail="Index file not found")
+            return FileResponse(index_path)
+
+        # mount static file folder
+        self.app.mount("/", StaticFiles(directory=self._static_dir), name="reactBuild")
+
+    def open_browser(self, port: int):
+        """When FastAPI run, open browser with port.
+
+        Args:
+            port: the port FastAPI app running on, will open browser window with this port.
+        """
+        webbrowser.open("http://127.0.0.1:" + str(port))
+
+    def run(self, port: int = 8000):
+        """uvicorn run FastAPI, also call open browser but delay 1.5s
+
+        Args:
+            port: the port FastAPI app running on.
+        """
+        threading.Timer(1.5, lambda: self.open_browser(port)).start()
+        uvicorn.run(self.app, host="127.0.0.1", port=port)
