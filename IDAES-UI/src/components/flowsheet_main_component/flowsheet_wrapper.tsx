@@ -14,13 +14,13 @@ import css from "./flowsheet_wrapper.module.css";
 
 export default function FlowsheetWrapper(){
 
-  let {server_port, fv_id, panelState} = useContext(AppContext);
-  const isFvShow:boolean = panelState.fv.show;
-  const isDiagnosticsShow:boolean = panelState.diagnostics.show;
-  const isStreamTableShow = panelState.streamTable.show;
+	let {server_port, fv_id, panelState} = useContext(AppContext);
+	const isFvShow:boolean = panelState.fv.show;
+	const isDiagnosticsShow:boolean = panelState.diagnostics.show;
+	const isStreamTableShow = panelState.streamTable.show;
 
-  const panelShow = {display:"block"};
-  const panelHide = {display:"none"};
+	const panelShow = {display:"block"};
+	const panelHide = {display:"none"};
 
   useEffect(()=>{
     //get server port base on UI port number, vite running on 5173 on dev
@@ -33,40 +33,43 @@ export default function FlowsheetWrapper(){
     }
   },[isFvShow, isStreamTableShow])
 
-  return(
-    <div id="flowsheet-wrapper" className={css.flowsheetWrapper}>
-      <MinimizedBar />
-      <PanelGroup direction="vertical" id="flowsheet-wrapper">
-        {
-          <Panel maxSize={100} defaultSize={65} style={isFvShow ? panelShow : panelHide}>
-            <PanelGroup direction="horizontal">
-                <Panel defaultSize={isFvShow ? 70 : 0} minSize={0}>
-                  <FlowsheetHeader />
-                  <Flowsheet />
-                </Panel>
-              
-              {/*this part closed because the variable part is not in this round of release*/}
-              {
-                isDiagnosticsShow && <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
-              }
-              {
-                isDiagnosticsShow && 
-                <Panel defaultSize={30} minSize={0}>
-                  <FlowsheetDiagnostics />
-                </Panel>
-              }
-            </PanelGroup>
-          </Panel>
-        }
-            
-        <PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
-        {
-          isStreamTableShow &&
-          <Panel maxSize={100} defaultSize={35} style={isStreamTableShow ? panelShow : panelHide}>
-            <StreamTable />
-          </Panel>
-        }
-      </PanelGroup>
-    </div>
-  )
+	return(
+		<div id="flowsheet-wrapper" className={css.flowsheetWrapper}>
+		<MinimizedBar />
+		<PanelGroup direction="vertical" id="flowsheet-wrapper">
+			{
+			<Panel maxSize={100} defaultSize={65}>
+				<PanelGroup direction="horizontal">
+					{
+					isFvShow && 
+					<Panel defaultSize={isFvShow ? 70 : 0} minSize={0} >
+						<FlowsheetHeader />
+						<Flowsheet />
+					</Panel>
+					}
+				
+				{/*this part closed because the variable part is not in this round of release*/}
+				{
+					isDiagnosticsShow && <PanelResizeHandle className="panelResizeHandle panelResizeHandle_vertical"/>
+				}
+				{
+					isDiagnosticsShow && 
+					<Panel defaultSize={isFvShow ? 30 : 100} minSize={0}>
+					<FlowsheetDiagnostics />
+					</Panel>
+				}
+				</PanelGroup>
+			</Panel>
+			}
+				
+			<PanelResizeHandle className="panelResizeHandle panelResizeHandle_horizontal"/>
+			{
+			isStreamTableShow &&
+			<Panel maxSize={100} defaultSize={35} style={isStreamTableShow ? panelShow : panelHide}>
+				<StreamTable />
+			</Panel>
+			}
+		</PanelGroup>
+		</div>
+	)
 }
