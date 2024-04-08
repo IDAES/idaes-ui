@@ -81,8 +81,18 @@ class FlowsheetApp:
             return self.settings
 =======
         # # API router
+<<<<<<< HEAD
         Router(self.app, self.flowsheet, self.flowsheet_name, self.save_time_interval)
 >>>>>>> 9f11168 (remove get flowsheet it's already in it's own route file)
+=======
+        Router(
+            fastAPIApp=self.app,
+            flowsheet=self.flowsheet,
+            flowsheet_name=self.flowsheet_name,
+            save_dir=self.save_dir,
+            save_time_interval=self.save_time_interval,
+        )
+>>>>>>> 9cc24b1 (add flowsheet store location save_dir)
 
         @self.app.put("/settings/")
         def put_settings(settings: AppSettings):
