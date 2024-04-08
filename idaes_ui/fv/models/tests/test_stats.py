@@ -1,6 +1,7 @@
 """
 Tests for the IDAES model statistics models
 """
+
 import pytest
 from . import flowsheet
 from ..stats import *

@@ -1,6 +1,7 @@
 """
 Data model for IDAES FV settings
 """
+
 __author__ = "Dan Gunter"
 __created__ = "2023-10-23"
 

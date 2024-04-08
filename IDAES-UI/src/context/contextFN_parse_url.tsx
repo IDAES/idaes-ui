@@ -18,8 +18,6 @@
 const currentENV = import.meta.env.VITE_MODE;
 
 export function context_parse_url(){
-  
-  
   if(currentENV === "prod"){
     /**
      * When env is prod read server port and fv id from url
@@ -36,7 +34,7 @@ export function context_parse_url(){
       the port and id are setup in example.py fv_example()
     */
     //fixed port when example
-    const server_port= "49999";
+    const server_port= 49999;
     //fixed id when example
     const fv_id = "sample_visualization";
     return {server_port, fv_id};

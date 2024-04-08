@@ -1,6 +1,7 @@
 """
 Tests for the IDAES FV app, using FastAPI TestClient
 """
+
 import pytest
 
 pytest.importorskip("fastapi", reason="fastapi not available")
@@ -22,6 +23,7 @@ def fvapp():
 def client(fvapp):
     """FastAPI client for testing"""
     return TestClient(fvapp)
+
 
 # Tests.
 # Unit test naming:

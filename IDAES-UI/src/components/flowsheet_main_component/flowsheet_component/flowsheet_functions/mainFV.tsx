@@ -35,6 +35,7 @@ export class MainFV {
   baseUrl:string;
   getFSUrl:string;
   putFSUrl:string;
+  getAppSettingUrl:string;
   model:any;
   paper:any;
   _is_graph_changed:boolean;
@@ -54,9 +55,10 @@ export class MainFV {
     this.isStreamTableShow = isStreamTableShow;
 
     //Gerneate url for fetch data
-    this.baseUrl = `http://localhost:${port}`
-    this.getFSUrl = VITE_MODE === "dev" ? `${this.baseUrl}/fs?id=${flowsheetId}` : `/fs?id=${flowsheetId}`;
-    this.putFSUrl = VITE_MODE === "dev" ? `${this.baseUrl}/fs?id=${flowsheetId}` : `/fs?id=${flowsheetId}`;
+    this.baseUrl = `http://localhost:${port}`;
+    this.getFSUrl = `${this.baseUrl}/api/get_fs?get_which=flowsheet`;
+    this.putFSUrl = `${this.baseUrl}/api/put_fs`;
+    this.getAppSettingUrl = `${this.baseUrl}/api/get_app_setting`;
 
     //Define model
     this.model = {}
@@ -71,21 +73,21 @@ export class MainFV {
     // Setting name (key) that defines the save model time interval
     this._save_time_interval_key = 'save_time_interval';
     this._default_save_time_interval = 5000; // Default time interval
-    this._save_time_interval = this.getSaveTimeInterval();
+    this._save_time_interval = this.getSaveTimeInterval(this.getAppSettingUrl);
     this.setupGraphChangeChecker(this._save_time_interval, flowsheetId);
     
-    //fetch model data from python server, once get data then render model and stream table
-    //default is from sample_visualization if no ?example=1 etc. in url
-    //define if fetch from example
-    this.setGetFSUrl();
-
     /**
      * @param 
      */
     axios.get(this.getFSUrl)
     .then((response) => {
         //get data from python server /fs
-        this.model = response.data;
+        if(response.data._old && response.data._new){
+          this.model = response.data._new
+        }else{
+          this.model = response.data;
+        }
+        
         //debug when flowsheet has no position it should not stack on each other
         isDevTest && this.debug_removeFlowsheetPosition(this.model);
         //render model
@@ -230,15 +232,12 @@ export class MainFV {
     });
   }
 
-    /**
-     * Get the save time interval value from the application's setting block.
-     */
-  getSaveTimeInterval() {
-    //question:
-    //this is the old way to write setting_url question its key=" then concat, should I keep "?
-    //let settings_url = `${this.baseUrl}/setting?setting_key="`.concat(this._save_time_interval_key);
-
-    let settings_url = `${this.baseUrl}/setting?setting_key=${this._save_time_interval_key}`;
+  /**
+   * @description Get the save time interval value from the application's setting block.
+   * @returns save_time_interval
+   */
+  getSaveTimeInterval(setting_url:string) {
+    let settings_url = `${this.baseUrl}/api/get_app_setting`;
     let save_time_interval = this._default_save_time_interval;
 
     axios.get(settings_url, {
@@ -247,7 +246,7 @@ export class MainFV {
       }
     })
     .then((response) => {
-      if (response.data.value != 'None') {
+      if (response.data.value) {
           save_time_interval = response.data.value;
       } else {
           this.informUser(
@@ -288,6 +287,7 @@ export class MainFV {
 
       var graphChangedChecker = setInterval(() => {
           if (this._is_graph_changed) {
+              console.log(this.paper.graph)
               this.saveModel(flowsheet_url, this.paper.graph);
               // reset flag
               this._is_graph_changed = false;
@@ -310,14 +310,19 @@ export class MainFV {
      * @param model The model to save
      */
     saveModel(url:any, model:any) {
-      let clientData = JSON.stringify(model.toJSON());
-      axios.put(url, clientData, {
+      console.log(model)
+      let modelData = {
+          "flowsheet_type": "jjs_fs",
+          "flowsheet": model //data type in python is dict
+      };
+      axios.put(url, JSON.stringify(modelData), {
         headers: {
             'Content-Type': 'application/json'
         }
       })
       .then((response) => {
         console.log(`saved`)
+        console.log(response.data)
         this.informUser(0, "Saved new model values");
       })
       .catch((error) => {

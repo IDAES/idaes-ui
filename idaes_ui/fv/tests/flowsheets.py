@@ -1,6 +1,7 @@
 """
 Shared flowsheets for tests
 """
+
 import numpy as np
 from idaes.models.properties.swco2 import SWCO2ParameterBlock
 from idaes.models.unit_models import Heater, PressureChanger, HeatExchanger
@@ -79,8 +80,8 @@ def flash_flowsheet():
     # TODO: move this to
     m.fs.flash.inlet.flow_mol.fix(np.NINF, skip_validation=True)
     # Pyomo#2180 is merged
-    #m.fs.flash.inlet.flow_mol[:].set_value(np.NINF, True)
-    #m.fs.flash.inlet.flow_mol.fix()
+    # m.fs.flash.inlet.flow_mol[:].set_value(np.NINF, True)
+    # m.fs.flash.inlet.flow_mol.fix()
     m.fs.flash.inlet.temperature.fix(np.inf)
     m.fs.flash.inlet.pressure[:].set_value(np.nan, True)
     m.fs.flash.inlet.pressure.fix()
@@ -90,21 +91,28 @@ def flash_flowsheet():
     m.fs.flash.deltaP.fix(0)
     return m.fs
 
+
 # ----------------------
 # Used for diagnostics
 # ---------------------
 
 
 def idaes_demo_flowsheet():
-    """Get a demo flowsheet that works with diagnostics.
+    """Get a demo flowsheet that works with diagnostics."""
+    return demo_flowsheet()  # return with curren file's demo_flowsheet
+
     """
-    m = demo.build_flowsheet()
-    demo.set_scaling(m)
-    demo.set_dof(m)
-    demo.initialize_flowsheet(m)
-    # add a 'solve()' method
-    m.fs.solve = solve_flowsheet(m)
-    return m.fs
+    TODO: this demo is from idaes but will cause error:
+    idaes.core.util.exceptions.InitializationError: fs.M01.inlet_2_state failed to initialize successfully. Please check the output logs for more information
+    Try to fix it later and in future should use idaes-pse to build flowsheet.
+    """
+    # m = demo.build_flowsheet()
+    # demo.set_scaling(m)
+    # demo.set_dof(m)
+    # demo.initialize_flowsheet(m)
+    # # add a 'solve()' method
+    # m.fs.solve = solve_flowsheet(m)
+    # return m.fs
 
 
 def solve_flowsheet(m):
@@ -116,7 +124,9 @@ def solve_flowsheet(m):
     Returns:
         a `solve()` method for the model
     """
+
     def _solve():
         solver = demo.get_solver()
         solver.solve(m, tee=False)
+
     return _solve
