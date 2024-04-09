@@ -142,11 +142,14 @@ export default function DiagnosticsDisplay(props:any){
             // initial function name by remove () in function
             let functionName:string = whichFunction.replace("(", "").replace(")", "");
             // build api call url
-            const post_diagnostics_runner_url:string = `http://localhost:49999/api/post_diagnostics_runner`;
+            const post_diagnostics_runner_url:string = `http://localhost:49999/run_diagnostic`;
             // build api call body
-            const body = {function_name: functionName};
+            const windowURL = new URL(window.location.href);
+            const urlId = windowURL.searchParams.get("id");
+            const body = {function_name: functionName, id: urlId};
             // api call return diagnostics runner result or error
-            const result = await axios.post(post_diagnostics_runner_url, body);
+            const result = await axios.put(post_diagnostics_runner_url, body);
+            console.log(result)
             const diagnosticsFunctionRunnerResult = result.data;
             // update diagnosticsNextStepsOutPut
             setDiagnosticsNextStepsOutputState((prev:any)=>{

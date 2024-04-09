@@ -95,12 +95,7 @@ export class MainFV {
     axios.get(this.getFSUrl)
     .then((response) => {
         //get data from python server /fs
-        if(response.data._old && response.data._new){
-          this.model = response.data._new
-        }else{
-          this.model = response.data;
-        }
-        
+        this.model = response.data;
         //debug when flowsheet has no position it should not stack on each other
         isDevTest && this.debug_removeFlowsheetPosition(this.model);
         //render model
@@ -303,7 +298,6 @@ export class MainFV {
 
       var graphChangedChecker = setInterval(() => {
           if (this._is_graph_changed) {
-              console.log(this.paper.graph)
               this.saveModel(flowsheet_url, this.paper.graph);
               // reset flag
               this._is_graph_changed = false;
