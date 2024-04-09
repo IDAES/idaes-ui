@@ -57,7 +57,6 @@ const MosaicApp = () => {
     function toggleStreamTableDiagnosticsRunnerHandler(clickedElementName:string){
         // validation when passed in param is not a valid viewInLogPanel key name, log and return.
         if(!Object.keys(viewInLogPanel).includes(clickedElementName)){
-            console.log(`key not found`);
             return;
         }
         // update state set viewInLogPanel.clickedElementName = true then show this panel, other false.
@@ -87,18 +86,14 @@ const MosaicApp = () => {
          * 3.panelState.diagnostics.show == false, bottom should only show stream table.
          */
         if(panelState.diagnostics.show === true && viewInLogPanel.diagnosticsLogs){
-            console.log(panelState.diagnostics.show)
-            console.log(`in 1`)
             return <FlowsheetDiagnosticsRunner/>
         }
         
         if(panelState.diagnostics.show === true && viewInLogPanel.streamTable === true){
-            console.log(`in 2`)
             return <StreamTable/>
         }
 
         if(panelState.diagnostics.show === false){
-            console.log(`in 2`)
             return <StreamTable/>
         }
 
@@ -283,15 +278,34 @@ const MosaicApp = () => {
             // parse the local storage stored mosaic layout 
             mosaicLayout = JSON.parse(mosaicLayout);
             
-            // here checks diagnostics panel state show or not to render that panel
-            // this will prevent local storage cache load wrong layout with diagnostics panel always open.
-            if(panelState.diagnostics.show){
-                mosaicLayout.first.second = "diagnostics";
-                mosaicLayout.first.splitPercentage =  50;
-            }else{
-                mosaicLayout.first.second = "";
-                mosaicLayout.first.splitPercentage =  100;
-            }
+            Object.keys(mosaicLayout).map((el:any)=>{
+                // 1 check mosaicLayout[el] is a obj if is obj then loop in do deep check
+                if(mosaicLayout[el] !== "diagnostics" || mosaicLayout[el] !== ""){
+                    if(typeof(mosaicLayout[el]) == 'object' && Object.keys(mosaicLayout[el]).length > 0){
+                        Object.keys(mosaicLayout[el]).map((subEl:any)=>{
+                            if(mosaicLayout[el][subEl] == 'diagnostics'){
+                                if(!panelState.diagnostics.show){
+                                    delete mosaicLayout[el][subEl];
+                                }
+                                mosaicLayout[el][subEl] = panelState.diagnostics.show ? "diagnostics" : "";
+                                mosaicLayout[el]['splitPercentage'] = panelState.diagnostics.show ? 55 : 100;
+                            }
+                        })
+                    }
+                }
+
+                // 2 check mosaicLayout[el] is diagnostics or ""
+                if(mosaicLayout[el] === "diagnostics" || mosaicLayout[el] === ""){
+                    if(panelState.diagnostics.show){
+                        mosaicLayout[el] = "diagnostics";
+                        
+                    }
+                    if(!panelState.diagnostics.show){
+                        mosaicLayout[el] = "";
+                        mosaicLayout['splitPercentage'] = 0
+                    }
+                }
+            })
         }else{
             // default mosaic layout
             const defaultLayout = {
