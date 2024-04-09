@@ -286,9 +286,11 @@ const MosaicApp = () => {
             // here checks diagnostics panel state show or not to render that panel
             // this will prevent local storage cache load wrong layout with diagnostics panel always open.
             if(panelState.diagnostics.show){
-                mosaicLayout['first']['second'] = "diagnostics";
+                mosaicLayout.first.second = "diagnostics";
+                mosaicLayout.first.splitPercentage =  50;
             }else{
-                mosaicLayout['first']['second'] = "";
+                mosaicLayout.first.second = "";
+                mosaicLayout.first.splitPercentage =  100;
             }
         }else{
             // default mosaic layout
