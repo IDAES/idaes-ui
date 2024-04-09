@@ -9,7 +9,6 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid black;
 }
 
 /*stream table header right container*/
@@ -105,29 +104,6 @@
   display: none;
 }
 
-/*minimize btn*/
-.flowsheet_header_icon_container{
-  padding: 10px 10px !important;
-  border: 1px solid black;
-}
-
-.flowsheetHeader_small_icon:hover{
-  cursor: pointer;
-  color: white;
-  background-color: #161616;
-  transition: .3s ease-in-out;
-}
-
-.flowsheetHeader_small_icon{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-  padding: 5px !important;
-  background-color: #D9D9D9;
-  border: none;
-  border-radius: 6px;
+.streamtable_vartype_panel{
+  display: none !important;
 }
