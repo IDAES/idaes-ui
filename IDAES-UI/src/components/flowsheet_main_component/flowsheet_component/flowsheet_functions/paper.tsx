@@ -261,8 +261,10 @@ export class Paper {
                     }
                 }
             );
-            idaesCanvas!.dispatchEvent(removeHighlightStreamEvent);
-            streamTable!.dispatchEvent(removeHighlightStreamEvent);
+
+            if(idaesCanvas) idaesCanvas!.dispatchEvent(removeHighlightStreamEvent);
+            if(streamTable) streamTable!.dispatchEvent(removeHighlightStreamEvent);
+            
         });
 
         // Link labels will appear and disappear on right click. Replaces browser context menu

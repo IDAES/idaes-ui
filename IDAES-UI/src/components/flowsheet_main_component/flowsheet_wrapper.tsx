@@ -22,12 +22,13 @@ export default function FlowsheetWrapper(){
 		//get server port base on UI port number, vite running on 5173 on dev
 		server_port == "5173" ? server_port = 8000 : server_port = server_port;
 		//when template loaded then render flowsheet, variable, stream table to page with minFV class.
-		fv = new MainFV(fv_id, server_port, isFvShow, false, isStreamTableShow); //The false is placeholder for isVariableShow, now variable panel is not show
+		fv = new MainFV(fv_id, server_port, isFvShow, false, isStreamTableShow, viewInLogPanel); //The false is placeholder for isVariableShow, now variable panel is not show
 	}else{
 		fv = undefined;
 	}
     
     return ()=>{
+		// clean up event handler
         if (fv && typeof fv.cleanToolBarEvent === 'function') {
             fv.cleanToolBarEvent();
         }

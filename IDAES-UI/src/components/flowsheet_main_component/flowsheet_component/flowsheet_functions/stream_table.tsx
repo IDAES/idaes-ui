@@ -50,10 +50,12 @@ export class StreamTable {
     gridCellMouseLeaveFn : any;
     existing_var_types: any;
     _gridOptions:any;
+    viewInLogPanel: any;
 
 
-    constructor(app:any, model:any) {
+    constructor(app:any, model:any, viewInLogPanel:any) {
         this._app = app;
+        this.viewInLogPanel = viewInLogPanel
         // Define brushing event handlers
         this.defineTableBrushingFns();
         this.initTable(model);
@@ -280,7 +282,7 @@ export class StreamTable {
         let streamTable = document.querySelector('#stream-table-data');
         let idaesCanvas = document.querySelector('#fv');
 
-        if(!streamTable || !idaesCanvas) return;
+        if(!streamTable || !idaesCanvas || !this.viewInLogPanel.streamTable) return;
         // Function to highlight a stream table column
         this.highlightFn = (event:any) => {
             let streamGridCells = streamTable!.querySelectorAll(
