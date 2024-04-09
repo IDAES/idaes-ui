@@ -280,7 +280,16 @@ const MosaicApp = () => {
         // if has layoutInLocalStorage means there is a stored layout then parse it to Obj use as most recent layout.
         // layout is frequently updated when mosaic window on change
         if(mosaicLayout){
+            // parse the local storage stored mosaic layout 
             mosaicLayout = JSON.parse(mosaicLayout);
+            
+            // here checks diagnostics panel state show or not to render that panel
+            // this will prevent local storage cache load wrong layout with diagnostics panel always open.
+            if(panelState.diagnostics.show){
+                mosaicLayout['first']['second'] = "diagnostics";
+            }else{
+                mosaicLayout['first']['second'] = "";
+            }
         }else{
             // default mosaic layout
             const defaultLayout = {
