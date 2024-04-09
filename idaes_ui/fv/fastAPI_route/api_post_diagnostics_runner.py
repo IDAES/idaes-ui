@@ -37,21 +37,30 @@ class PostDiagnosticsRunnerRoute:
 
             # get diagnosticsToolBox ready by using original_flowsheet
             original_flowsheet = flowsheet_manager.get_original_flowsheet()
-            dt = DiagnosticsToolbox(original_flowsheet)
+            dt_instance = DiagnosticsToolbox(original_flowsheet)
 
-            # initial streamIO to catch diagnostics output or its default will print to terminal
-            output_stream = io.StringIO()
+            """
+            base on request.function_name run diagnostics function, and use streamIO to capture
+            diagnosticsToolBox output as return value return to frontend
+            """
+            # initial current function name
+            function_name = request.function_name
 
-            # base on request.function_name run diagnostics function
-            match request.function_name:
-                case "display_underconstrained_set":
-                    dt.display_underconstrained_set(stream=output_stream)
-                case "display_constraints_with_large_residuals":
-                    dt.display_constraints_with_large_residuals(stream=output_stream)
-                case "display_potential_evaluation_errors":
-                    dt.display_potential_evaluation_errors(stream=output_stream)
+            if hasattr(dt_instance, function_name):
+                # read dt function from dt instance
+                current_function = getattr(dt_instance, function_name)
+                # initial streamIO use as stream to capture diagnostics output or its default will print to terminal
+                output_stream = io.StringIO()
+                # run current function
+                current_function(stream=output_stream)
 
-            # read catched output content
+            else:
+                # return error function not exists
+                return {
+                    "error": f"Error function name {function_name} is not exists in diagnosticsToolBox instance"
+                }
+
+            # read captured output content
             captured_output = output_stream.getvalue()
 
             # close StreamIO
