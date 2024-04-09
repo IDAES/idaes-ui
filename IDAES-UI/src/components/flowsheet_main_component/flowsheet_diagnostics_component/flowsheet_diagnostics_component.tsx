@@ -18,7 +18,6 @@ export default function FlowsheetDiagnostics(){
     const [diagnosticData, setDiagnosticsData] = useState<DiagnosticsDataInterface | null>(null);
     // use to hold which issue currently is displayed on screen setWhichIssue to update diagnostics display
     const [whichIssue, setWhichIssue] = useState<string | null>("structural"); 
-    console.log(whichIssue)
 
     const toggleIssueHandler = (issue:any) =>{
         // this function use in issues component's each issue tab
@@ -27,7 +26,6 @@ export default function FlowsheetDiagnostics(){
     }
 
     useEffect(()=>{
-        console.log(`loading diagnostics data`)
         // const getDiagnosticUrl = `http://127.0.0.1:${server_port}/api/get_diagnostics`;
         const windowURL = new URL(window.location.href);
         const id = windowURL.searchParams.get("id");

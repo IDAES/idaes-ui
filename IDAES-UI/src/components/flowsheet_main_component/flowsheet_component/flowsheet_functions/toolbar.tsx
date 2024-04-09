@@ -176,7 +176,6 @@ export class Toolbar {
     //this element is static and 100% there.
     const headerExportImageBtn = document.querySelector("#headerExportImageBtn") as HTMLElement;
     const headerExportSvgBtn = document.querySelector("#headerExportSvgBtn") as HTMLElement;
-    console.log(`event reged`)
     headerExportImageBtn.addEventListener("click", () => {
         let p = this._paper.paper;
         const model_id = this.flowsheetId
