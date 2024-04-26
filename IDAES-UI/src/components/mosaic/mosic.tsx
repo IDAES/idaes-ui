@@ -392,19 +392,61 @@ const MosaicApp = () => {
              * if current layout not contain diagnostics panel. 
              * use diagnosticsPanelParams to re-format copyCurrentLayout (insert diagnostics panel to its old spot)
              * else directly return layout
+             * 
+             * have to have this because when diagnostics panel is off and change mosaic layout
+             * the mosaic will only update displayed panel obj and store to local storage
+             * this will make the diagnostics panel disappeared forever.
              */
             if(!JSON.stringify(currentLayout).includes("diagnostics")){
-                let diagnosticsPanelParams = localStorage.getItem("diagnosticsPanelParams");
-                let keyOfDiagnosticsItem: string;
-                Object.keys(copyCurrentLayout).forEach(el=>{
-                    if(JSON.stringify(copyCurrentLayout[el]) == JSON.stringify(diagnosticsPanelParams.diagnosticsPanelStayWith)){
-                        keyOfDiagnosticsItem = el;
+                if(!localStorage.getItem("diagnosticsPanelParams")){
+                    initialDiagnosticsPanelParams();
+                }
+                
+                const readDiagnosticsPanelParams = localStorage.getItem("diagnosticsPanelParams");
+                if(readDiagnosticsPanelParams){
+                    let diagnosticsPanelParams = JSON.parse(readDiagnosticsPanelParams);
+                    /**
+                     * This is for restore diagnostics panel when diagnostics panel stand alone and 
+                     * panelState.show is false and change mosaic layout
+                     */
+                    if(!diagnosticsPanelParams.diagnosticsPanelLocationInObj){
+                        const otherPanelAt = diagnosticsPanelParams.diagnosticsPanelLocationInItem == "first" ? "second" : "first";
+                        const rebuildOtherPanelObj = {
+                            direction : copyCurrentLayout.direction ?  copyCurrentLayout.direction: "row",
+                            splitPercentage : copyCurrentLayout.splitPercentage ? copyCurrentLayout.splitPercentage : 55,
+                            first: copyCurrentLayout['first'] ? copyCurrentLayout['first'] : "flowsheet",
+                            second: copyCurrentLayout['second'] ? copyCurrentLayout['second'] : "streamTableAndDiagnostics",
+
+                        }
+                        copyCurrentLayout.direction = diagnosticsPanelParams.direction ? diagnosticsPanelParams.direction : "column";
+                        copyCurrentLayout.splitPercentage = diagnosticsPanelParams.splitPercentage ? diagnosticsPanelParams.splitPercentage : 55;
+                        copyCurrentLayout[diagnosticsPanelParams.diagnosticsPanelLocationInItem] = "diagnostics";
+                        copyCurrentLayout[otherPanelAt] = rebuildOtherPanelObj;
                     }
-                })
+                    /**
+                     * This is for restore diagnostics panel when diagnostics panel stage nested with other panel in a obj
+                     */
+                    if(diagnosticsPanelParams.diagnosticsPanelLocationInObj){
+                        const stayWithPanel = copyCurrentLayout[diagnosticsPanelParams.diagnosticsPanelLocationInItem];
+                        const otherPanelAt = diagnosticsPanelParams.diagnosticsPanelLocationInObj == "first" ? "second" : "first"; // wrong didnt find stay with item
+                        const rebuildPanelWithDiagnosticsObj = {
+                            direction: diagnosticsPanelParams.direction ? diagnosticsPanelParams.direction : "column",
+                            splitPercentage : copyCurrentLayout.splitPercentage ? copyCurrentLayout.splitPercentage : 55,
+                        }
+                        rebuildPanelWithDiagnosticsObj[otherPanelAt] = stayWithPanel;
+                        rebuildPanelWithDiagnosticsObj[diagnosticsPanelParams.diagnosticsPanelLocationInObj] = "diagnostics";
+
+                        copyCurrentLayout[diagnosticsPanelParams.diagnosticsPanelLocationInItem] = rebuildPanelWithDiagnosticsObj;
+                    }
+                }
             }
 
-            return currentLayout;
+            return copyCurrentLayout;
         }
+
+        /**
+         * This handles when panelState.diagnostics.show if false to remove the diagnostics panel from mosaic layout
+         */
         
         if(!panelState.diagnostics.show){
             let copyLayoutHolder: string = JSON.stringify(currentLayout);
@@ -451,7 +493,6 @@ const MosaicApp = () => {
         setCurrentLayout(()=>{
             const mosaicLayout = localStorage.getItem('mosaicLayout');
             if(mosaicLayout){
-                console.log(mosaicLayout.includes("diagnostics"))
                 return JSON.parse(mosaicLayout);
             }else{
                 return setupDefaultMosaicLayout();
