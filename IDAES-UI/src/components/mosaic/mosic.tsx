@@ -2,12 +2,13 @@ import { useContext, useEffect, useState, useId } from 'react';
 import { AppContext } from '@/context/appMainContext';
 import { Mosaic, MosaicWindow } from 'react-mosaic-component';
 import { Button, Classes, Intent, Icon } from '@blueprintjs/core';
-import { IconNames, IconName } from '@blueprintjs/icons';
+import { IconNames, IconName, Percentage } from '@blueprintjs/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons';
+import MessageBar  from "../message_bar_component/message_bar_component";
 
 //interface
-import {ToggleStreamTableInLogInterface} from '@/interface/appMainContext_interface';
+import {ToggleStreamTableInLogInterface, DiagnosticsPanelParamsInterface} from '@/interface/appMainContext_interface';
 
 import 'react-mosaic-component/react-mosaic-component.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
@@ -48,6 +49,7 @@ const MosaicApp = () => {
 
     const isShowSteamName = fvHeaderState.isShowSteamName;
     const isShowLabels = fvHeaderState.isShowLabels;
+    const [currentLayout, setCurrentLayout] = useState(setupDefaultMosaicLayout());
 
     /**
      * @Description this function use to update context "viewInLogPanel"
@@ -136,6 +138,8 @@ const MosaicApp = () => {
                     );
         
         return (
+            <>
+            {/* <MessageBar /> */}
             <MosaicWindow<ViewId>
                 path={path}
                 createNode={() => 'new'}
@@ -215,6 +219,7 @@ const MosaicApp = () => {
                 {/*Content is render here*/}
                 {ELEMENT_MAP[id]}
             </MosaicWindow>
+            </>
         );
     };
 
@@ -238,29 +243,22 @@ const MosaicApp = () => {
     }
 
     /**
-     * Everything about handle layout on change
-     * the mosaic layout will auto save to local storage 'mosaicLayout' when user make changes in UI 
-     * handle by function mosaicLayoutChangeHandler, call in return Mosaic component onChange
-     */
-    interface DiagnosticsPanelParamsInterface {
-        direction: "row" | "column";
-        diagnosticsPanelLocationInItem: "first" | "second";
-        diagnosticsPanelLocationInObj: "first" | "second";
-        diagnosticsPanelStayWith: string;
-        splitPercentage: number;
-    }
-
-    /**
      * @Description Use for update current mosaic layout to local storage as a string format.
      * @param layout Current mosaic layout obj
      * @triggers Mosaic component onChange event handler
      * @returns None
      */
     function mosaicLayoutChangeHandler(layout:any){
-        // store layout to local storage
-        let currentLayout = JSON.stringify(layout);
-        const updatedMosaicLayout = updateDiagnosticsPanelLocation(layout);
-        localStorage.setItem('mosaicLayout', currentLayout);
+        if(panelState.diagnostics.show){
+            updateDiagnosticsPanelLocation(layout);
+        }
+        
+        localStorage.setItem('mosaicLayout', JSON.stringify(layout));
+
+        // overwrite layout state every when change layout
+        setCurrentLayout(()=>{
+            return layout;
+        })
     }
 
     /**
@@ -274,52 +272,41 @@ const MosaicApp = () => {
      * 
      * @willDo setup or update local storage's diagnosticsPanelParams, it use for define diagnostics panel location.
      */
-
-    // TODO: !issue here (maybe), when diagnostics is not on and just initial drag change flowsheet and table panel the diagnosticsPanelLocation.diagnosticsPanelLocationInItem InObj are gone, this cause diagnostics panel disappear
     function updateDiagnosticsPanelLocation(layout:any){
-        // read mosaic layout from local storage
-        let mosaicLayout = JSON.parse(localStorage.getItem('mosaicLayout')!);
-        let diagnosticsPanelParams = JSON.parse(localStorage.getItem("diagnosticsPanelParams")!);
+        let diagnosticsPanelParams: DiagnosticsPanelParamsInterface;
+        let readDiagnosticsPanelParams = localStorage.getItem("diagnosticsPanelParams");
 
-        // initial var for store diagnostics panel order from layout handler
-        let currentDiagnosticsPanelLocationInItem: string;
-        let currentDiagnosticsPanelLocationInObj: string;
+        if(readDiagnosticsPanelParams){
+            diagnosticsPanelParams = JSON.parse(readDiagnosticsPanelParams);
+        }else{
+            diagnosticsPanelParams = initialDiagnosticsPanelParams();
+        }
 
-        // read diagnostics panel order from layout when window drag or reorder
+        // read diagnostics location from and update to local storage
         Object.keys(layout).forEach(el=>{
-            if(typeof(layout[el]) == "object"){
+            if(layout[el] == "diagnostics"){
+                diagnosticsPanelParams.direction = layout.direction;
+                diagnosticsPanelParams.splitPercentage = layout.splitPercentage;
+                diagnosticsPanelParams.diagnosticsPanelLocationInItem = el;
+                diagnosticsPanelParams.diagnosticsPanelLocationInObj = undefined;
+                diagnosticsPanelParams.diagnosticsPanelStayWith = undefined;
+            }
+
+            if(typeof layout[el] == "object"){
                 Object.keys(layout[el]).forEach(subEl=>{
                     if(layout[el][subEl] == "diagnostics"){
-                        currentDiagnosticsPanelLocationInItem = el;
-                        currentDiagnosticsPanelLocationInObj = subEl;
-                    }
-                })
-            }
-
-            // here handle when diagnostics closed and switch flowsheet and stream table to update diagnosticsPanelParams
-            if(typeof(layout[el]) == "string" && layout[el] == diagnosticsPanelParams.diagnosticsPanelStayWith){
-                //  TODO:
-            }
-        })
-
-        // check if current mosaic layout local stored diagnostics panel location is same as handler passed in diagnostics panel location
-        // if not update it and use for store diagnostics panel order
-        Object.keys(mosaicLayout).forEach(el=>{
-            if(typeof(mosaicLayout) == "object"){
-                Object.keys(mosaicLayout[el]).forEach(subEl=>{
-                    if(mosaicLayout[el][subEl] == "diagnostics" && mosaicLayout[el][subEl] != currentDiagnosticsPanelLocationInObj){
-                        diagnosticsPanelParams.diagnosticsPanelLocationInItem = currentDiagnosticsPanelLocationInItem;
-                        diagnosticsPanelParams.diagnosticsPanelLocationInObj = currentDiagnosticsPanelLocationInObj;
-                        console.log(subEl)
+                        diagnosticsPanelParams.direction = layout[el].direction;
+                        diagnosticsPanelParams.splitPercentage = layout[el].splitPercentage;
+                        const otherPanelAt = subEl == "first" ? "second" : "first";
+                        diagnosticsPanelParams.diagnosticsPanelStayWith = layout[el][otherPanelAt];
+                        diagnosticsPanelParams["diagnosticsPanelLocationInItem"] = el;
+                        diagnosticsPanelParams["diagnosticsPanelLocationInObj"] = subEl;
                     }
                 })
             }
         })
 
-        console.log(diagnosticsPanelParams)
         localStorage.setItem("diagnosticsPanelParams", JSON.stringify(diagnosticsPanelParams));
-
-        return mosaicLayout;
     }
 
     /**
@@ -343,15 +330,49 @@ const MosaicApp = () => {
              *    this key value represent in that element where is the diagnostics panel located.
              */
             const diagnosticsPanelParams = {
-                "direction": "row",
-                "diagnosticsPanelLocationInItem": "first",
-                "diagnosticsPanelLocationInObj":"second",
-                "diagnosticsPanelStayWith":"flowsheet",
-                "splitPercentage":55
+                direction: "row",
+                diagnosticsPanelParamsLocationInItem:"first",
+                diagnosticsPanelLocationInObj:"second",
+                diagnosticsPanelStayWith:"flowsheet",
+                splitPercentage:55
             }
 
             localStorage.setItem("diagnosticsPanelParams", JSON.stringify(diagnosticsPanelParams));
+
+            return diagnosticsPanelParams;
+        }else{
+            return JSON.parse(diagnosticsPanelParams);
         }
+    }
+
+    function setupDefaultMosaicLayout(){
+        let mosaicLayout;
+        if(panelState.diagnostics.show){
+            mosaicLayout = {
+                "direction": "column",
+                "first":{
+                    "direction": "row",
+                    "first":"flowsheet",
+                    "second":"diagnostics",
+                    "splitPercentage":55
+                },
+                "second": "streamTableAndDiagnostics",
+                "splitPercentage": 60
+            };
+        }
+        
+        // diagnostics not show
+        if(!panelState.diagnostics.show){
+            mosaicLayout= {
+                "direction": "column",
+                "first":"flowsheet",
+                "second": "streamTableAndDiagnostics",
+                "splitPercentage": 60
+            };
+        }
+
+        // localStorage.setItem("mosaicLayout", JSON.stringify(mosaicLayout));
+        return mosaicLayout;
     }
     
     /**
@@ -361,145 +382,88 @@ const MosaicApp = () => {
      * @returns mosaic layout obj
      */
     function getMosaicLayout(){
-        // read mosaic layout from local storage
-        let mosaicLayout:any = localStorage.getItem('mosaicLayout');
-
-        // initial diagnostics panel location
         initialDiagnosticsPanelParams();
-        
-        // if has layoutInLocalStorage means there is a stored layout then parse it to Obj use as most recent layout.
-        // layout is frequently updated when mosaic window on change
-        if(mosaicLayout){
-            // parse the local storage stored mosaic layout 
-            mosaicLayout = JSON.parse(mosaicLayout);
-            // parse the local storage diagnostics panel params this 100% there and update when mosaic window on change!
-            const diagnosticsPanelParams = JSON.parse(localStorage.getItem("diagnosticsPanelParams")!);
-            
-            // when diagnostics panel is show restore diagnostics
-            if(panelState.diagnostics.show){
-                Object.keys(mosaicLayout).forEach((el)=>{
-                    // check the mosaic layout item should contain diagnostics panel
-                    if(el == diagnosticsPanelParams.diagnosticsPanelLocationInItem){
-                        // when the element should contain diagnostics is a object: {first:{direction:"row", first:"flowsheet"...}}
-                        if(typeof(mosaicLayout[el]) == "object"){
-                            // reassign this panel obj with direction in diagnosticsPanelParams
-                            if(diagnosticsPanelParams.direction){
-                                mosaicLayout[el].direction = diagnosticsPanelParams.direction;
-                            }else{
-                                mosaicLayout[el].direction = "row"; // default value
-                            }
-                            // reassign reassign this panel obj with split percentage in diagnosticsPanelParams
-                            if(diagnosticsPanelParams.splitPercentage){
-                                mosaicLayout[el].splitPercentage = diagnosticsPanelParams.splitPercentage;
-                            }else{
-                                mosaicLayout[el].splitPercentage = 55; // default value
-                            }
 
-                            Object.keys(mosaicLayout[el]).forEach(subEl=>{
-                                // this check and delete to prevent duplicated "diagnostics" assign to mosaicLayout
-                                if(mosaicLayout[el][subEl] == "diagnostics"){
-                                    delete mosaicLayout[el][subEl];
-                                }
-                                // reassign key values for direction splitPercentage, and diagnostics base on diagnosticsPanelParams
-                                mosaicLayout[el][diagnosticsPanelParams.diagnosticsPanelLocationInObj] = "diagnostics";
-                            })
-                        }
-                    
-                        // when the element should contain diagnostics is a string: {first: "flowsheet"...}
-                        // when mosaicLayout[el] is string rebuild it to obj
-                        if(typeof(mosaicLayout[el]) == "string"){
-                            // copy old panel value
-                            const copyCurrentValue = mosaicLayout[el];
-                            // initial a new obj to restore diagnostics panel init.
-                            mosaicLayout[el] = {};
-                            mosaicLayout[el].direction = diagnosticsPanelParams.direction;
-                            // conditionally render diagnostics panel as first or second
-                            mosaicLayout[el].first = diagnosticsPanelParams.diagnosticsPanelLocationInObj == "first" ? "diagnostics" : copyCurrentValue;
-                            mosaicLayout[el].second = diagnosticsPanelParams.diagnosticsPanelLocationInObj == "second" ? "diagnostics" : copyCurrentValue;
+        if(panelState.diagnostics.show){
+            let copyCurrentLayout = JSON.parse(JSON.stringify(currentLayout));
 
-                            mosaicLayout[el].splitPercentage = diagnosticsPanelParams.splitPercentage;
-                        }
-                    }
-
-                })
-            }
-
-            // when diagnostics panel is hide, save current diagnostics panel's location info to diagnosticsPanelParam and remove diagnostics panel
-            if(!panelState.diagnostics.show){
-                Object.keys(mosaicLayout).forEach((el)=>{
-                    if(el == diagnosticsPanelParams.diagnosticsPanelLocationInItem){
-                        if(typeof(mosaicLayout[el]) == "object"){
-                            Object.keys(mosaicLayout[el]).forEach(subEl=>{
-                                if(mosaicLayout[el][subEl] == "diagnostics"){
-                                    console.log(mosaicLayout)
-                                    diagnosticsPanelParams.diagnosticsPanelLocationInItem = el;
-                                    diagnosticsPanelParams.diagnosticsPanelLocationInObj = subEl;
-                                    diagnosticsPanelParams.direction = mosaicLayout[el][subEl].direction;
-                                    diagnosticsPanelParams.splitPercentage = mosaicLayout[el][subEl].splitPercentage;
-                                    let otherPanel:string;
-                                    subEl == "first" ? otherPanel = "second" : otherPanel = "first";
-                                    mosaicLayout[el] = mosaicLayout[el][otherPanel];
-                                }
-                            })
-                            localStorage.setItem("diagnosticsPanelParams", JSON.stringify(diagnosticsPanelParams));
-                        }
-
-                        console.log(mosaicLayout[el])
-                        if(typeof(mosaicLayout[el]) == "string" && mosaicLayout[el] == "diagnostics"){
-                            console.log(`in here now`)
-                        }
+            /**
+             * when panelState.diagnostics.show == true check layout has diagnostics panel or not
+             * if current layout not contain diagnostics panel. 
+             * use diagnosticsPanelParams to re-format copyCurrentLayout (insert diagnostics panel to its old spot)
+             * else directly return layout
+             */
+            if(!JSON.stringify(currentLayout).includes("diagnostics")){
+                let diagnosticsPanelParams = localStorage.getItem("diagnosticsPanelParams");
+                let keyOfDiagnosticsItem: string;
+                Object.keys(copyCurrentLayout).forEach(el=>{
+                    if(JSON.stringify(copyCurrentLayout[el]) == JSON.stringify(diagnosticsPanelParams.diagnosticsPanelStayWith)){
+                        keyOfDiagnosticsItem = el;
                     }
                 })
             }
-        }else{
-            // when no mosaic layout from local storage initial default mosaic layout
-            // default panel layout is:
-            // 1, diagram, 2. stream table
-            // diagnostics panel should be closed
 
-            // maker sure to set diagnostics.show == false if it's opened at start
-            // if(panelState.diagnostics.show){
-            //     setPanelState(()=>false);
-            // }
-
-            // initial default mosaic layout
-            let defaultLayout
-            
-            if(!panelState.diagnostics.show){
-                defaultLayout= {
-                    "direction": "column",
-                    "first":"flowsheet",
-                    "second": "streamTableAndDiagnostics",
-                    "splitPercentage": 60
-                };
-            }
-            
-            if(panelState.diagnostics.show){
-                defaultLayout = {
-                    "direction": "column",
-                    "first":{
-                        "direction": "row",
-                        "first":"flowsheet",
-                        "second":"diagnostics",
-                        "splitPercentage":55
-                    },
-                    "second": "streamTableAndDiagnostics",
-                    "splitPercentage": 60
-                };
-            }
-
-            // assign mosaicLayout as defaultLayout
-            mosaicLayout = defaultLayout;
-            localStorage.setItem("mosaicLayout", JSON.stringify(mosaicLayout))
+            return currentLayout;
         }
+        
+        if(!panelState.diagnostics.show){
+            let copyLayoutHolder: string = JSON.stringify(currentLayout);
+            let copyLayout: {[key:string] : any} = JSON.parse(copyLayoutHolder);
 
-        return mosaicLayout
+            // when diagnostics at first layer of mosaicLayout obj
+            Object.keys(copyLayout).forEach(el=>{
+                if(copyLayout[el] == "diagnostics"){
+                    // remove diagnostics
+                    delete copyLayout[el];
+                    const otherPanelKey = el == "first" ? "second" : "first";
+                    const copyOtherPanel = JSON.parse(JSON.stringify(copyLayout[otherPanelKey])); // make a deep copy of other panel obj
+                    copyLayout["first"] = copyOtherPanel["first"];
+                    copyLayout["second"] = copyOtherPanel["second"];
+                    copyLayout["direction"] = copyOtherPanel["direction"];
+                    copyLayout["splitPercentage"] = copyOtherPanel["splitPercentage"];
+
+                }
+            })
+
+            Object.keys(copyLayout).forEach(el=>{
+                if(typeof copyLayout[el] == "object"){
+                    Object.keys(copyLayout[el]).forEach(subEl=>{
+                        if(copyLayout[el][subEl] == "diagnostics"){
+                            // console.log(copyLayout)
+                            delete copyLayout[el][subEl];
+                            if(copyLayout[el].first){
+                                copyLayout[el] = copyLayout[el].first
+                            }else{
+                                copyLayout[el] = copyLayout[el].second
+                            }
+                        }
+                    })
+                }
+            })
+
+            return copyLayout;
+        }
     }
+
+    useEffect(()=>{
+        // update default layout when panelState.diagnostics.show changes
+        // this will trigger life cycle to re-render.
+        setCurrentLayout(()=>{
+            const mosaicLayout = localStorage.getItem('mosaicLayout');
+            if(mosaicLayout){
+                console.log(mosaicLayout.includes("diagnostics"))
+                return JSON.parse(mosaicLayout);
+            }else{
+                return setupDefaultMosaicLayout();
+            }
+        })
+    }, [panelState.diagnostics.show])
 
 
     return (
         <Mosaic<ViewId>
             renderTile={renderTile}
+            // TODO: variable panel
             ////mosaic panel with components (variable)
             // initialValue={{
             //     direction: 'row',

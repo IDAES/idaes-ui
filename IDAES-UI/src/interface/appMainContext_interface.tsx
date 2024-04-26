@@ -26,3 +26,11 @@ export interface ToggleStreamTableInLogInterface {
 	diagnosticsLogs:boolean;
 	[key: string]: boolean;
 };
+
+export interface DiagnosticsPanelParamsInterface {
+	direction: string;
+	diagnosticsPanelLocationInItem: string | undefined;
+	diagnosticsPanelLocationInObj: string | undefined;
+	diagnosticsPanelStayWith: string | {[keys: string] : any} |undefined;
+	splitPercentage: number;
+}
