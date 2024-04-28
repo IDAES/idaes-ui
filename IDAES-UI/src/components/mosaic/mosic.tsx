@@ -436,22 +436,22 @@ const MosaicApp = () => {
                             });
                             const otherPanelName = stayWithPanelName == "flowsheet" ? "streamTableAndDiagnostics" : "flowsheet";
                             const otherPanelAt = stayWithPanelKey == "first" ? "second" : "first";
-
+                            
                             // in case stayWithPanelKey undefined, assign to first.
                             if(!stayWithPanelKey) stayWithPanelKey = "first";
-
+                            
                             // const otherPanelAt = diagnosticsPanelParams.diagnosticsPanelLocationInObj == "first" ? "second" : "first";
                             const rebuildPanelWithDiagnosticsObj:any = {
                                 direction: diagnosticsPanelParams.direction ? diagnosticsPanelParams.direction : "column",
                                 splitPercentage : copyCurrentLayout.splitPercentage ? copyCurrentLayout.splitPercentage : 55,
                             }
                             rebuildPanelWithDiagnosticsObj[stayWithPanelKey] = stayWithPanelName;
-
+                            
                             // double check make sure stayWithPanelKey != diagnosticsPanelParams.diagnosticsPanelLocationInObj to avoid error
                             if(stayWithPanelKey == diagnosticsPanelParams.diagnosticsPanelLocationInObj){
-                                stayWithPanelKey == "first" ? diagnosticsPanelParams.diagnosticsPanelLocationInObj = "second" : "first";
+                                stayWithPanelKey == "first" ? diagnosticsPanelParams.diagnosticsPanelLocationInObj = "second" : diagnosticsPanelParams.diagnosticsPanelLocationInObj = "first";
                             }
-
+                            
                             rebuildPanelWithDiagnosticsObj[diagnosticsPanelParams.diagnosticsPanelLocationInObj] = "diagnostics";
                             copyCurrentLayout = JSON.parse(JSON.stringify(copyCurrentLayout));
                             copyCurrentLayout[stayWithPanelKey] = rebuildPanelWithDiagnosticsObj;
@@ -655,11 +655,11 @@ function conditionallyRenderPanelHeaderBtn(
             return<div className="mosaic_toolbar_btn_container">
                 <p className="mosaic_diagnostic_toolbar_content">BLOCK: FLOWSHEET</p>
                 <div 
-                    className="mosaic_toobar_btn_icon_with_text clickable_btn" 
+                    className="mosaic_toolbar_btn_icon_with_text clickable_btn" 
                     onClick={()=>diagnosticsRefreshHandler()}
                 >
                     <Icon icon={IconNames.REFRESH} size={20} />
-                    <span className="mosaic_toobar_btn_icon_with_text_text">Refresh</span>
+                    <span className="mosaic_toolbar_btn_icon_with_text_text">Refresh</span>
                 </div>
             </div>
             break;

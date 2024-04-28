@@ -52,7 +52,7 @@
     margin: 0;
 }
 
-.mosaic_toobar_btn_icon_with_text{
+.mosaic_toolbar_btn_icon_with_text{
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -62,7 +62,7 @@
     padding: 8px;
 }
 
-.mosaic_toobar_btn_icon_with_text_text{
+.mosaic_toolbar_btn_icon_with_text_text{
     font-size: 14px;
     font-weight: bold;
 }
