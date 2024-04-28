@@ -31,6 +31,7 @@ from typing import Dict, Union
 from urllib.parse import urlparse
 import time
 import os
+import traceback
 
 # package
 from idaes_ui.fv.flowsheet import FlowsheetDiff, FlowsheetSerializer
@@ -405,44 +406,58 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         self._write_text(200, message="success")
 
     def _put_diagnostic(self, id_):
-        # TODO: id_ in here is not from query param but from frontend, if id_ from do_PUT is None
-        # reading request json data
-        content_length = int(self.headers.get("Content-Length", 0))
-        request_body = self.rfile.read(content_length).decode("utf-8")
-        request_data = json.loads(request_body)
+        try:
+            # TODO: id_ in here is not from query param but from frontend, if id_ from do_PUT is None
+            # reading request json data
+            content_length = int(self.headers.get("Content-Length", 0))
+            request_body = self.rfile.read(content_length).decode("utf-8")
+            request_data = json.loads(request_body)
 
-        # get function name from request
-        function_name = request_data.get("function_name", "")
-        id_ = request_data.get("id", "")
+            # get function name from request
+            function_name = request_data.get("function_name", "")
+            id_ = request_data.get("id", "")
 
-        # get fs
-        fs = self.server._get_flowsheet_obj(id_)
+            # get fs
+            fs = self.server._get_flowsheet_obj(id_)
 
-        # create diagnosticToolbox instence
-        dt_instance = DiagnosticsToolbox(fs)
+            # create diagnosticToolbox instence
+            dt_instance = DiagnosticsToolbox(fs)
 
-        # base on pass in function name as function name and run diagnosticToolBox.function_name
-        if hasattr(dt_instance, function_name):
-            # read dt function from dt instance
-            current_function = getattr(dt_instance, function_name)
-            # initial streamIO use as stream to capture diagnostics output or its default will print to terminal
-            output_stream = io.StringIO()
-            # run current function
-            current_function(stream=output_stream)
-        else:
-            # return error function not exists
-            return {
-                "error": f"Error function name {function_name} is not exists in diagnosticsToolBox instance"
-            }
+            # base on pass in function name as function name and run diagnosticToolBox.function_name
+            if hasattr(dt_instance, function_name):
+                # read dt function from dt instance
+                current_function = getattr(dt_instance, function_name)
+                # initial streamIO use as stream to capture diagnostics output or its default will print to terminal
+                output_stream = io.StringIO()
+                # run current function
+                current_function(stream=output_stream)
+            else:
+                # return error function not exists
+                self._write_json(
+                    500,
+                    {
+                        "error": f"Error function name {function_name} is not exists in diagnosticsToolBox instance"
+                    },
+                )
 
-        # read captured output content
-        captured_output = output_stream.getvalue()
+            # read captured output content
+            captured_output = output_stream.getvalue()
 
-        # close StreamIO
-        output_stream.close()
+            # close StreamIO
+            output_stream.close()
 
-        # return respond
-        self._write_json(200, {"diagnostics_runner_result": captured_output})
+            # return respond
+            self._write_json(200, {"diagnostics_runner_result": captured_output})
+        except Exception as e:
+            traceback.print_exc()
+
+            # Return 500 status code and error message
+            self._write_json(
+                500,
+                {
+                    "error": f"Error running diagnostics: {str(e)}, please check your flowsheet!"
+                },
+            )
 
     # === Internal methods ===
 

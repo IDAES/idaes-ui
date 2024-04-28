@@ -36,7 +36,11 @@ export default function FlowsheetDiagnosticsRunner(){
     },[displayLength])
 
     return(
-        <div className={css.diagnosticsRunner_content_container} style={{"overflowY" : "scroll"}}>
+        <div 
+            className={css.diagnosticsRunner_content_container} 
+            id="diagnosticsRunner_content_container" 
+            style={{"overflowY" : "scroll"}}
+        >
             {display}
         </div>
     )

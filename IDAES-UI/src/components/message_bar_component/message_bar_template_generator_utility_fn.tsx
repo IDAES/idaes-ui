@@ -1,6 +1,6 @@
 import css from "./message_bar.module.css";
 
-export function messageBarTemplateGenerator(whichCalled:string, succeed:boolean){
+export function messageBarTemplateGenerator(whichCalled:string, succeed:boolean, error?:any){
 
     let templateBgClass:string = "bg-successful";
     succeed ? templateBgClass = "bg-successful" : templateBgClass = "bg-error";
@@ -32,6 +32,12 @@ export function messageBarTemplateGenerator(whichCalled:string, succeed:boolean)
 
     if(whichCalled == "diagnosticRefresh" && !succeed){
         message = "Diagnostics refresh failed! Please restart the server!";
+    }
+
+    // diagnostics fn run
+    if(whichCalled == "diagnosticFNRunError" && !succeed){
+        let currentError:string | undefined = undefined;
+        error ? message = error : message = `Run diagnostics failed, please check your python terminal.`
     }
 
     // initial template

@@ -4,6 +4,7 @@ import axios from "axios";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { messageBarTemplateGenerator } from "@/components/message_bar_component/message_bar_template_generator_utility_fn";
 import css from "./diagnostics_display.module.css";
 
 export default function DiagnosticsDisplay(props:any){
@@ -167,8 +168,17 @@ export default function DiagnosticsDisplay(props:any){
                 return copyState
             })
 
-        }catch(error){
+        }catch(error:any){
+            messageBarTemplateGenerator("diagnosticFNRunError", false, error.response.data.error)
             console.log(error)
+            const diagnosticsRunnerContentContainer = document.getElementById("diagnosticsRunner_content_container");
+            if(diagnosticsRunnerContentContainer){
+                const errorTemplate = `
+                    <pre class="${css.error_message}">${error.response.data.error}<pre>
+                    <br>
+                `
+                diagnosticsRunnerContentContainer.innerHTML+= errorTemplate
+            }
         }
     }
 
