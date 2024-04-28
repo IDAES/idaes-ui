@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import {AppContext} from "../../context/appMainContext";
 import { MainFV } from "./flowsheet_component/flowsheet_functions/mainFV";
 import MosaicApp from "../mosaic/mosic";
+import MessageBar from "../message_bar_component/message_bar_component";
 import MinimizedBar from "./minimized_bar_component/minimized_bar_component";
 
 import css from "./flowsheet_wrapper.module.css";
@@ -43,6 +44,7 @@ export default function FlowsheetWrapper(){
 			 * 	components, flowsheet, diagnostics, stream table
 			 */}
 			<MosaicApp />
+			<MessageBar />
 		</div>
 	)
 }
