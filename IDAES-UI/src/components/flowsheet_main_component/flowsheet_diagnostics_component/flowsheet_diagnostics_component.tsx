@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState} from "react";
 import { AppContext } from "@/context/appMainContext";
 import axios from "axios";
+import { messageBarTemplateGenerator } from "@/components/message_bar_component/message_bar_template_generator_utility_fn";
 import { Diagnostic_main } from "./diagnostic_functions/diagnostic_main";
 import "./flowsheet_diagnostics.css";
 import DiagnosticIssues from "./diagnostics_issues/diagnostics_issues";
@@ -36,9 +37,11 @@ export default function FlowsheetDiagnostics(){
             try{
                 const res = await axios.get(url);
                 const data = res.data
+                messageBarTemplateGenerator("diagnosticRefresh", true);
                 setDiagnosticsData(data);
             }catch(error){
                 console.error("Fetch diagnostic data error", error)
+                messageBarTemplateGenerator("diagnosticRefresh", false);
             }
         }
         fetchDiagnosticData(getDiagnosticUrl);

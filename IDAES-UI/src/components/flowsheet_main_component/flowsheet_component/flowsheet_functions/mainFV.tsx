@@ -15,6 +15,7 @@ import { Paper } from './paper';
 import { JointJsCellConfig } from './cell_config';
 import { StreamTable } from './stream_table';
 import { Toolbar } from './toolbar';
+import { messageBarTemplateGenerator } from '@/components/message_bar_component/message_bar_template_generator_utility_fn';
 import axios from 'axios';
 const VITE_MODE = import.meta.env.VITE_MODE;
 
@@ -215,9 +216,11 @@ export class MainFV {
     axios.put(putUrl, clientData, { headers: { 'Content-Type': 'application/json' } })
     .then(() => {
       this.informUser(0, "Refresh: load new model values from Python program");
-      return axios.get(getUrl, { responseType: 'json' });
+      const newData = axios.get(getUrl, { responseType: 'json' });
+      return newData; 
     })
     .then(response => {
+      console.log(response.data)
       const data = response.data;
       /**
        * this clear hide file prevent error:
@@ -227,11 +230,20 @@ export class MainFV {
        * fv off error cant read from graph
        * table off error Could not retrieve new model from Python program: Cannot set properties of null
        */
-      if(this.isStreamTableShow) document.getElementById("hide-fields-list")!.innerHTML = "";
-      this.renderModel(data);
-      this.stream_table.initTable(data);
+      let streamTableHideList = undefined;
+      // assign stream table hide list item when only stream table shows
+      if(this.isStreamTableShow && this.viewInLogPanel.streamTable){
+        streamTableHideList = document.getElementById("hide-fields-list");
+      }
+      if(streamTableHideList){
+        streamTableHideList.innerHTML = "";
+        this.renderModel(data);
+        this.stream_table.initTable(data);
+      }
+      messageBarTemplateGenerator('refreshFS', true)
     })
     .catch(error => {
+      messageBarTemplateGenerator('refreshFS', false)
       if (error.response) {
         this.informUser(2, "Fatal error: cannot save current model before refresh: " + error.response.data);
       } else {
@@ -329,8 +341,10 @@ export class MainFV {
       .then((response) => {
         console.log(`saved`)
         this.informUser(0, "Saved new model values");
+        messageBarTemplateGenerator('userSave', true);
       })
       .catch((error) => {
+        messageBarTemplateGenerator('userSave', false);
         this.informUser(2, "Fatal error: cannot save current model: " + error);
       });
     }
