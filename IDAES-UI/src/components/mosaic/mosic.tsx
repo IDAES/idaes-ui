@@ -243,7 +243,8 @@ const MosaicApp = () => {
     }
 
     /**
-     * @Description Use for update current mosaic layout to local storage as a string format.
+     * @Description Use for update current mosaic layout to local storage and state.
+     * When panel change the mosaic change handler will call this function
      * @param layout Current mosaic layout obj
      * @triggers Mosaic component onChange event handler
      * @returns None
@@ -262,15 +263,9 @@ const MosaicApp = () => {
     }
 
     /**
-     * @description use for initial diagnostics panel location, by reading
-     * diagnosticsPanelParams from local storage and mosaicLayout's flowsheet location to assign
-     * default diagnostics panel location.
-     * When default diagnostics panel should stay with flowsheet panel, on it's right side.
-     * When Mosaic onchange trigger to update diagnostics panel order
-     * 
-     * @params layout, the layout mosaic will pass in when handle window changes
-     * 
-     * @willDo setup or update local storage's diagnosticsPanelParams, it use for define diagnostics panel location.
+     * @description use for update diagnostics panel location the updated diag panel params
+     * use for restore diag panel to the correct position.
+     * @params layout, the layout mosaic will pass in when handle window changes.
      */
     function updateDiagnosticsPanelLocation(layout:any){
         let diagnosticsPanelParams: DiagnosticsPanelParamsInterface;
@@ -310,7 +305,8 @@ const MosaicApp = () => {
     }
 
     /**
-     * @description Use for initial diagnostics panel, The diagnostics panel params is use for locate where is the diagnostics should
+     * @description Use for initial diagnostics panel params, 
+     * The diagnostics panel params is use for locate where is the diagnostics should
      * stay at in mosaic window
      */
     function initialDiagnosticsPanelParams(){
@@ -322,12 +318,13 @@ const MosaicApp = () => {
              * explain naming of diagnosticsPanelParams:
              * diagnosticsPanel must be nested inside a obj so it must has:
              * 1. direction: for mosaic to know if it's: row or column.
-             * 2. diagnosticsPanelLocationInItem: to check it's in which obj keys, each key represent a panel.
-             *    each key will show as first second etc.
-             *    if one row only contain one element the value of that key is a string.
-             *    if one row contain multiple elements it will show as a obj.
-             * 3. diagnosticsPanelLocationInObj: diagnostics 100% in a obj to share row or column with other element,
-             *    this key value represent in that element where is the diagnostics panel located.
+             * 2. diagnosticsPanelLocationInItem: to check diag panel in which obj keys, 
+             *      each key represent a panel.
+             *      each key will show as first second etc.
+             *      if one row only contain one element the value of that key is a string.
+             *      if one row contain multiple elements it will show as a obj.
+             * 3. diagnosticsPanelLocationInObj: if a row contain diag and other panel, that row is a obj.
+             *      this use to store diag panel's order in that obj.
              */
             const diagnosticsPanelParams = {
                 direction: "row",
@@ -345,6 +342,11 @@ const MosaicApp = () => {
         }
     }
 
+    /**
+     * @description when first time start app there has no mosaic layout
+     * this use for setup the mosaic layout
+     * @returns  obj, mosaic layout
+     */
     function setupDefaultMosaicLayout(){
         let mosaicLayout;
         if(panelState.diagnostics.show){
@@ -376,10 +378,9 @@ const MosaicApp = () => {
     }
     
     /**
-     * @Description read mosaic layout from local storage to initial layoutInLocalStorage.
-     * if has layout in local storage get it parse it and return it 
-     * if no layout in local storage return default layout
-     * @returns mosaic layout obj
+     * @Description read current layout and diagnostics panel params then
+     * base on diagnostics show or hide to update current layout
+     * @returns up to date layout
      */
     function getMosaicLayout(){
         try{
