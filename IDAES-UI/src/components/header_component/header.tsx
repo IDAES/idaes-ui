@@ -8,6 +8,10 @@ import HeaderFunctionButtonsWrapper from "./header_fn_btn_wrapper_component/hade
 import "./header.css";
 import css from "./header.module.css";
 
+/**
+ * @description react component use to wrap all header related components
+ * @returns react component <Header />
+ */
 export default function Header(){
   let val = useContext(AppContext)
   
