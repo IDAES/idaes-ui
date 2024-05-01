@@ -345,6 +345,7 @@ const MosaicApp = () => {
     /**
      * @description when first time start app there has no mosaic layout
      * this use for setup the mosaic layout
+     * first second direction splitPercentage are mosaic's required way to write down the obj key
      * @returns  obj, mosaic layout
      */
     function setupDefaultMosaicLayout(){
