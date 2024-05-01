@@ -9,7 +9,7 @@ import css from "./diagnostics_display.module.css";
 
 export default function DiagnosticsDisplay(props:any){
     // initial context
-    const {diagnosticsNextStepsOutputState, setDiagnosticsNextStepsOutputState, diagnosticsRunFnNameListState, setDiagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState} = useContext(AppContext);
+    const {server_port,fv_id,diagnosticsNextStepsOutputState, setDiagnosticsNextStepsOutputState, diagnosticsRunFnNameListState, setDiagnosticsRunFnNameListState, setDiagnosticsRunnerDisplayState} = useContext(AppContext);
     // initial diagnostics data
     const diagnosticData = props.diagnosticData;
     // initial which issue from props
@@ -143,7 +143,7 @@ export default function DiagnosticsDisplay(props:any){
             // initial function name by remove () in function
             let functionName:string = whichFunction.replace("(", "").replace(")", "");
             // build api call url
-            const post_diagnostics_runner_url:string = `http://localhost:49999/run_diagnostic`;
+            const post_diagnostics_runner_url:string = `http://localhost:${server_port}/run_diagnostic`;
             // build api call body
             const windowURL = new URL(window.location.href);
             const urlId = windowURL.searchParams.get("id");

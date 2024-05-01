@@ -30,7 +30,7 @@ export default function FlowsheetDiagnostics(){
         // const getDiagnosticUrl = `http://127.0.0.1:${server_port}/api/get_diagnostics`;
         const windowURL = new URL(window.location.href);
         const id = windowURL.searchParams.get("id");
-        const getDiagnosticUrl = `http://localhost:49999/diagnostics?id=${id}`;
+        const getDiagnosticUrl = `http://localhost:${server_port}/diagnostics?id=${id}`;
 
         const fetchDiagnosticData = async (url:string) =>{
             // fetch diagnostic data from end point and update to state
