@@ -1,0 +1,75 @@
+.headerButton:hover {
+    cursor: pointer;
+}
+
+.header_fn_btn_wrapper_ul {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    list-style: none;
+    color: white;
+}
+
+.headerDiagnosticsBtnContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.headerDiagnosticsBtnContainer > p {
+    color: white;
+}
+
+.toggleBtn {
+    width: 60px;
+    height: 30px;
+    position: relative;
+    display: inline-block;
+    border-radius: 15px;
+    border: 1px solid white;
+    background-color: white;
+}
+
+/* Diagnostics */
+
+.toggleBtn:hover {
+    cursor: pointer;
+}
+
+.toggleBtnInnerOn,
+.toggleBtnInnerOff {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    transition: .3s ease-in-out;
+}
+
+.toggleBtnInnerOn {
+    right: 0;
+    background-color: green;
+}
+
+.toggleBtnInnerOff {
+    left: 0;
+    background-color: red;
+}
+
+.faIcon {
+    color: white;
+}
+
+/* Help */
+
+.link {
+    color: white;
+}
+
+.link:hover {
+    text-decoration: none;
+    color: white;
+}
