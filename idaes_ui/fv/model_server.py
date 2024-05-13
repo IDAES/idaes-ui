@@ -359,7 +359,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         build_diagnostics_report = {
             "config": diag_data_config,
             "diagnostics_toolbox_report": {
-                "toolbox_jacobian_condition": diagnostics_toolbox_report.toolbox_jacobian_condation,
+                "toolbox_jacobian_condition": diagnostics_toolbox_report.toolbox_jacobian_condition,
                 "toolbox_model_statistics": diagnostics_toolbox_report.toolbox_model_statistics,
                 "structural_report": diagnostics_toolbox_report.structural_report,
                 "numerical_report": diagnostics_toolbox_report.numerical_report,
@@ -433,12 +433,7 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
                 current_function(stream=output_stream)
             else:
                 # return error function not exists
-                self._write_json(
-                    500,
-                    {
-                        "error": f"Error function name {function_name} is not exists in diagnosticsToolBox instance"
-                    },
-                )
+                self._write_json(500, {"error": f"Unknown function: {function_name}"})
 
             # read captured output content
             captured_output = output_stream.getvalue()
@@ -495,9 +490,11 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         u, queries = urlparse(path), None
         # u = ParseResult(scheme='', netloc='', path='/app', params='', query='id=sample_visualization', fragment='')
         if u.query:
-            queries = dict(
-                [q.split("=") for q in u.query.split("&")]
-            )  # {'id': 'sample_visualization'}
+            queries = {}
+            for item in u.query.split("&"):
+                parts = item.split("=")
+                if len(parts) == 2:  # skip if not name=value pair
+                    queries[parts[0]] = parts[1]
         return u, queries
 
     # === Logging ===

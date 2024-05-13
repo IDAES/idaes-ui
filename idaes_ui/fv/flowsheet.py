@@ -185,7 +185,8 @@ class FlowsheetSerializer:
                     f"Flowsheet 'component_objects' cannot be navigated: {err}"
                 )
             if n_obj == 0:
-                raise ValueError("Flowsheet has no Arcs or unit Blocks")
+                _log.warning("Flowsheet has no Arcs or unit Blocks")
+                # raise ValueError("Flowsheet has no Arcs or unit Blocks")
         # setup
         self.unit_models = {}  # {unit: {"name": unit.getname(), "type": str?}}
         self.streams = {}  # {Arc.getname(): Arc} or {Port.getname(): Port}

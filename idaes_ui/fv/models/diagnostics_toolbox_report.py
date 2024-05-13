@@ -22,7 +22,7 @@ from idaes.core.util.model_statistics import (
 
 
 class DiagnosticsToolBoxReportData(BaseModel):
-    toolbox_jacobian_condation: str = ""
+    toolbox_jacobian_condition: str = ""
     toolbox_model_statistics: List[str] = []
     structural_report: dict = {}
     numerical_report: dict = {}
@@ -36,7 +36,7 @@ class DiagnosticsToolBoxReport:
         block: the flowsheet model
     return:
         "diagnostics_toolbox_report": {
-            toolbox_jacobian_condation: str = ""
+            toolbox_jacobian_condition: str = ""
             toolbox_model_statistics: List[str] = []
             structural_report: dict = {}
             numerical_report: dict = {}
@@ -50,18 +50,20 @@ class DiagnosticsToolBoxReport:
         self.update()
 
     def update(self):
-        self.toolbox_jacobian_condation = self.generate_jacobian_condation()
+        self.toolbox_jacobian_condition = self.generate_jacobian_condition()
         self.toolbox_model_statistics = self.generate_model_statistics()
         self.structural_report = self.generate_structural_report()
         self.numerical_report = self.generate_numerical_report()
         self.next_steps = self.generate_next_steps()
 
-    def generate_jacobian_condation(self):
-        jac, nlp = get_jacobian(self.block, scaled=False)
-        jac = (
-            f"    Jacobian Condition Number: {jacobian_cond(jac=jac, scaled=False):.3E}"
-        )
-        return jac
+    def generate_jacobian_condition(self):
+        try:
+            jac, nlp = get_jacobian(self.block, scaled=False)
+            cond = jacobian_cond(jac=jac, scaled=False)
+            cond_str = f"{cond:.3E}"
+        except RuntimeError:
+            cond_str = "Undefined (Exactly Singular)"
+        return f"    Jacobian Condition Number: {cond_str}"
 
     def generate_model_statistics(self):
         return _collect_model_statistics(self.block)

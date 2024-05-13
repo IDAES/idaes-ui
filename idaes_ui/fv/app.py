@@ -96,7 +96,7 @@ class FlowsheetApp:
             )
 
         # # Uvicorn serve fastAPI app
-        # # condation not test only not test case will start uvicorn
+        # # condition not test only not test case will start uvicorn
         if not self.test and browser:
             WebUvicorn(self.app, self.port, self.flowsheet_name)
 
