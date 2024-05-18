@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-import { AppContextProvider } from "./context/appMainContext";
+import { AppContextProvider } from "./AppContext.tsx";
 
 if(!localStorage.getItem("appSetting")){
   localStorage.setItem("appSetting", "{}")

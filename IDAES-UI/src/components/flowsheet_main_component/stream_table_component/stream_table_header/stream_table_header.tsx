@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { AppContext } from '../../../../context/appMainContext';
+import { AppContext } from '../../../../AppContext';
 import { minimizePanel } from "../../flowsheet_component/flowsheet_functions/universal_functions";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';

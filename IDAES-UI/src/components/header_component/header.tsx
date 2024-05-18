@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AppContext } from "../../context/appMainContext";
+import { AppContext } from "../../AppContext";
 
 import HeaderLogo from "./header_logo_component/header_logo";
 import HeaderFlowsheetName from "./header_flowsheet_name_component/header_flowsheet_name";

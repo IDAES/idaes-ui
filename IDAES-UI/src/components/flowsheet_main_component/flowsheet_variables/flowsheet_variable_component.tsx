@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { AppContext } from "../../../context/appMainContext";
+import { AppContext } from "../../../AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCaretRight, faCaretDown} from "@fortawesome/free-solid-svg-icons";
 

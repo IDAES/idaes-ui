@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { AppContext } from "@/context/appMainContext";
+import { AppContext } from "@/AppContext";
 import axios from "axios";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

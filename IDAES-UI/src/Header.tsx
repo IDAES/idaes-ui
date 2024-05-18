@@ -1,35 +1,25 @@
-import HeaderButtons from "./HeaderButtons";
-import DiagnosticsToggle from "./DiagnosticsToggle";
-import styles from "./Header.module.css";
-import idaes_logo from "@/assets/images/idaes-logo.png";
+import { useContext } from "react";
+import { AppContext } from "./AppContext";
+
+// import HeaderLogo from "./header_logo_component/header_logo";
+// import HeaderFlowsheetName from "./header_flowsheet_name_component/header_flowsheet_name";
+// import HeaderFunctionButtonsWrapper from "./header_fn_btn_wrapper_component/hader_fn_btn_wrapper";
+
+// import "./header.css";
+import css from "./Header.module.css";
 
 /**
- * @description Application header
- * @returns Header component
+ * @description react component use to wrap all header related components
+ * @returns react component <Header />
  */
-export default function Header() {
-    const flowsheetName = fv_id ? fv_id : "Name not found";
-    return (
-        <header id="header" className='.header_container'>
-            <div className={styles.headerLeftMainContainer}>
-                {/* -- IDAES logo -- */}
-                <div id="headerLogoContainer"
-                     className={styles.headerLogoContainer}>
-                    <img src={idaes_logo}
-                         alt="IDAES logo"
-                         id="headerLogo"
-                         className={styles.headerLogo}
-                    />
-                    <p id="headerLogoText" className={styles.headerLogoText}>IDAES</p>
-                </div>
-                <DiagnosticsToggle/>
-            </div>
-            {/* -- Flowsheet name -- */}
-            <p id="flowsheet_name_title"
-               className={styles.headerFlowsheetName}>{flowsheetName}
-            </p>
-            {/* -- Header buttons */}
-            <HeaderButtons/>
-        </header>
-    )
+export default function Header(){
+  let val = useContext(AppContext);
+  
+  return (
+    <header id="header" className={`row ${css.header_container}`}>
+      {/* <HeaderLogo /> */}
+      {/* <HeaderFlowsheetName />
+      <HeaderFunctionButtonsWrapper /> */}
+    </header>
+  )
 }

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState} from "react";
-import { AppContext } from "@/context/appMainContext";
+import { AppContext } from "@/AppContext";
 import axios from "axios";
 import { messageBarTemplateGenerator } from "@/components/message_bar_component/message_bar_template_generator_utility_fn";
 import { Diagnostic_main } from "./diagnostic_functions/diagnostic_main";

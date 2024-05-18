@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState, useId } from 'react';
-import { AppContext } from '@/context/appMainContext';
+import { AppContext } from '@/AppContext';
 import { Mosaic, MosaicWindow } from 'react-mosaic-component';
 import { Button, Classes, Intent, Icon } from '@blueprintjs/core';
 import { IconNames, IconName, Percentage } from '@blueprintjs/icons';

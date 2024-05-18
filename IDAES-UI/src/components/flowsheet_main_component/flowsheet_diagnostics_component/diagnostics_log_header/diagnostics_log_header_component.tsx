@@ -1,5 +1,5 @@
 import {useState, useContext, useEffect} from "react";
-import { AppContext } from "@/context/appMainContext";
+import { AppContext } from "@/AppContext";
 import css from "./diagnostics_log_header.module.css";
 
 import { Button, Classes, Intent, Icon } from '@blueprintjs/core';

@@ -1,5 +1,4 @@
-import Header from "./components/header_component/header";
-import Header from "./comp/Header";
+import Header from "./Header";
 import FlowsheetWrapper from './components/flowsheet_main_component/flowsheet_wrapper';
 
 import '@fontsource/roboto/300.css';

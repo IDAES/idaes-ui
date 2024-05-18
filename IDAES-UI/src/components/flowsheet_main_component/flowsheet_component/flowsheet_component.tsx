@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { AppContext } from "../../../context/appMainContext";
+import { AppContext } from "../../../AppContext";
 
 import css from "./flowsheet.module.css";
 

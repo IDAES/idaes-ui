@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import {AppContext} from "../../context/appMainContext";
+import {AppContext} from "../../AppContext";
 import { MainFV } from "./flowsheet_component/flowsheet_functions/mainFV";
 import MosaicApp from "../mosaic/mosic";
 import MessageBar from "../message_bar_component/message_bar_component";
