@@ -1,4 +1,4 @@
-import css from "./message_bar.module.css";
+import css from "./MessageBar.module.css";
 
 export function messageBarTemplateGenerator(whichCalled:string, succeed:boolean, error?:any){
 

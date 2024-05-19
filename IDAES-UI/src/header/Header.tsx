@@ -1,11 +1,10 @@
 import { useContext } from "react";
-import { AppContext } from "./AppContext";
+import { AppContext } from "../AppContext";
 
-// import HeaderLogo from "./header_logo_component/header_logo";
+import HeaderLogo from "./HeaderLogo";
 // import HeaderFlowsheetName from "./header_flowsheet_name_component/header_flowsheet_name";
-// import HeaderFunctionButtonsWrapper from "./header_fn_btn_wrapper_component/hader_fn_btn_wrapper";
+import HeaderButtons from "./HeaderButtons";
 
-// import "./header.css";
 import css from "./Header.module.css";
 
 /**
@@ -17,9 +16,9 @@ export default function Header(){
   
   return (
     <header id="header" className={`row ${css.header_container}`}>
-      {/* <HeaderLogo /> */}
-      {/* <HeaderFlowsheetName />
-      <HeaderFunctionButtonsWrapper /> */}
+      <HeaderLogo /> {/**This contains header logo and DiagnosticsToggle */}
+      {/* <HeaderFlowsheetName /> */}
+      <HeaderButtons />
     </header>
   )
 }

@@ -27,7 +27,7 @@ const isDevTest:Boolean = false;
  *     1. Render the model.
  *     2. Display the stream table.
  */
-export class MainFV {
+export class FV {
   flowsheetId:string;
   //define type for this class for TS
   isFvShow:boolean;

@@ -4,7 +4,7 @@ import axios from "axios";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { messageBarTemplateGenerator } from "@/components/message_bar_component/message_bar_template_generator_utility_fn";
+import { messageBarTemplateGenerator } from "@/components/MessageBar/MessageBarTemplateGenerator";
 import css from "./diagnostics_display.module.css";
 
 export default function DiagnosticsDisplay(props:any){

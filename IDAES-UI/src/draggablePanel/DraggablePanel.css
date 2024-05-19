@@ -1,0 +1,144 @@
+.mosaic-window-body{
+    background-color: white !important;
+}
+
+.mosaic-window-toolbar{
+    min-height:50px;
+}
+
+.clickable_btn:hover{
+    cursor: pointer;
+    background-color: #8f99a826;
+}
+
+/*Toolbar*/
+.mosaic_customized_toolbar_header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.mosaic_customized_toolbar_title_container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.mosaic_toolbar_btn_container {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 5px;
+    margin-right: 10px;
+}
+
+
+.mosaic_header_toolbar_title{
+    margin-bottom: 0;
+    font-weight: bold;
+    color: rgb(67, 67, 67);
+}
+
+.mosaic_diagnostic_toolbar_content{
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.mosaic_toolbar_btn_icon_with_text{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: auto 10px;
+    padding: 8px;
+}
+
+.mosaic_toolbar_btn_icon_with_text_text{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+/*download btn*/
+.mosaic_flowsheet_header_download,
+.mosaic_flowsheet_header_view{
+    position: relative;
+}
+
+.mosaic_dropdown_download >li,
+.mosaic_dropdown_view >li{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    list-style: none;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.mosaic_dropdown_download >li:hover,
+.mosaic_dropdown_view > li:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.mosaic_dropdown_download,
+.mosaic_dropdown_view {
+    position: absolute;
+    display: none;
+    min-width: 500px;
+    top: 100%;
+    left: -300%;
+    padding: 20px;
+    background-color: white;
+    box-shadow: -5px 1px 12px rgba(000, 000, 000, .3);
+}
+
+.mosaic_flowsheet_header_download:hover 
+.mosaic_dropdown_download {
+    display: block;
+}
+
+.mosaic_flowsheet_header_view:hover 
+.mosaic_dropdown_view {
+    display: block;
+}
+
+.mosaic_toolbar_diagram_view_icon_stroke_only{
+    color: white;
+    stroke: black;
+    stroke-width: 40px;
+}
+
+.mosaic_diagnosticsRunner_select{
+    font-size: 18px;
+    border: none;
+}
+
+/*diagnostics runner panel*/
+.diagnostics_runner_panel_title:hover{
+    cursor: pointer;
+    color: rgb(67, 67, 67);
+    transition: .3s ease;
+}
+
+.mosaic_header_toolbar_title_activate{
+    color: rgb(67, 67, 67);
+}
+
+.mosaic_header_toolbar_title_deactivate{
+    color: rgb(173, 173, 173);
+}
+
+.mosaic_header_tool_bar_fully_deactivate{
+    display: none;
+}

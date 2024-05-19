@@ -48,8 +48,6 @@ export default function HeaderButtons() {
                 <a href="https://idaes-pse.readthedocs.io/en/latest/tutorials/getting_started/index.html"
                    target="_blank" className={styles.link}>Help</a>
             </li>
-            {/* Diagnostics toggle on/off (button) */}
-            <DiagnosticsToggle/>
         </ul>
     )
 }

@@ -1,0 +1,27 @@
+.flowsheet_variable_ul{
+  list-style: none;
+  height: minmax(100%);
+  overflow: scroll;
+}
+
+.flowsheet_variable_ul {
+  scrollbar-width: none; /* Firefox 64+ */
+}
+
+.flowsheet_variable_ul::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+}
+
+.variables_display_each_unit_label{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.variables_display_each_unit_label:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}

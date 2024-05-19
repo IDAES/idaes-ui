@@ -1,7 +1,8 @@
-import react from "react";
-import css from "./message_bar.module.css";
+import css from "./MessageBar.module.css";
+
 /**
- * @return something
+ * @param props 
+ * @returns Message bar component. display message at bottom of the screen
  */
 export default function MessageBar(props:any){
     let messageType: string;

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState} from "react";
 import { AppContext } from "@/AppContext";
 import axios from "axios";
-import { messageBarTemplateGenerator } from "@/components/message_bar_component/message_bar_template_generator_utility_fn";
+import { messageBarTemplateGenerator } from "@/components/MessageBar/MessageBarTemplateGenerator";
 import { Diagnostic_main } from "./diagnostic_functions/diagnostic_main";
 import "./flowsheet_diagnostics.css";
 import DiagnosticIssues from "./diagnostics_issues/diagnostics_issues";

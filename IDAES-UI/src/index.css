@@ -269,3 +269,13 @@ customized label style
   cursor:grab;
   box-shadow: 2px 2px 15px rgb(142, 142, 142);
 }
+
+
+/*Header*/
+.header_each_btn:hover{
+  cursor: pointer;
+}
+
+#header p {
+  margin-bottom: 0;
+}
