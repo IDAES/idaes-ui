@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { AppContext } from '@/AppContext';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faMinus } from '@fortawesome/free-solid-svg-icons';
-import css from "./PanelHeaderStreamTable.module.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus } from '@fortawesome/free-solid-svg-icons';
+import css from "./StreamTableHeader.module.css";
 
 export default function StreamTableHeader(){
   const {setPanelState} = useContext(AppContext);

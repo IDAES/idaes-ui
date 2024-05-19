@@ -18,14 +18,17 @@ import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 
 import "./DraggablePanel.css";
 
-import StreamTableHeader from './PanelHeaderStreamTable';
+// Panel headers
+import StreamTableHeader from '@/streamTable/StreamTableHeader';
+import DiagnosticsLogHeader from '@/components/flowsheet_main_component/flowsheet_diagnostics_component/diagnostics_log_header/diagnostics_log_header_component';
 
-import Flowsheet_variable from '@/diagramVariable/DiagramVariable';
+// Panels
 import Diagram from '@/diagram/Diagram';
+import Flowsheet_variable from '@/diagramVariable/DiagramVariable';
 import FlowsheetDiagnostics from '@/components/flowsheet_main_component/flowsheet_diagnostics_component/flowsheet_diagnostics_component';
 import FlowsheetDiagnosticsRunner from '@/components/flowsheet_main_component/flowsheet_diagnostics_runner_component/flowsheet_diagnostic_runner_component';
-import DiagnosticsLogHeader from '@/components/flowsheet_main_component/flowsheet_diagnostics_component/diagnostics_log_header/diagnostics_log_header_component';
-import StreamTable from '@/components/flowsheet_main_component/stream_table_component/stream_table';
+import StreamTable from '@/streamTable/StreamTable';
+
 
 // interface
 import { FvHeaderStateInterface } from '@/interface/appMainContext_interface';
