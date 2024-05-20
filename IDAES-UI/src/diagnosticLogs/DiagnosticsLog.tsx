@@ -33,12 +33,27 @@ export default function DiagnosticsLog(){
 
     useEffect(()=>{
         setDiagnosticsHistory((prev:number)=>displayLength)
-    },[displayLength])
+    },[displayLength]);
+
+    useEffect(()=>{
+        // Setup diagnostics log panel height is 100% as parent element height
+        const diagnosticsLogPanelLogContainer = document.getElementById('diagnostics_log_container');
+        if(diagnosticsLogPanelLogContainer){
+            const parentElement = diagnosticsLogPanelLogContainer.parentElement;
+            if(parentElement){
+                parentElement.style.position = "relative";
+                parentElement.style.height = "100%";
+                diagnosticsLogPanelLogContainer.style.height = "100%";
+                diagnosticsLogPanelLogContainer.style.minHeight = "100%";
+                diagnosticsLogPanelLogContainer.style.maxHeight = "100%";
+            }
+        }
+    },[])
 
     return(
         <div 
-            className={css.diagnosticsRunner_content_container} 
-            id="diagnosticsRunner_content_container" 
+            className={css.diagnostics_log_container} 
+            id="diagnostics_log_container" 
             style={{"overflowY" : "scroll"}}
         >
             {display}

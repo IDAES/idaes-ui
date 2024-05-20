@@ -171,13 +171,13 @@ export default function DiagnosticsDisplay(props:any){
         }catch(error:any){
             messageBarTemplateGenerator("diagnosticFNRunError", false, error.response.data.error)
             console.log(error)
-            const diagnosticsRunnerContentContainer = document.getElementById("diagnosticsRunner_content_container");
-            if(diagnosticsRunnerContentContainer){
+            const diagnosticsLogContainer = document.getElementById("diagnostics_log_container");
+            if(diagnosticsLogContainer){
                 const errorTemplate = `
                     <pre class="${css.error_message}">${error.response.data.error}<pre>
                     <br>
                 `
-                diagnosticsRunnerContentContainer.innerHTML+= errorTemplate
+                diagnosticsLogContainer.innerHTML+= errorTemplate
             }
         }
     }

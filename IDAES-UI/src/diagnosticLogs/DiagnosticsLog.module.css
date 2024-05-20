@@ -1,8 +1,8 @@
-.diagnosticsRunner_content_container{
+.diagnostics_log_container{
     position:relative;
     min-height: 500px;
     max-height: 1080px;
     padding: 20px;
-    overflow-y: scroll !important;
+    overflow: scroll !important;
     scroll-behavior: smooth;
 }
