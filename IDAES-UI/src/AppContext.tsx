@@ -1,5 +1,5 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
-import { context_parse_url } from "./utlity/contextFN_parse_url";
+import { context_parse_url } from "./utility/contextFN_parse_url";
 import { ToggleStreamTableInLogInterface } from "@/interface/appMainContext_interface";
 
 export const AppContext = createContext<any>({});
