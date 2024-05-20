@@ -3,7 +3,7 @@ import { AppContext } from "@/AppContext";
 
 import css from "./HeaderDiagramName.module.css";
 
-// return component diagram name use in header
+// return component <HeaderDiagramName /> name use in header
 export default function HeaderDiagramName(){
   const {fv_id} = useContext(AppContext)
   return(
