@@ -20,13 +20,13 @@ import "./DraggablePanel.css";
 
 // Panel headers
 import StreamTableHeader from '@/streamTable/StreamTableHeader';
-import DiagnosticsLogHeader from '@/components/flowsheet_main_component/flowsheet_diagnostics_component/diagnostics_log_header/diagnostics_log_header_component';
+import DiagnosticsLogHeader from '@/diagnosticLogs/DiagnosticsLogHeader';
 
 // Panels
 import Diagram from '@/diagram/Diagram';
-import Flowsheet_variable from '@/diagramVariable/DiagramVariable';
-import FlowsheetDiagnostics from '@/components/flowsheet_main_component/flowsheet_diagnostics_component/flowsheet_diagnostics_component';
-import FlowsheetDiagnosticsRunner from '@/components/flowsheet_main_component/flowsheet_diagnostics_runner_component/flowsheet_diagnostic_runner_component';
+import VariablePanel from '@/diagramVariable/DiagramVariable';
+import DiagnosticsPanel from '@/diagnostics/Diagnostics';
+import DiagnosticsLogPanel from '@/diagnosticLogs/DiagnosticsLog';
 import StreamTable from '@/streamTable/StreamTable';
 
 
@@ -92,7 +92,7 @@ const DraggablePanel = () => {
          * 3.panelState.diagnostics.show == false, bottom should only show stream table.
          */
         if(panelState.diagnostics.show === true && viewInLogPanel.diagnosticsLogs){
-            return <FlowsheetDiagnosticsRunner/>
+            return <DiagnosticsLogPanel/>
         }
         
         if(panelState.diagnostics.show === true && viewInLogPanel.streamTable === true){
@@ -109,9 +109,9 @@ const DraggablePanel = () => {
 
     // element map: what element will render as mosaic panel
     const ELEMENT_MAP: { [viewId: string]: JSX.Element } = {
-        components: <Flowsheet_variable />,
+        components: <VariablePanel />,
         flowsheet: <Diagram />,
-        diagnostics: <FlowsheetDiagnostics />,
+        diagnostics: <DiagnosticsPanel />,
         streamTableAndDiagnostics: diagnosticsRunnerOrStreamTableDisplay(),
     };
 

@@ -1,6 +1,6 @@
-import css from "./diagnostics_issues.module.css";
+import css from "./DiagnosticsHeader.module.css";
 
-export default function DiagnosticIssues(props:any) {
+export default function DiagnosticHeader(props:any) {
     // reading props from parent
     let diagnosticData = props.diagnosticData;
     // set default diagnostics issue display as loading...

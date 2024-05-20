@@ -2,10 +2,11 @@ import { useContext, useEffect, useState} from "react";
 import { AppContext } from "@/AppContext";
 import axios from "axios";
 import { messageBarTemplateGenerator } from "@/components/MessageBar/MessageBarTemplateGenerator";
-import { Diagnostic_main } from "./diagnostic_functions/diagnostic_main";
-import "./flowsheet_diagnostics.css";
-import DiagnosticIssues from "./diagnostics_issues/diagnostics_issues";
-import DiagnosticsDisplay from "./diagnostics_display/diagnostics_display";
+// import { InitialDiagnostics } from "./InitialDiagnostics"; //????? here is imported but never use?
+import DiagnosticHeader from "./DiagnosticsHeader";
+import DiagnosticsDisplay from "./DiagnosticsDisplay";
+
+import "./Diagnostics.css";
 
 interface DiagnosticsDataInterface {
     config: {key:any, value:any},
@@ -13,7 +14,7 @@ interface DiagnosticsDataInterface {
     statistics:any
 }
 
-export default function FlowsheetDiagnostics(){
+export default function Diagnostics(){
     let {server_port, diagnosticsRefreshState} = useContext(AppContext);
     // this use to hold all diagnostic data fetched from api end point pass down to sub components
     const [diagnosticData, setDiagnosticsData] = useState<DiagnosticsDataInterface | null>(null);
@@ -55,8 +56,15 @@ export default function FlowsheetDiagnostics(){
 
     return (
         <>
-            <DiagnosticIssues diagnosticData={diagnosticData} toggleIssue={toggleIssueHandler} whichIssue={whichIssue}/>
-            <DiagnosticsDisplay diagnosticData={diagnosticData} whichIssue={whichIssue}/>
+            <DiagnosticHeader 
+                diagnosticData={diagnosticData} 
+                toggleIssue={toggleIssueHandler} 
+                whichIssue={whichIssue}
+            />
+            <DiagnosticsDisplay 
+                diagnosticData={diagnosticData} 
+                whichIssue={whichIssue}
+            />
         </>
     )
 }

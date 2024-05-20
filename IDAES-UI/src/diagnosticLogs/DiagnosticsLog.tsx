@@ -1,8 +1,8 @@
 import React from "react";
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "@/AppContext";
-import css from "./flowsheet_diagnostics_runner.module.css";
-export default function FlowsheetDiagnosticsRunner(){
+import css from "./DiagnosticsLog.module.css";
+export default function DiagnosticsLog(){
     const {
             diagnosticsNextStepsOutputState, 
             diagnosticsRunnerDisplayState,
