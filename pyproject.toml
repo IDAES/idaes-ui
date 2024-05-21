@@ -44,8 +44,23 @@ build-backend = "setuptools.build_meta"
         "playwright==1.42.0",
         "pytest-playwright==0.4.4",
         "requests==2.31.0",
-        "pydantic",
+        "pydantic~=2.0",
     ]
+    
+    #remove below later!!!!!!
+    dev = [
+        "addheader >= 0.3.0",
+        "fastapi",
+        "uvicorn",
+        "pytest-icdiff >= 0.7",
+        "httpx",
+        "playwright==1.42.0",
+        "pytest-playwright==0.4.4",
+        "requests==2.31.0",
+        "pydantic~=2.0",
+    ]
+    #remove above later!!!!!!
+
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
 [project.optional-dependencies]
