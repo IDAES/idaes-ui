@@ -46,20 +46,6 @@ build-backend = "setuptools.build_meta"
         "requests==2.31.0",
         "pydantic~=2.0",
     ]
-    
-    #remove below later!!!!!!
-    dev = [
-        "addheader >= 0.3.0",
-        "fastapi",
-        "uvicorn",
-        "pytest-icdiff >= 0.7",
-        "httpx",
-        "playwright==1.42.0",
-        "pytest-playwright==0.4.4",
-        "requests==2.31.0",
-        "pydantic~=2.0",
-    ]
-    #remove above later!!!!!!
 
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
@@ -68,6 +54,17 @@ dev = [
     # For adding copyright headers (see addheader.yml and the readme)
     "addheader >= 0.3.0",
     # Dev versions of idaes/idaes-ui in requirements-dev.txt
+
+    # Test to match requirement-dev dependencies
+    "addheader >= 0.3.0",
+    "fastapi",
+    "uvicorn",
+    "pytest-icdiff >= 0.7",
+    "httpx",
+    "playwright==1.42.0",
+    "pytest-playwright==0.4.4",
+    "requests==2.31.0",
+    "pydantic~=2.0",
 ]
 # For packaging
 pkg = [
