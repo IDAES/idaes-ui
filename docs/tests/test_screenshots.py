@@ -5,12 +5,15 @@ Run `pytest -s -m screenshot` to generate the screenshots in the directory 'docs
 See :class:`Screenshot.filename` for the naming convention.
 
 """
+
 # stdlib
 from enum import Enum
 from pathlib import Path
 import re
 import time
 from typing import Iterable
+import socket
+
 
 # third-party
 from playwright.sync_api import Page, expect
@@ -32,7 +35,8 @@ class ScreenMode(Enum):
 
 
 class ScreenElement(Enum):
-    diagnostic_logs = "di"
+    diagnostics = "di"
+    diagnostic_logs = "di_log"
     flowsheet_diagram = "fs"
     model_tree = "tr"
     solver_logs = "sl"
@@ -48,6 +52,7 @@ class ScreenShot:
                          ScreenElement.stream_table))
         filename = scs.filepath  # -> "/<path>/<to>/<static>/fv-view_di_tb.png"
     """
+
     def __init__(
         self, mode: ScreenMode, elements: Iterable[ScreenElement], ext: str = "png"
     ):
@@ -73,7 +78,6 @@ class ScreenShot:
         tests_path = Path(__file__).parent
         static_path = tests_path.parent / "static"
         self._fv_path = (static_path / "fv").absolute()
-
 
     @property
     def filename(self) -> str:
@@ -110,12 +114,24 @@ class FVExample:
     app = "sample_visualization"
 
     def __init__(self):
+        print("server start by fsvis")
+
+        self.port = self.find_free_port(self.port)
         model = build_flowsheet()
         # shutdown any running instance before we start
         if fsvis.web_server and fsvis.web_server.port != self.port:
             fsvis.web_server.shutdown()
             fsvis.web_server = None
         visualize(model.fs, self.app, port=self.port, browser=False)
+
+    @staticmethod
+    def find_free_port(starting_port):
+        port = starting_port
+        while True:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                if s.connect_ex(("127.0.0.1", port)) != 0:
+                    return port
+                port += 1
 
     @property
     def url(self):
@@ -125,15 +141,16 @@ class FVExample:
 @pytest.fixture(scope="function", autouse=True)
 def fv():
     fv = FVExample()
+    print(fsvis.web_server.__dict__)
     return fv
 
 
 def load(page, fv):
-    """Custom wait, for diagram to render after page starts.
-    """
+    """Custom wait, for diagram to render after page starts."""
     page.goto(fv.url)
     loc = page.locator("svg[joint-selector='svg']")
     expect(loc).to_have_id("v-2")
+
 
 # Generate screenshots with 'tests'
 
@@ -147,8 +164,7 @@ def test_basic(page: Page, fv: FVExample):
 
 
 def pause():
-    """There *must* be a better way to do this, but this works for screenshots..
-    """
+    """There *must* be a better way to do this, but this works for screenshots.."""
     print("Begin: pause for page to update")
     time.sleep(10)
     print("End: pause for page to update")
@@ -156,8 +172,7 @@ def pause():
 
 @pytest.mark.screenshot
 def test_screenshots_view(page: Page, fv: FVExample):
-    """Generate screenshots for different panel view options.
-    """
+    """Generate screenshots for different panel view options."""
     load(page, fv)
     pause()
 
@@ -170,26 +185,39 @@ def test_screenshots_view(page: Page, fv: FVExample):
     pause()
     page.screenshot(path=scs.filepath)
 
-    # minimize stream table
-    btn = page.locator("#minimize-streamtable-panel-btn")
+    # open diagnostics
+    btn = page.locator("#headerDiagnosticsBtn")
     btn.wait_for()
     btn.click()
     scs = ScreenShot(
         mode=ScreenMode.view,
-        elements=[ScreenElement.flowsheet_diagram],
+        elements=[ScreenElement.diagnostics],
     )
     print(f"creating screenshot in path: {scs.filepath}")
     pause()
     page.screenshot(path=scs.filepath)
 
-    # minimize flowsheet too (!)
-    btn = page.locator("#minimize-flowsheet-panel-btn")
-    btn.wait_for()
-    btn.click()
-    scs = ScreenShot(
-        mode=ScreenMode.view,
-        elements=[],
-    )
-    print(f"creating screenshot in path: {scs.filepath}")
-    pause()
-    page.screenshot(path=scs.filepath)
+    ## minimize btn is not there anymore turn it off wait for future
+    # minimize stream table
+    # btn = page.locator("#minimize-streamtable-panel-btn")
+    # btn.wait_for()
+    # btn.click()
+    # scs = ScreenShot(
+    #     mode=ScreenMode.view,
+    #     elements=[ScreenElement.flowsheet_diagram],
+    # )
+    # print(f"creating screenshot in path: {scs.filepath}")
+    # pause()
+    # page.screenshot(path=scs.filepath)
+
+    # # # minimize flowsheet too (!)
+    # btn = page.locator("#minimize-flowsheet-panel-btn")
+    # btn.wait_for()
+    # btn.click()
+    # scs = ScreenShot(
+    #     mode=ScreenMode.view,
+    #     elements=[],
+    # )
+    # print(f"creating screenshot in path: {scs.filepath}")
+    # pause()
+    # page.screenshot(path=scs.filepath)
