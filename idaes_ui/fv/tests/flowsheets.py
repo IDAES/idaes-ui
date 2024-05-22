@@ -14,6 +14,7 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
 )
 from idaes.models.unit_models import Flash, Mixer
 from idaes.models.flowsheets import demo_flowsheet as demo
+from idaes.models.flowsheets.demo_flowsheet import build_flowsheet
 
 
 def demo_flowsheet():
@@ -99,20 +100,8 @@ def flash_flowsheet():
 
 def idaes_demo_flowsheet():
     """Get a demo flowsheet that works with diagnostics."""
-    return demo_flowsheet()  # return with curren file's demo_flowsheet
-
-    """
-    TODO: this demo is from idaes but will cause error:
-    idaes.core.util.exceptions.InitializationError: fs.M01.inlet_2_state failed to initialize successfully. Please check the output logs for more information
-    Try to fix it later and in future should use idaes-pse to build flowsheet.
-    """
-    # m = demo.build_flowsheet()
-    # demo.set_scaling(m)
-    # demo.set_dof(m)
-    # demo.initialize_flowsheet(m)
-    # # add a 'solve()' method
-    # m.fs.solve = solve_flowsheet(m)
-    # return m.fs
+    m = build_flowsheet()
+    return m.fs
 
 
 def solve_flowsheet(m):
