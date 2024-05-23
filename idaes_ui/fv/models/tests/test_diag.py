@@ -41,7 +41,7 @@ def test_data(flowsheet):
             "next_steps": diagnostics_toolbox_report.next_steps,
         },
     }
-
+    flowsheet.visualize("sample_visualization", port=49999)
     remote_data = json.dumps(get_diagnostics_data(49999, "sample_visualization"))
     build_diagnostics_report = json.dumps(build_diagnostics_report)
     assert build_diagnostics_report == remote_data
