@@ -1,0 +1,8 @@
+.diagnostics_log_container{
+    position:relative;
+    min-height: 500px;
+    max-height: 1080px;
+    padding: 20px;
+    overflow: scroll !important;
+    scroll-behavior: smooth;
+}

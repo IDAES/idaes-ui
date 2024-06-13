@@ -1,4 +1,3 @@
-
 module.exports = {
   logging:{
     level: 'verbose'

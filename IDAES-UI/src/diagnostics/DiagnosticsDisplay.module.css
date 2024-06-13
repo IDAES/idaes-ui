@@ -1,0 +1,129 @@
+.diagnostics_display_main_container{
+    height: 100%;
+    padding: 30px;
+    overflow: scroll;
+}
+
+.diagnostic_display_each_section_container{
+    margin-bottom: 30px;
+}
+
+.diagnostic_display_each_config_container{
+    display: flex;
+    gap:10px;
+    margin-bottom: 5px;
+}
+
+.diagnostics_display_each_severity_main_container{
+    margin-bottom: 25px;
+}
+
+.diagnostic_display_each_severity_title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    text-transform: capitalize;
+    margin-bottom: 10px;
+}
+
+.diagnostic_display_diagnostic_content_container{
+    margin-left: 20px;
+}
+
+.diagnostics_warning_caution_main_container{
+    margin-bottom: 20px;
+}
+
+.diagnostics_display_pre_tag{
+    font-family: sans-serif;
+    margin-bottom: 5px;
+}
+
+.diagnostic_display_each_severity_title > span{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 29px;
+    height: 29px;
+    border-radius: 50%;
+}
+
+.diagnostics_warning_caution_display_container{
+    margin-left: 20px;
+}
+
+.warning{
+    color: red;
+}
+
+.warning > span{
+    border: 2px solid red;
+}
+
+.caution{
+    color: orange;
+}
+
+.caution > span{
+    border: 2px solid orange;
+}
+
+.diagnostic_display_each_issue_container{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.diagnostic_display_section_title{
+    font-weight: bold;
+}
+
+.diagnostics_display_each_next_step_content{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    color: #4caaf4;
+}
+
+.diagnostics_display_each_next_step_content:hover{
+    cursor: pointer;
+    color: #3e90ce;
+}
+
+.next_step_function_btn{
+    padding: 4px 6px;
+    border: 1px solid #3e90ce;
+}
+
+.next_step_function_btn:hover{
+    color: white;
+    background-color: #3e90ce;
+}
+
+.copied_next_step{
+    position: relative;
+}
+
+.copied_next_step::after{
+    content:"Copied!";
+    position: absolute;
+    color: black;
+    top: 50%;
+    right: -180%;
+    transform: translateY(-50%);
+    width: 80px;
+    height: 30px;
+    padding: 5px 10px;
+    z-index: 100;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0px 0px 10px rgb(219, 219, 219);
+    border-radius: 3px;
+}
+
+.error_message{
+    color: red;
+}

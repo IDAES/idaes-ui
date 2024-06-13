@@ -19,6 +19,7 @@ The main class is `FlowsheetServer`, which is instantiated from the `visualize()
 # pylint: disable=missing-function-docstring
 
 # stdlib
+import io
 import http.server
 import json
 import logging
@@ -30,9 +31,12 @@ from typing import Dict, Union
 from urllib.parse import urlparse
 import time
 import os
+import traceback
 
 # package
 from idaes_ui.fv.flowsheet import FlowsheetDiff, FlowsheetSerializer
+from idaes_ui.fv.models import DiagnosticsData, DiagnosticsException, DiagnosticsError
+from idaes.core.util.model_diagnostics import DiagnosticsToolbox
 from . import persist, errors
 
 _log = logging.getLogger(__name__)
@@ -42,19 +46,8 @@ _this_dir = Path(__file__).parent.absolute()
 # old web dir
 # this can be switch by add param ?app=old in url to enable old site
 # logic is in do_GET()
-# _static_dir = _this_dir / "static"
-# _template_dir = _this_dir / "templates"
-
-# react app dir
-_static_dir = _this_dir / "../../IDAES-UI/dist/"
-_template_dir = _this_dir / "../../IDAES-UI/dist/"
-
-# Dev switch between old site and new site
-enableOldSite = False
-# enableOldSite = True
-if enableOldSite:
-    _static_dir = _this_dir / "static"
-    _template_dir = _this_dir / "templates"
+_static_dir = _this_dir / "static"
+_template_dir = _this_dir / "static"
 
 
 class FlowsheetServer(http.server.HTTPServer):
@@ -86,12 +79,6 @@ class FlowsheetServer(http.server.HTTPServer):
         """Start the server, which will spawn a thread."""
         self._thr = threading.Thread(target=self._run, daemon=True)
         self._thr.start()
-
-        # create shared JSON file
-        # define file path for shared_variable.json for React
-        root = "./shared_variable.json"
-        IDAES_UI_path = "./IDAES-UI/src/context/shared_variable.json"
-        pathDic = [root, IDAES_UI_path]
 
     def add_setting(self, key: str, value):
         """Add a setting to the flowsheet's settings block. Settings block is
@@ -315,6 +302,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
                 )
                 return
             self._get_setting(setting_key_)
+        elif u.path == "/diagnostics":
+            self._get_diagnostics(id_)
         else:
             # Try to serve a file
             self.directory = _static_dir  # keep here: overwritten if set earlier
@@ -362,6 +351,26 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         """
         self._write_json(200, {"setting_value": self.server.get_setting(setting_key_)})
 
+    def _get_diagnostics(self, id_):
+        fs = self.server._get_flowsheet_obj(id_)
+        diag_data = DiagnosticsData(fs)
+        diag_data_config = diag_data.config
+        diagnostics_toolbox_report = diag_data.diagnostics_toolbox_report
+        build_diagnostics_report = {
+            "config": diag_data_config,
+            "diagnostics_toolbox_report": {
+                "toolbox_jacobian_condition": diagnostics_toolbox_report.toolbox_jacobian_condition,
+                "toolbox_model_statistics": diagnostics_toolbox_report.toolbox_model_statistics,
+                "structural_report": diagnostics_toolbox_report.structural_report,
+                "numerical_report": diagnostics_toolbox_report.numerical_report,
+                "next_steps": diagnostics_toolbox_report.next_steps,
+            },
+        }
+
+        self._write_json(200, build_diagnostics_report)
+        # json.dumps(diag_data_config)
+        json.dumps(diagnostics_toolbox_report)
+
     # === PUT ===
     def do_PUT(self):
         """Process a request to store data."""
@@ -376,6 +385,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
 
         if u.path == "/fs":
             self._put_fs(id_)
+        elif u.path == "/run_diagnostic":
+            self._put_diagnostic(id_)
 
     def _put_fs(self, id_):
         # Read flowsheet from request (read(LENGTH) is required to avoid hanging)
@@ -393,6 +404,55 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         self._write_text(200, message="success")
+
+    def _put_diagnostic(self, id_):
+        try:
+            # TODO: id_ in here is not from query param but from frontend, if id_ from do_PUT is None
+            # reading request json data
+            content_length = int(self.headers.get("Content-Length", 0))
+            request_body = self.rfile.read(content_length).decode("utf-8")
+            request_data = json.loads(request_body)
+
+            # get function name from request
+            function_name = request_data.get("function_name", "")
+            id_ = request_data.get("id", "")
+
+            # get fs
+            fs = self.server._get_flowsheet_obj(id_)
+
+            # create diagnosticToolbox instence
+            dt_instance = DiagnosticsToolbox(fs)
+
+            # base on pass in function name as function name and run diagnosticToolBox.function_name
+            if hasattr(dt_instance, function_name):
+                # read dt function from dt instance
+                current_function = getattr(dt_instance, function_name)
+                # initial streamIO use as stream to capture diagnostics output or its default will print to terminal
+                output_stream = io.StringIO()
+                # run current function
+                current_function(stream=output_stream)
+            else:
+                # return error function not exists
+                self._write_json(500, {"error": f"Unknown function: {function_name}"})
+
+            # read captured output content
+            captured_output = output_stream.getvalue()
+
+            # close StreamIO
+            output_stream.close()
+
+            # return respond
+            self._write_json(200, {"diagnostics_runner_result": captured_output})
+        except Exception as e:
+            traceback.print_exc()
+
+            # Return 500 status code and error message
+            self._write_json(
+                500,
+                {
+                    "error": f"Error running diagnostics: {str(e)}, please check your flowsheet!"
+                },
+            )
 
     # === Internal methods ===
 
@@ -430,9 +490,11 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         u, queries = urlparse(path), None
         # u = ParseResult(scheme='', netloc='', path='/app', params='', query='id=sample_visualization', fragment='')
         if u.query:
-            queries = dict(
-                [q.split("=") for q in u.query.split("&")]
-            )  # {'id': 'sample_visualization'}
+            queries = {}
+            for item in u.query.split("&"):
+                parts = item.split("=")
+                if len(parts) == 2:  # skip if not name=value pair
+                    queries[parts[0]] = parts[1]
         return u, queries
 
     # === Logging ===

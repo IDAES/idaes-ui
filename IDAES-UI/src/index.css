@@ -5,58 +5,6 @@
   --black:#333333;
 }
 
-/*
-Font Open Sans:
-
-Light 300
-Light 300 italic
-
-Regular 400
-Regular 400 italic
-
-Medium 500
-Medium 500 italic
-
-SemiBold 600
-SemiBold 600 italic
-
-Bold 700
-Bold 700 italic
-
-ExtraBold 800
-ExtraBold 800 italic
-*/
-/* @font-face {
-  font-family: OpenSans-Light;
-  src: url('/assets/font/OpenSans/static/OpenSans-Light.ttf');
-}
-@font-face {
-  font-family: OpenSans-LightItalic;
-  src: url('/assets/font/OpenSans/static/OpenSans-LightItalic.ttf');
-}
-@font-face {
-  font-family: OpenSans-Regular;
-  src: url('/assets/font/OpenSans/static/OpenSans-Regular.ttf');
-}*/
-
-
-/* @font-face {
-  font-family: OpenSans-LightItalic;
-  src: url('/assets/font/OpenSans/static/OpenSans-LightItalic.ttf');
-}
-
-@font-face {
-  font-family: OpenSans-LightItalic;
-  src: url('/assets/font/OpenSans/static/OpenSans-Italic-VariableFont_wdth,wght.ttf');
-  font-weight: 300;
-  font-style: italic;
-} */
-
-/* @font-face {
-  font-family: 'OpenSans Variable';
-  src: url('/assets/font/OpenSans/static/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
-} */
-
 .padding-sm{
   padding: 5px;
 }
@@ -268,4 +216,14 @@ customized label style
 .linkLabel:hover{
   cursor:grab;
   box-shadow: 2px 2px 15px rgb(142, 142, 142);
+}
+
+
+/*Header*/
+.header_each_btn:hover{
+  cursor: pointer;
+}
+
+#header p {
+  margin-bottom: 0;
 }

@@ -8,14 +8,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
     name = "idaes-ui"
-    description = "IDAES PSE Platform UI"
+    description = "IDAES UI"
     readme = "README.md"
-    version = "0.23.8" #Version format 0.YY.MM
+    version = "0.24.03" #Version format 0.YY.MM
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
-        {name="The IDAES Project"},
-        {name="Dan Gunter", email="dkgunter@lbl.gov"}
+        {name="The IDAES Project"}
     ]
     classifiers = [
             "Development Status :: 3 - Alpha",
@@ -41,17 +40,21 @@ build-backend = "setuptools.build_meta"
         # Don't version setuptools, various bits complain
         "setuptools",
         # For running tests
+        "idaes-pse @ git+https://github.com/IDAES/idaes-pse@main",
         "pytest",
-        # dependency 'requests' module for standalone idaes-ui package
-        "requests"
+        "playwright==1.42.0",
+        "pytest-playwright==0.4.4",
+        "requests==2.31.0",
+        "pydantic~=2.0",
     ]
+
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
 [project.optional-dependencies]
-# Just for developers (they should also add 'jb')
 dev = [
     # For adding copyright headers (see addheader.yml and the readme)
-    "addheader >= 0.3.0"
+    "addheader >= 0.3.0",
+    # Dev versions of idaes/idaes-ui in requirements-dev.txt
 ]
 # For packaging
 pkg = [
@@ -88,17 +91,18 @@ idaes_ui = [
     "*.dat",
     "*.yml",
     "*.yaml",
-    "fv/static/lib/**/*"
 ]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra"
+addopts = "-q"
 testpaths = [
-    "idaes_ui"
+    "idaes_ui",
+    "docs"
 ]
 markers = [
     "component: between unit and integration test",
     "unit: test one small unit of functionality",
-    "integration: test integrated functionality"
+    "integration: test integrated functionality",
+    "screenshot: screenshots"
 ]
