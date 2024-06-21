@@ -40,12 +40,14 @@ build-backend = "setuptools.build_meta"
         # Don't version setuptools, various bits complain
         "setuptools",
         # For running tests
+        "idaes-pse @ git+https://github.com/IDAES/idaes-pse@main",
         "pytest",
         "playwright==1.42.0",
         "pytest-playwright==0.4.4",
         "requests==2.31.0",
-        "pydantic",
+        "pydantic~=2.0",
     ]
+
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
 [project.optional-dependencies]

@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@blueprintjs/core": "^5.8.2",
+    "@blueprintjs/icons": "^5.7.0",
     "@fontsource/roboto": "^5.0.5",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
@@ -21,6 +23,7 @@
     "jointjs": "^3.7.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-mosaic-component": "^6.1.0",
     "react-resizable-panels": "^0.0.53",
     "styled-components": "^5.3.11"
   },

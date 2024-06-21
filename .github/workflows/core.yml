@@ -65,7 +65,7 @@ jobs:
             runner-image: ubuntu-20.04
           - os: win64
             runner-image: windows-2022
-    steps:
+    steps:  
       - uses: IDAES/idaes-ui/.github/actions/install@main
         with:
           variant: ${{ matrix.install-variant }}
@@ -114,14 +114,19 @@ jobs:
             package.json
             package-lock.json
             cypress.config.js
+            
       - name: Install node packages
         run: npm install
+
       - name: Start UI
-        run: npm run ui & echo "UI Server started"
+        run: |
+          python -m idaes_ui.fv.example & 
+          sleep 30
+
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          wait-on-timeout: 20
+          wait-on-timeout: 50
           command: npm run test
           browser: chrome
       - name: Upload screenshots

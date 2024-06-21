@@ -3,7 +3,7 @@
  */
 describe('flowsheet visualizer component spec', () => {
 	// initial wait time for cypress delay give fetch api some time to call backend
-	const waitTime = 300;
+	const waitTime = 2000;
 
 	// define visit app url before each test
 	beforeEach(()=>{
@@ -14,29 +14,26 @@ describe('flowsheet visualizer component spec', () => {
 	// check flowsheet header component exists and visible
 	it('check flowsheet header component exists and visible', ()=>{
 		// header component exists
-		cy.get('#flowsheet-header-component').should('be.visible');
+		cy.get('#header').should('be.visible');
 	})
 
 	// check flowsheet header contain title and title is correct
 	it('check flowsheet header contain title and title is correct',()=>{
-		cy.get('#flowsheet-header-component-title').should('has.text', 'FLOWSHEET')
+		cy.get('#flowsheet_name_title').should('has.text', 'sample_visualization')
 	})
 
 	// check flowsheet header has all required button exist and visible
 	it('check flowsheet header component\'s functions button exists', ()=>{
 		// initial header button as an array
 		const buttons = [
-		{ id: '#stream-names-toggle', name: 'Stream Names Toggle' },
-		{ id: '#show-label-toggle', name: 'Show Label Toggle' },
-		{ id: '#zoom-in-btn', name: 'Zoom In' },
-		{ id: '#zoom-out-btn', name: 'Zoom Out' },
-		{ id: '#zoom-to-fit', name: 'Zoom To Fit' },
-		{ id: '#minimize-flowsheet-panel-btn', name: 'Minimize Flowsheet Panel' },
+		{ id: '#refresh_btn', name: 'refresh' },
+		{ id: '#save_btn', name: 'save' },
+		{ id: '#help_btn', name: 'help' },
 		];
 		
 		// loop through buttons array run each test
 		buttons.forEach(button => {
-		cy.get(`#flowsheet-header-component ${button.id}`).then($el => {
+		cy.get(`#header ${button.id}`).then($el => {
 			expect($el).to.be.visible, `${button.name} button should be visible`;
 		});
 		});
@@ -53,19 +50,26 @@ describe('flowsheet visualizer component spec', () => {
 	// basic zoom in function
 	it('test zoom in button', () => {
 		cy.wait(waitTime)
-		cy.get('.joint-paper.joint-theme-default').then($el => {
+		cy.get('.joint-paper').then($el => {
 		// record old joint paper element width
 		const oldWidth = $el.width();
 		const oldHeight = $el.height();
 		
 		// click zoom in btn
 		cy.get('#zoom-in-btn').click();
+		cy.get('#zoom-in-btn').click();
+		cy.get('#zoom-in-btn').click();
 		
 		// read joint paper element again
-		cy.get('.joint-paper.joint-theme-default').then($newEl => {
+		cy.get('.joint-paper').then($newEl => {
+				cy.wait(waitTime)
 				const newWidth = $newEl.width();
 				const newHeight = $newEl.height();
 				
+
+				console.log(`new height ${newHeight}`)
+				console.log(newWidth)
+
 				expect(newWidth).to.be.greaterThan(oldWidth);
 				expect(newHeight).to.be.greaterThan(oldHeight);
 			});
@@ -85,7 +89,7 @@ describe('flowsheet visualizer component spec', () => {
 		cy.get('#zoom-out-btn').click();
 		
 		// read joint paper element again
-		cy.get('.joint-paper.joint-theme-default').then($newEl => {
+		cy.get('.joint-paper .joint-theme-default').then($newEl => {
 				const newWidth = $newEl.width();
 				const newHeight = $newEl.height();
 				

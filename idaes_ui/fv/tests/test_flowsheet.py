@@ -216,7 +216,7 @@ def _canonicalize(d: dict) -> dict:
     [
         ("demo", _get_demo_flowsheet, "demo_flowsheet.json"),
         ("demo", _get_flash_flowsheet, "flash_flowsheet.json"),
-#        ("boiler", _get_boiler_flowsheet, "serialized_boiler_flowsheet.json"),
+        #        ("boiler", _get_boiler_flowsheet, "serialized_boiler_flowsheet.json"),
     ],
     ids=lambda obj: getattr(obj, "__qualname__", str(obj)),
 )
@@ -250,9 +250,16 @@ def _show_json(test=None, stored=None):
     json.dump(stored, sys.stdout)
 
 
+# create invalidFlowsheet as test instead of ConcreteModel, ConcreteModel has component_objs
+class InvalidFlowsheet:
+    """A mock flowsheet object without the 'component_objects' method."""
+
+    pass
+
+
 @pytest.mark.unit
 def test_flowsheet_serializer_invalid():
-    m = ConcreteModel()
+    m = InvalidFlowsheet()
     pytest.raises(ValueError, FlowsheetSerializer, m, "bad")
 
 

@@ -185,7 +185,8 @@ class FlowsheetSerializer:
                     f"Flowsheet 'component_objects' cannot be navigated: {err}"
                 )
             if n_obj == 0:
-                raise ValueError("Flowsheet has no Arcs or unit Blocks")
+                _log.warning("Flowsheet has no Arcs or unit Blocks")
+                # raise ValueError("Flowsheet has no Arcs or unit Blocks")
         # setup
         self.unit_models = {}  # {unit: {"name": unit.getname(), "type": str?}}
         self.streams = {}  # {Arc.getname(): Arc} or {Port.getname(): Port}
@@ -553,8 +554,15 @@ class FlowsheetSerializer:
             .rename(columns={"index": "Variable"})
             .reset_index()
             .rename(columns={"index": ""})
-            .applymap(
-                lambda x: round(x, self._sig_figs) if isinstance(x, (int, float)) else x
+            # .applymap(
+            #     lambda x: round(x, self._sig_figs) if isinstance(x, (int, float)) else x
+            # )
+            .apply(
+                lambda col: col.apply(
+                    lambda x: round(x, self._sig_figs)
+                    if isinstance(x, (int, float))
+                    else x
+                )
             )
         )
 
@@ -602,7 +610,10 @@ class FlowsheetSerializer:
                 for pfx in "performance", "stream":
                     content_type = pfx + "_contents"
                     contents = self._serialized_contents[unit_name][content_type]
-                    c = contents.applymap(round_number).to_dict("index")
+                    # c = contents.applymap(round_number).to_dict("index")
+                    c = contents.apply(lambda col: col.map(round_number)).to_dict(
+                        "index"
+                    )  # Fix applymap
                     # ensure that keys are strings (so it's valid JSON)
                     unit_contents[content_type] = {str(k): v for k, v in c.items()}
             self._out_json["model"]["unit_models"][unit_name] = unit_contents

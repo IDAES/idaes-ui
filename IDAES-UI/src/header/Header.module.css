@@ -1,0 +1,48 @@
+#header p {
+  margin-bottom: 0;
+}
+
+.header_container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--black);
+  position: relative;
+}
+
+/* Logo */
+
+.headerLeftMainContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.headerLogoContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  padding-right: 20px;
+  border-right: 1px solid white;
+}
+
+.headerLogo{
+  max-width: 70px;
+}
+
+.headerLogoText{
+  color: white;
+  font-size: 35px;
+  font-weight: 300;
+}
+
+.headerFlowsheetName{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}

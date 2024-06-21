@@ -28,8 +28,8 @@ from .base import DiagnosticsException
 
 
 class DiagnosticsUpdateException(DiagnosticsException):
-    """Error updating diagnostics
-    """
+    """Error updating diagnostics"""
+
     def __init__(self, name="unknown", details=None):
         super().__init__(name=name, details=details)
 
@@ -109,7 +109,12 @@ class ModelIssue(BaseModel):
     name: str = ""
     description: str = ""
     objects: List[
-        Union[ModelIssueVariable, ModelIssueVariableBounded, ModelIssueConstraint, ModelIssueComponent]
+        Union[
+            ModelIssueVariable,
+            ModelIssueVariableBounded,
+            ModelIssueConstraint,
+            ModelIssueComponent,
+        ]
     ] = []
 
 
@@ -222,7 +227,7 @@ class ModelIssues(BaseModel):
                 severity=Severity.warning,
                 modifiers={"constrained": name, "object-type": thing},
                 description=f"Structural singularity: "
-                            f"{name}-constrained {thing}{plural}",
+                f"{name}-constrained {thing}{plural}",
             )
             for obj in obj_set:
                 obj_list = []
@@ -268,5 +273,3 @@ class ModelIssues(BaseModel):
             obj = ModelIssueVariable(name=v.name, value=v.value, fixed=v.fixed)
             issue.objects.append(obj)
         self.issues.append(issue)
-
-

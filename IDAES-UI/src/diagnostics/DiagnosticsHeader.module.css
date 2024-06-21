@@ -1,0 +1,39 @@
+.diagnosticsIssues_container{
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    border-bottom: 1px solid gray;
+}
+
+.diagnosticIssues_each_issue{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    height: 30px;
+}
+
+.diagnosticIssues_each_issue:hover{
+    cursor: pointer;
+    border-bottom: 1px solid black;
+}
+
+.diagnosticIssues_each_issue > p{
+    user-select: none;
+    text-transform: capitalize;
+}
+
+.diagnosticIssues_each_issue > p > sup{
+    padding: 3px 8px;
+    margin-left: 3px;
+    border-radius: 50%;
+    background-color: gray;
+    color: white;
+}
+
+.activated > p{
+    font-weight: bold;
+    color: #4caaf4;
+}
