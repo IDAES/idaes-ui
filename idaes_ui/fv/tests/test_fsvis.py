@@ -20,10 +20,11 @@ import json
 import logging
 import os
 from pathlib import Path
-import pytest
 import re
-import requests
 import time
+
+import pytest
+requests = pytest.importorskip("requests")
 
 from pyomo.environ import ConcreteModel
 from idaes.core import FlowsheetBlock
