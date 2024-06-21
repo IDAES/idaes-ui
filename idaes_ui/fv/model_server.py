@@ -368,8 +368,6 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         }
 
         self._write_json(200, build_diagnostics_report)
-        # json.dumps(diag_data_config)
-        json.dumps(diagnostics_toolbox_report)
 
     # === PUT ===
     def do_PUT(self):
