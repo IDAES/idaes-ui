@@ -2,11 +2,13 @@
 Tests for the diagnostics models
 """
 
-import pytest
 import json
+
+import pytest
+requests = pytest.importorskip("requests")
+
 from ..diag import DiagnosticsData
 from . import flowsheet
-import requests
 
 
 # get diagnostics data from remote

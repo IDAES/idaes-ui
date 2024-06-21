@@ -16,8 +16,9 @@ import socket
 
 
 # third-party
-from playwright.sync_api import Page, expect
 import pytest
+pytest.importorskip("playwright", reason="Playwright not installed")
+from playwright.sync_api import Page, expect
 
 # package
 from idaes.models.flowsheets.demo_flowsheet import build_flowsheet
