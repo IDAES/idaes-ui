@@ -37,24 +37,25 @@ build-backend = "setuptools.build_meta"
             "Topic :: Software Development :: Libraries :: Python Modules",
     ]
     dependencies = [
+        # IMPORTANT: idaes-pse should NOT be added to the default dependencies
+        # this causes, among other things, CI failures in IDAES/idaes-pse
         # Don't version setuptools, various bits complain
         "setuptools",
-        # For running tests
-        "idaes-pse @ git+https://github.com/IDAES/idaes-pse@main",
-        "pytest",
-        "playwright==1.42.0",
-        "pytest-playwright==0.4.4",
-        "requests==2.31.0",
-        "pydantic~=2.0",
+        "pydantic ~= 2.0",
+        "fastapi",
+        "uvicorn",
     ]
 
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
 
 [project.optional-dependencies]
-dev = [
-    # For adding copyright headers (see addheader.yml and the readme)
-    "addheader >= 0.3.0",
-    # Dev versions of idaes/idaes-ui in requirements-dev.txt
+testing = [
+    "pytest",
+    "pytest-icdiff >= 0.7",  # readable dict diffs for test_flowsheet and others
+    "playwright==1.42.0",
+    "pytest-playwright==0.4.4",
+    "requests==2.31.0",
+    "httpx",  # fastapi testing
 ]
 # For packaging
 pkg = [

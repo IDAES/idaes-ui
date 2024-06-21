@@ -46,15 +46,7 @@ runs:
       env:
         _pip_install_url: ${{ github.server_url }}/${{ github.repository }}@${{ github.ref }}
       run: |
-        pip install --progress-bar off -r requirements-dev.txt
-
-    - name: Install using pip (git+... URL)
-      if: inputs.variant == 'standard'
-      shell: bash -l {0}
-      env:
-        _pip_install_url: ${{ github.server_url }}/${{ github.repository }}@${{ github.ref }}
-      run: |
-        pip install --progress-bar off "git+$_pip_install_url" idaes-pse pytest
+        pip install --progress-bar off "idaes-ui[testing] @ git+$_pip_install_url" idaes-pse
 
     - name: Install extensions
       shell: bash -l {0}
