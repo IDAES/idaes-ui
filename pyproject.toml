@@ -10,7 +10,7 @@ build-backend = "setuptools.build_meta"
     name = "idaes-ui"
     description = "IDAES UI"
     readme = "README.md"
-    version = "0.24.03" #Version format 0.YY.MM
+    version = "0.24.6" #Version format 0.YY.MM
     license = {text="BSD"}
     requires-python = ">=3.8"
     authors = [
