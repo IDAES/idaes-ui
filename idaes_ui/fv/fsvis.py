@@ -16,15 +16,27 @@
 # stdlib
 from collections import namedtuple
 from pathlib import Path
+import os
 import sys
 import time
 from typing import Optional, Union, Dict, Tuple
 import webbrowser
+import io
 
 # package
 from idaes import logger
 from .model_server import FlowsheetServer
 from . import persist, errors
+from IPython.display import Image as IPythonImage, display
+from IPython.display import SVG
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from PIL import Image
+
 
 # Logging
 _log = logger.getLogger(__name__)
@@ -62,6 +74,7 @@ def visualize(
     log_level: int = logger.WARNING,
     quiet: bool = False,
     loop_forever: bool = False,
+    screenshot: bool = True,
 ) -> VisualizeResult:
     """Visualize the flowsheet in a web application.
 
@@ -193,7 +206,102 @@ def visualize(
     if loop_forever:
         _loop_forever(quiet)
 
-    return VisualizeResult(store=datastore, port=web_server.port, server=web_server)
+    if screenshot:
+        print("Generating Screenshot......")
+        get_screenshot(flowsheet_name=name, port=web_server.port)
+
+    return VisualizeResult(
+        store=datastore,
+        port=web_server.port,
+        server=web_server,
+    )
+
+
+def get_screenshot(flowsheet_name, port) -> str:
+    # live server url
+    url = f"http://localhost:{port}/app?id={flowsheet_name}"
+
+    # Set up Chrome options for headless browsing
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--window-size=1920x1080 ")
+
+    # Initialize the WebDriver
+    driver = webdriver.Chrome(options=chrome_options)
+
+    try:
+        # Navigate to the URL
+        driver.get(url)
+
+        # Wait for the SVG element to be present
+        svg_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "svg[joint-selector='svg'][id='v-2']")
+            )
+        )
+
+        # Get the outer HTML of the SVG element
+        svg_content = svg_element.get_attribute("outerHTML")
+
+        # Save the SVG content to a file
+        with open(f"{flowsheet_name}_svg.svg", "w", encoding="utf-8") as f:
+            f.write(svg_content)
+
+        print(f"SVG saved as {flowsheet_name}_svg.svg")
+
+        current_path = os.getcwd()
+        files_and_dirs = os.listdir(current_path)
+        for item in files_and_dirs:
+            print(item)
+
+        # debug
+        # with open(f"{flowsheet_name}.svg", "r") as f:
+        #     svg_content = f.read()
+        # print(svg_content[:500])
+
+        # Display the SVG
+        display(SVG(filename=f"{flowsheet_name}_svg.svg"))
+
+        from IPython.display import HTML
+
+        html_content = f'<div style="width:100%;height:600px">{svg_content}</div>'
+        display(HTML(html_content))
+
+        return svg_content
+
+    finally:
+        # Close the browser
+        driver.quit()
+
+    # here generate png ok but size is odd
+    # try:
+    #     # Navigate to the URL
+    #     driver.get(url)
+
+    #     # Wait for the element to be present
+    #     element = WebDriverWait(driver, 10).until(
+    #         EC.presence_of_element_located((By.ID, "v-2"))
+    #     )
+
+    #     # Scroll element into view
+    #     driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    #     # Take screenshot of the specific element
+    #     element_png = element.screenshot_as_png
+
+    #     # Create an image from the screenshot
+    #     image = Image.open(io.BytesIO(element_png))
+
+    #     # Save or return the image
+    #     image.save(f"{flowsheet_name}_screenshot.png")
+    #     print(f"Screenshot saved as {flowsheet_name}_screenshot.png")
+    #     display(IPythonImage(filename=f"{flowsheet_name}_screenshot.png"))
+
+    #     return image
+
+    # finally:
+    #     # Close the browser
+    #     driver.quit()
 
 
 def _loop_forever(quiet):
