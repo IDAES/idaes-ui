@@ -43,9 +43,8 @@ build-backend = "setuptools.build_meta"
         "setuptools",
         "pydantic ~= 2.0",
 
-        # for compatibility with IDAES unit formatting
-        # following IDAES/idaes-pse#1438 is released
-        "pint < 0.24",
+        # Pint 0.24.1 for Python 3.9 compatibility
+        "pint >= 0.24.1",
 
         # fastapi is not used at the moment; uncomment once fastapi is needed again
         # "fastapi",
