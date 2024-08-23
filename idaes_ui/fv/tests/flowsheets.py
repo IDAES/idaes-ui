@@ -79,7 +79,7 @@ def flash_flowsheet():
     # Flash unit
     m.fs.flash = Flash(property_package=m.fs.properties)
     # TODO: move this to
-    m.fs.flash.inlet.flow_mol.fix(np.NINF, skip_validation=True)
+    m.fs.flash.inlet.flow_mol.fix(-np.inf, skip_validation=True)
     # Pyomo#2180 is merged
     # m.fs.flash.inlet.flow_mol[:].set_value(np.NINF, True)
     # m.fs.flash.inlet.flow_mol.fix()
