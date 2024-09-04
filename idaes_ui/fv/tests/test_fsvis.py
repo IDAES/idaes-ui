@@ -24,6 +24,7 @@ import re
 import time
 
 import pytest
+
 requests = pytest.importorskip("requests")
 
 from pyomo.environ import ConcreteModel
@@ -344,3 +345,84 @@ def test_loop_forever():
         print("check thread")
         assert thr.is_alive()
     # threads should die when process exits
+
+
+@pytest.mark.unit
+def test_visualize_return(flash_model):
+    flowsheet = flash_model.fs
+    visualizer = fsvis.visualize(flowsheet, browser=False, save=False)
+
+    assert hasattr(visualizer, "store")
+    assert hasattr(visualizer, "port")
+    assert hasattr(visualizer, "server")
+    assert hasattr(visualizer, "save_diagram")
+
+
+from playwright.sync_api import sync_playwright
+
+
+@pytest.fixture(scope="module")
+def browser():
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        yield browser
+        browser.close()
+
+
+@pytest.mark.unit
+def test_saved_diagram_as_svg_and_png(flash_model):
+    """
+    test visualizer.save_diagram saved diagram as svg in screenshots folder
+    """
+    import asyncio
+
+    flowsheet_name = "test_diagram"
+
+    async def run_visualizer_and_save():
+        # Run visualizer and save diagram
+        visualizer = fsvis.visualize(flash_model.fs, flowsheet_name, browser=True)
+
+        visualizer.save_diagram(
+            name=flowsheet_name,
+            save_to=os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "screenshots",
+            ),
+            display="false",
+            image_type="svg",
+        )
+
+        visualizer.save_diagram(
+            name=flowsheet_name,
+            save_to=os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "screenshots",
+            ),
+            display="false",
+            image_type="png",
+        )
+
+        # Verify screenshot is saved to save path
+
+        current_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        screenshot_at_folder_path = os.path.join(current_dir_path, "screenshots")
+        has_svg = os.path.exists(
+            os.path.join(screenshot_at_folder_path, f"{flowsheet_name}.svg")
+        )
+
+        has_png = os.path.exists(
+            os.path.join(screenshot_at_folder_path, f"{flowsheet_name}.png")
+        )
+
+        if has_svg and has_png:
+            return True
+        else:
+            return False
+
+    loop = asyncio.new_event_loop()
+    try:
+        asyncio.set_event_loop(loop)
+        is_screenshot_saved = loop.run_until_complete(run_visualizer_and_save())
+    finally:
+        loop.close()
+    assert is_screenshot_saved
