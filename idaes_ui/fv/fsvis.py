@@ -251,9 +251,8 @@ def visualize(
 
         # use async loop to run async playwright diagram async generator
         nest_asyncio.apply()
-
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(
+        save_diagram_return = loop.run_until_complete(
             _async_save_diagram(
                 name=name,
                 live_server_url=live_server_url,
@@ -262,6 +261,8 @@ def visualize(
                 display=display,
             )
         )
+
+        return save_diagram_return
 
     return VisualizeResult(
         store=datastore,
@@ -411,12 +412,12 @@ async def _async_save_diagram(
             # Wait for download to complete
             download_path = await download.path()
 
+            diagram_saved_path = f"{save_to}/{name}.{image_type}"
             # Move download to save_to and display image and display image saved path
             if download_path:
                 # Save image to save to and display
-                save_to = f"{save_to}/{name}.{image_type}"
-                os.rename(download_path, save_to)
-                _log.info(f"File downloaded: {save_to}")
+                os.rename(download_path, diagram_saved_path)
+                _log.info(f"File downloaded: {diagram_saved_path}")
 
                 # get if user is in jupyter notebook or not
                 # if not in jupyter notebook will only return screenshot path
@@ -429,11 +430,11 @@ async def _async_save_diagram(
                 # check display and image_type to out put image and image path
                 if display and image_type == "svg":
                     # display svg and display screenshot
-                    IPythonDisplay(SVG(filename=save_to))
+                    IPythonDisplay(SVG(filename=diagram_saved_path))
 
                 if display and image_type == "png":
                     # display png images
-                    IPythonDisplay(Image(filename=save_to))
+                    IPythonDisplay(Image(filename=diagram_saved_path))
             else:
                 _log.error("Diagram file not found")
                 return None
@@ -445,12 +446,7 @@ async def _async_save_diagram(
         finally:
             await browser.close()
 
-            test_return = {
-                name,
-                save_to,
-                image_type,
-            }
-            return test_return
+        return {"diagram_saved_path": diagram_saved_path}
 
 
 def _is_jupyter():
