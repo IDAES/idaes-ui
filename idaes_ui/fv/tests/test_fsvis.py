@@ -15,6 +15,7 @@ Tests for the IDAES Flowsheet Visualizer (IFV).
 
 These are currently integration tests, because the start/stop the embedded HTTP server.
 """
+import logging
 import glob
 import json
 import logging
@@ -23,7 +24,9 @@ from pathlib import Path
 import re
 import time
 
+
 import pytest
+import asyncio
 
 requests = pytest.importorskip("requests")
 
@@ -34,6 +37,9 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
 )
 from idaes.models.unit_models import Flash
 from idaes_ui.fv import fsvis, errors, validate_flowsheet
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module")
@@ -374,13 +380,12 @@ def test_saved_diagram_as_svg_and_png(flash_model):
     """
     test visualizer.save_diagram saved diagram as svg in screenshots folder
     """
-    import asyncio
 
     flowsheet_name = "test_diagram"
 
     async def run_visualizer_and_save():
         # Run visualizer and save diagram
-        visualizer = fsvis.visualize(flash_model.fs, flowsheet_name, browser=True)
+        visualizer = fsvis.visualize(flash_model.fs, flowsheet_name, browser=False)
 
         visualizer.save_diagram(
             name=flowsheet_name,
@@ -420,9 +425,49 @@ def test_saved_diagram_as_svg_and_png(flash_model):
             return False
 
     loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     try:
-        asyncio.set_event_loop(loop)
         is_screenshot_saved = loop.run_until_complete(run_visualizer_and_save())
     finally:
         loop.close()
     assert is_screenshot_saved
+
+
+@pytest.mark.unit
+def test_screenshots_save_path(flash_model):
+    async def run_visualizer_and_save_diagram():
+        flowsheet_name = "test_diagram"
+        save_diagram_type = "svg"
+        # Run visualizer and save diagram assign save_diagram return as save_diagram returns
+        save_diagram_return = fsvis.visualize(
+            flash_model.fs, flowsheet_name, browser=False
+        ).save_diagram(
+            name=flowsheet_name,
+            save_to=os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "screenshots",
+            ),
+            display="false",
+            image_type=save_diagram_type,
+        )
+
+        return {
+            "diagram_name": flowsheet_name,
+            "diagram_type": save_diagram_type,
+            "diagram_saved_path": save_diagram_return["diagram_saved_path"],
+        }
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        save_diagram_return = loop.run_until_complete(run_visualizer_and_save_diagram())
+        save_path = save_diagram_return["diagram_saved_path"]
+    finally:
+        loop.close()
+
+    current_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    default_save_path = os.path.join(
+        current_dir_path,
+        f'screenshots/{save_diagram_return["diagram_name"]}.{save_diagram_return["diagram_type"]}',
+    )
+    assert save_path == default_save_path
