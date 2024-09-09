@@ -200,11 +200,11 @@ def visualize(
         _loop_forever(quiet)
 
     def save_diagram(
-        name: str = name,
+        screenshot_name: str = name,
         image_type: str = "svg",
         save_to: str = "screenshots",
         display: bool = True,
-    ):
+    ) -> dict:
         """Capture Screenshot of Flowsheet Diagram
 
         This function enables users to capture a screenshot of a flowsheet diagram.
@@ -214,10 +214,16 @@ def visualize(
         Additionally, users can control whether to display the screenshot in the running environment by adjusting the display argument.
 
         Args:
-            name: string, use to save as screenshot name, default is flowsheet name from parent function
+            screenshot_name: string, use to save as screenshot name, default is flowsheet name from parent function
             image_type: string, use to save as screenshot image type, default is svg, now supporting svg, png
             save_to: string, use to define where screenshot should save to, default is ./screenshots
             display: bool, use to control if display screenshot or not
+
+        Returns:
+            dict: A dictionary with the following keys:
+                screenshot_image_type (str) : screenshot saved image type name as string.
+                validated_save_path (str) : the final save path after validation by the function _validate_and_create_save_path.
+                diagram_saved_path (str): the path where the diagram is saved.
         """
         import asyncio
         import nest_asyncio
@@ -242,27 +248,37 @@ def visualize(
         # if user set image_type arg invalid set it as default svg and print message
         if not image_type or not image_type in default_image_types:
             _log.warning(
-                f"[{image_type} is not supported] Diagram image types can only be PNG or SVG. The default image type is now set to SVG."
+                f"[{image_type} is not supported] Only PNG and SVG are supported as diagram screenshot types. The default image type has been set to SVG."
             )
             image_type = "svg"
 
         # set file save path
-        save_to = _validate_and_create_save_path(save_to)
+        validate_save_path = _validate_and_create_save_path(save_to)
+
+        # log save_to_info if user's save path is invalid
+        if not validate_save_path == save_to:
+            _log.warning(
+                f"The save path {save_to} is invalid, now save path change to {validate_save_path}"
+            )
 
         # use async loop to run async playwright diagram async generator
         nest_asyncio.apply()
         loop = asyncio.get_event_loop()
         save_diagram_return = loop.run_until_complete(
             _async_save_diagram(
-                name=name,
+                screenshot_name=screenshot_name,
                 live_server_url=live_server_url,
-                save_to=save_to,
+                save_to=validate_save_path,
                 image_type=image_type,
                 display=display,
             )
         )
 
-        return save_diagram_return
+        return {
+            "screenshot_image_type": image_type,
+            "validate_save_path": validate_save_path,
+            "diagram_saved_path": save_diagram_return["diagram_saved_path"],
+        }
 
     return VisualizeResult(
         store=datastore,
@@ -375,8 +391,18 @@ def _validate_and_create_save_path(user_path):
 
 
 async def _async_save_diagram(
-    name: str, live_server_url: str, save_to: str, image_type: str, display: bool
+    screenshot_name: str,
+    live_server_url: str,
+    save_to: str,
+    image_type: str,
+    display: bool,
 ):
+    """
+    use playwright simulate user click website, to save diagram as svg or png screenshot into user defined save_path or default folder
+
+    Args:
+        screenshot_name: string use as screenshot saved name, if undefined will use flowsheet as screenshot saved name
+    """
     # import playwright to generate screenshot
     from playwright.async_api import async_playwright
     from IPython.display import SVG
@@ -412,7 +438,7 @@ async def _async_save_diagram(
             # Wait for download to complete
             download_path = await download.path()
 
-            diagram_saved_path = f"{save_to}/{name}.{image_type}"
+            diagram_saved_path = f"{save_to}/{screenshot_name}.{image_type}"
             # Move download to save_to and display image and display image saved path
             if download_path:
                 # Save image to save to and display
