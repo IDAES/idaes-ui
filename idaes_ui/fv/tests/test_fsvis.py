@@ -15,6 +15,7 @@ Tests for the IDAES Flowsheet Visualizer (IFV).
 
 These are currently integration tests, because the start/stop the embedded HTTP server.
 """
+import io
 import logging
 import glob
 import json
@@ -388,7 +389,7 @@ def test_saved_diagram_as_svg_and_png(flash_model):
         visualizer = fsvis.visualize(flash_model.fs, flowsheet_name, browser=False)
 
         visualizer.save_diagram(
-            name=flowsheet_name,
+            screenshot_name=flowsheet_name,
             save_to=os.path.join(
                 os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                 "screenshots",
@@ -398,7 +399,7 @@ def test_saved_diagram_as_svg_and_png(flash_model):
         )
 
         visualizer.save_diagram(
-            name=flowsheet_name,
+            screenshot_name=flowsheet_name,
             save_to=os.path.join(
                 os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                 "screenshots",
@@ -435,18 +436,50 @@ def test_saved_diagram_as_svg_and_png(flash_model):
 
 @pytest.mark.unit
 def test_screenshots_save_path(flash_model):
+    flowsheet_name = "test_diagram"
+    save_diagram_type = "svg"
+    user_defined_save_path = (
+        "./some/user_defined_path"  # start from current folder this path should valid
+    )
+    user_defined_invalid_path = (
+        "/some/invalid/path"  # start from root this should be invalid
+    )
+    # setup logging capture, for capture warning log
+    # log_capture_string = io.StringIO()
+    # ch = logging.StreamHandler(log_capture_string)
+    # ch.setLevel(logging.INFO)
+    # formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    # ch.setFormatter(formatter)
+    # logger = logging.getLogger()
+    # logger.addHandler(ch)
+
     async def run_visualizer_and_save_diagram():
-        flowsheet_name = "test_diagram"
-        save_diagram_type = "svg"
         # Run visualizer and save diagram assign save_diagram return as save_diagram returns
-        save_diagram_return = fsvis.visualize(
+        # 1: without save_to param, should use default save path
+        without_save_path_return = fsvis.visualize(
             flash_model.fs, flowsheet_name, browser=False
         ).save_diagram(
-            name=flowsheet_name,
-            save_to=os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                "screenshots",
-            ),
+            screenshot_name=flowsheet_name,
+            display="false",
+            image_type=save_diagram_type,
+        )
+
+        # 2: test user defined valid path
+        user_defined_valid_save_path_return = fsvis.visualize(
+            flash_model.fs, flowsheet_name, browser=False
+        ).save_diagram(
+            screenshot_name=flowsheet_name,
+            save_to=user_defined_save_path,
+            display="false",
+            image_type=save_diagram_type,
+        )
+
+        # 3: input with invalid user's path, should use default save path
+        invalid_path_return = fsvis.visualize(
+            flash_model.fs, flowsheet_name, browser=False
+        ).save_diagram(
+            screenshot_name=flowsheet_name,
+            save_to=user_defined_invalid_path,
             display="false",
             image_type=save_diagram_type,
         )
@@ -454,20 +487,46 @@ def test_screenshots_save_path(flash_model):
         return {
             "diagram_name": flowsheet_name,
             "diagram_type": save_diagram_type,
-            "diagram_saved_path": save_diagram_return["diagram_saved_path"],
+            "without_save_path": without_save_path_return["diagram_saved_path"],
+            "user_defined_valid_save_path": user_defined_valid_save_path_return[
+                "diagram_saved_path"
+            ],
+            "invalid_user_save_path": invalid_path_return["diagram_saved_path"],
         }
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
         save_diagram_return = loop.run_until_complete(run_visualizer_and_save_diagram())
-        save_path = save_diagram_return["diagram_saved_path"]
     finally:
         loop.close()
 
-    current_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    default_save_path = os.path.join(
-        current_dir_path,
-        f'screenshots/{save_diagram_return["diagram_name"]}.{save_diagram_return["diagram_type"]}',
+    # current_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    fv_folder_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "..")
     )
-    assert save_path == default_save_path
+
+    screenshot_file_name = (
+        f'{save_diagram_return["diagram_name"]}.{save_diagram_return["diagram_type"]}'
+    )
+
+    screenshot_folder_and_file_name = f"screenshots/{screenshot_file_name}"
+
+    # define default save path
+    default_save_path = os.path.join(
+        fv_folder_path,
+        screenshot_folder_and_file_name,
+    )
+
+    # check 1 assert when save_to is empty use default_save_path
+    assert save_diagram_return["without_save_path"] == default_save_path
+
+    # check 2 assert when user gives valid save_to, the file should download to path
+    user_defined_valid_path_has_file = os.path.exists(
+        save_diagram_return["user_defined_valid_save_path"]
+    )
+
+    assert user_defined_valid_path_has_file
+
+    # check 3 assert when user give an invalid path, system should log error, and use default path to save
+    assert save_diagram_return["invalid_user_save_path"] == default_save_path
