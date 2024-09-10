@@ -52,6 +52,9 @@ build-backend = "setuptools.build_meta"
 
         # for return screenshot image to jupyter and identify if user is in jupyter environment
         "IPython",
+
+        # request for screenshot function to use playwright to open browser in background and capture image
+        "playwright==1.42.0",
     ]
 
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
@@ -60,7 +63,6 @@ build-backend = "setuptools.build_meta"
 testing = [
     "pytest",
     "pytest-icdiff >= 0.7",  # readable dict diffs for test_flowsheet and others
-    "playwright==1.42.0",
     "pytest-playwright==0.4.4",
     "requests==2.31.0",
     # "httpx",  # fastapi testing
