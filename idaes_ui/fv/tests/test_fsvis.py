@@ -24,6 +24,8 @@ import os
 from pathlib import Path
 import re
 import time
+import tempfile
+import platform
 
 
 import pytest
@@ -441,9 +443,16 @@ def test_screenshots_save_path(flash_model):
     user_defined_save_path = (
         "./some/user_defined_path"  # start from current folder this path should valid
     )
-    user_defined_invalid_path = (
-        "/some/invalid/path"  # start from root this should be invalid
-    )
+
+    # Create invalid file path with an invalid directory name to test path validation
+    if platform.system() == "Windows":
+        user_defined_invalid_path = "CON:\\invalid_path"
+    else:
+        user_defined_invalid_path = "/some/invalid/path"
+
+    assert not os.path.exists(
+        user_defined_invalid_path
+    ), "Invalid path should not exist"
 
     async def run_visualizer_and_save_diagram():
         # Run visualizer and save diagram assign save_diagram return as save_diagram returns
