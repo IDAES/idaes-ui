@@ -345,24 +345,24 @@ def _init_logging(lvl):
     ui_logger.setLevel(lvl)
 
 
-def _validate_and_create_save_path(user_path):
+def _validate_and_create_save_path(save_to):
     """
     check user's path is valid or use default path
 
     Args:
-        user_path: string, the path user provided
+        save_to: string, the path user provided
     Returns:
         path_to_use: the path use to save diagram screenshot
     """
     # setup default saving path
     default_path = os.path.join(os.getcwd(), "screenshots")
 
-    if user_path is None or user_path.strip() == "":
+    if save_to is None or save_to.strip() == "":
         _log.warning(f"No path provided. Using default path: {default_path}")
         path_to_use = default_path
     else:
         # change path to abs path
-        abs_path = os.path.abspath(user_path)
+        abs_path = os.path.abspath(save_to)
 
         # check if path exist
         if not os.path.exists(abs_path):
@@ -387,6 +387,7 @@ def _validate_and_create_save_path(user_path):
     if path_to_use == default_path and not os.path.exists(default_path):
         os.makedirs(default_path)
 
+    _log.warning(f"save path is {path_to_use}")
     return path_to_use
 
 
