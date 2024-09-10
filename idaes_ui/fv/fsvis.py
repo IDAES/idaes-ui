@@ -21,8 +21,6 @@ import sys
 import time
 from typing import Optional, Union, Dict, Tuple
 import webbrowser
-import io
-import shutil
 
 # package
 from idaes import logger
@@ -255,12 +253,12 @@ def visualize(
 
         # set file save path
         validate_path_return = _validate_and_create_save_path(save_to)
-        validate_save_path = validate_path_return["path_to_use"]
+        valid_save_path = validate_path_return["path_to_use"]
 
         # log save_to_info if user's save path is invalid
-        if not validate_save_path == save_to:
+        if not valid_save_path == save_to:
             _log.warning(
-                f"The save path {save_to} is invalid, now save path change to {validate_save_path}"
+                f"The save path {save_to} is invalid, now save path change to {valid_save_path}"
             )
 
         # use async loop to run async playwright diagram async generator
@@ -270,7 +268,7 @@ def visualize(
             _async_save_diagram(
                 screenshot_name=screenshot_name,
                 live_server_url=live_server_url,
-                save_to=validate_save_path,
+                save_to=valid_save_path,
                 image_type=image_type,
                 display=display,
             )
@@ -278,7 +276,7 @@ def visualize(
 
         return {
             "screenshot_image_type": image_type,
-            "validate_save_path": validate_save_path,
+            "valid_save_path": valid_save_path,
             "default_save_path": validate_path_return["default_save_path"],
             "diagram_saved_path": save_diagram_return["diagram_saved_path"],
         }
@@ -444,10 +442,20 @@ async def _async_save_diagram(
 
             diagram_saved_path = f"{save_to}/{screenshot_name}.{image_type}"
             # Move download to save_to and display image and display image saved path
-            if download_path:
+            if os.path.exists(download_path):
                 # Save image to save to and display
-                shutil.move(download_path, diagram_saved_path)
-                _log.info(f"File downloaded: {diagram_saved_path}")
+                # read from download screenshot file
+
+                with open(download_path, "rb") as source_file:
+                    file_content = source_file.read()
+                # write to save path
+                with open(diagram_saved_path, "wb") as target_file:
+                    target_file.write(file_content)
+
+                if os.path.exists(diagram_saved_path):
+                    _log.info(f"File downloaded: {diagram_saved_path}")
+                else:
+                    _log.error(f"screenshot fail to save to: {diagram_saved_path}")
 
                 # get if user is in jupyter notebook or not
                 # if not in jupyter notebook will only return screenshot path
