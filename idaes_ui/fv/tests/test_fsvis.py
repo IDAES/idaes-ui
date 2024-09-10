@@ -477,6 +477,7 @@ def test_screenshots_save_path(flash_model):
         )
 
         return {
+            "default_save_path": without_save_path_return["default_save_path"],
             "diagram_name": flowsheet_name,
             "diagram_type": save_diagram_type,
             "without_save_path": without_save_path_return["diagram_saved_path"],
@@ -493,26 +494,18 @@ def test_screenshots_save_path(flash_model):
     finally:
         loop.close()
 
-    # current_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fv_folder_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "..")
-    )
-
     screenshot_file_name = (
         f'{save_diagram_return["diagram_name"]}.{save_diagram_return["diagram_type"]}'
     )
 
-    screenshot_folder_and_file_name = f"screenshots/{screenshot_file_name}"
-
     # define default save path
-    default_save_path = os.path.join(
-        fv_folder_path,
-        screenshot_folder_and_file_name,
+    default_save_path = (
+        f'{save_diagram_return["default_save_path"]}/{screenshot_file_name}'
     )
 
     # check 1 assert when save_to is empty use default_save_path
-    logging.info(f'save diagram path={save_diagram_return["without_save_path"]}')
     logging.info(f"default save path={default_save_path}")
+    logging.info(f'save diagram path={save_diagram_return["without_save_path"]}')
     assert save_diagram_return["without_save_path"] == default_save_path
 
     # check 2 assert when user gives valid save_to, the file should download to path
