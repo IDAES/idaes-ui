@@ -444,14 +444,6 @@ def test_screenshots_save_path(flash_model):
     user_defined_invalid_path = (
         "/some/invalid/path"  # start from root this should be invalid
     )
-    # setup logging capture, for capture warning log
-    # log_capture_string = io.StringIO()
-    # ch = logging.StreamHandler(log_capture_string)
-    # ch.setLevel(logging.INFO)
-    # formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    # ch.setFormatter(formatter)
-    # logger = logging.getLogger()
-    # logger.addHandler(ch)
 
     async def run_visualizer_and_save_diagram():
         # Run visualizer and save diagram assign save_diagram return as save_diagram returns
@@ -519,14 +511,21 @@ def test_screenshots_save_path(flash_model):
     )
 
     # check 1 assert when save_to is empty use default_save_path
+    logging.info(f'save diagram path={save_diagram_return["without_save_path"]}')
+    logging.info(f"default save path={default_save_path}")
     assert save_diagram_return["without_save_path"] == default_save_path
 
     # check 2 assert when user gives valid save_to, the file should download to path
     user_defined_valid_path_has_file = os.path.exists(
         save_diagram_return["user_defined_valid_save_path"]
     )
-
+    logging.info(
+        f"is user defined valid path has saved file={user_defined_valid_path_has_file}"
+    )
     assert user_defined_valid_path_has_file
 
     # check 3 assert when user give an invalid path, system should log error, and use default path to save
+    logging.info(
+        f'when user give invalid save path, invalid path been rewrite to default path={save_diagram_return["invalid_user_save_path"] == default_save_path}'
+    )
     assert save_diagram_return["invalid_user_save_path"] == default_save_path
