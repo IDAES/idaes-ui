@@ -50,6 +50,9 @@ build-backend = "setuptools.build_meta"
         # fastapi is not used at the moment; uncomment once fastapi is needed again
         # "fastapi",
         # "uvicorn",
+
+        # for generate a screenshot and open the browser asynchronously
+        "nest_asyncio",
     ]
 
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
