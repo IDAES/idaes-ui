@@ -470,7 +470,8 @@ async def _async_save_diagram(
 
         except Exception as e:
             _log.error(f"Unable to capture diagram: {e}")
-            return None
+            await browser.close()
+            return {"diagram_saved_path": diagram_saved_path}
 
         finally:
             await browser.close()
