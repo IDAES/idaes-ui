@@ -22,6 +22,7 @@ import time
 from typing import Optional, Union, Dict, Tuple
 import webbrowser
 import io
+import shutil
 
 # package
 from idaes import logger
@@ -445,7 +446,7 @@ async def _async_save_diagram(
             # Move download to save_to and display image and display image saved path
             if download_path:
                 # Save image to save to and display
-                os.rename(download_path, diagram_saved_path)
+                shutil.move(download_path, diagram_saved_path)
                 _log.info(f"File downloaded: {diagram_saved_path}")
 
                 # get if user is in jupyter notebook or not
@@ -470,8 +471,7 @@ async def _async_save_diagram(
 
         except Exception as e:
             _log.error(f"Unable to capture diagram: {e}")
-            await browser.close()
-            return {"diagram_saved_path": diagram_saved_path}
+            return None
 
         finally:
             await browser.close()
