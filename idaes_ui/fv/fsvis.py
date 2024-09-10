@@ -416,7 +416,7 @@ async def _async_save_diagram(
     from IPython.display import display as IPythonDisplay
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await p.chromium.launch(headless=True, timeout=30000)
         context = await browser.new_context(viewport={"width": 1920, "height": 1080})
         page = await context.new_page()
 
@@ -457,10 +457,10 @@ async def _async_save_diagram(
                     target_file.write(file_content)
 
                 # remove playwright downloaded screenshot file when diagram_saved_path != download_path
-                # if diagram_saved_path != download_path and os.path.exists(
-                #     download_path
-                # ):
-                #     os.remove(download_path)
+                if diagram_saved_path != download_path and os.path.exists(
+                    download_path
+                ):
+                    os.remove(download_path)
 
                 if os.path.exists(diagram_saved_path):
                     _log.info(f"File downloaded: {diagram_saved_path}")
