@@ -457,10 +457,10 @@ async def _async_save_diagram(
                     target_file.write(file_content)
 
                 # remove playwright downloaded screenshot file when diagram_saved_path != download_path
-                if diagram_saved_path != download_path and os.path.exists(
-                    download_path
-                ):
-                    os.remove(download_path)
+                # if diagram_saved_path != download_path and os.path.exists(
+                #     download_path
+                # ):
+                #     os.remove(download_path)
 
                 if os.path.exists(diagram_saved_path):
                     _log.info(f"File downloaded: {diagram_saved_path}")
