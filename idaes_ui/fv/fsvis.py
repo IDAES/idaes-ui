@@ -416,7 +416,9 @@ async def _async_save_diagram(
     from IPython.display import display as IPythonDisplay
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True, timeout=300000)
+        browser = await p.chromium.launch(
+            headless=True, args=["--no-sandbox"], timeout=300000
+        )
         context = await browser.new_context(viewport={"width": 1920, "height": 1080})
         page = await context.new_page()
 
