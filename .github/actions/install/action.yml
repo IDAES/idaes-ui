@@ -41,11 +41,6 @@ runs:
       shell: bash -l {0}
       run: pip install --progress-bar off -r requirements-dev.txt
 
-    - name: Install playwright
-      shell: bash -l {0}
-      run: |
-        playwright install
-
     - name: Install using pip (git+... URL)
       if: inputs.variant == 'standard'
       shell: bash -l {0}
