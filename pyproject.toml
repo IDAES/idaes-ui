@@ -53,6 +53,9 @@ build-backend = "setuptools.build_meta"
 
         # for generate a screenshot and open the browser asynchronously
         "nest_asyncio",
+
+        # for return screenshot image to jupyter and identify if user is in jupyter environment
+        IPython,
     ]
 
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
