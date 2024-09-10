@@ -446,7 +446,7 @@ def test_screenshots_save_path(flash_model):
 
     # Create invalid file path with an invalid directory name to test path validation
     if platform.system() == "Windows":
-        user_defined_invalid_path = "CON:\\invalid_path"
+        user_defined_invalid_path = "Z:\\non_existent_folder\\invalid_path"
     else:
         user_defined_invalid_path = "/some/invalid/path"
 
