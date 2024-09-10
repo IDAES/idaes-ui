@@ -253,7 +253,8 @@ def visualize(
             image_type = "svg"
 
         # set file save path
-        validate_save_path = _validate_and_create_save_path(save_to)
+        validate_path_return = _validate_and_create_save_path(save_to)
+        validate_save_path = validate_path_return["path_to_use"]
 
         # log save_to_info if user's save path is invalid
         if not validate_save_path == save_to:
@@ -277,6 +278,7 @@ def visualize(
         return {
             "screenshot_image_type": image_type,
             "validate_save_path": validate_save_path,
+            "default_save_path": validate_path_return["default_save_path"],
             "diagram_saved_path": save_diagram_return["diagram_saved_path"],
         }
 
@@ -388,7 +390,7 @@ def _validate_and_create_save_path(save_to):
         os.makedirs(default_path)
 
     _log.warning(f"save path is {path_to_use}")
-    return path_to_use
+    return {"path_to_use": path_to_use, "default_save_path": default_path}
 
 
 async def _async_save_diagram(
