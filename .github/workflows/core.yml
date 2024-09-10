@@ -74,7 +74,9 @@ jobs:
       - name: Install playwright
         shell: bash -l {0}
         run: |
+          playwright install-deps
           playwright install
+
           
       - name: Run pytest
         run: pytest -v --pyargs idaes_ui.fv
