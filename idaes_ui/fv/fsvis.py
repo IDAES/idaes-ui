@@ -404,6 +404,10 @@ async def _async_save_diagram(
 
     Args:
         screenshot_name: string use as screenshot saved name, if undefined will use flowsheet as screenshot saved name
+        live_server_url: string use for playwright to open browser on
+        save_to: string where to save the screenshot file
+        image_type: string the screenshot image type
+        display: bool to display or not display it in jupyter
     """
     # import playwright to generate screenshot
     from playwright.async_api import async_playwright
@@ -444,13 +448,19 @@ async def _async_save_diagram(
             # Move download to save_to and display image and display image saved path
             if os.path.exists(download_path):
                 # Save image to save to and display
-                # read from download screenshot file
 
+                # read from download screenshot file
                 with open(download_path, "rb") as source_file:
                     file_content = source_file.read()
                 # write to save path
                 with open(diagram_saved_path, "wb") as target_file:
                     target_file.write(file_content)
+
+                # remove playwright downloaded screenshot file when diagram_saved_path != download_path
+                if diagram_saved_path != download_path and os.path.exists(
+                    download_path
+                ):
+                    os.remove(download_path)
 
                 if os.path.exists(diagram_saved_path):
                     _log.info(f"File downloaded: {diagram_saved_path}")
