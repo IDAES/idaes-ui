@@ -229,7 +229,7 @@ Move your cursor over the diagram panel, then hold down the left mouse button an
 
 ---
 
-(stream-table)=
+(stream-table-detail)=
 ## Stream table
 * [Stream table overview](stream-table-overview)
 * [Reorder data in stream table](reorder-data-in-stream-view)
@@ -272,7 +272,7 @@ You can click the Hide Fields button located in the Stream Table header to open 
 
 ---
 
-(diagnostics-tool)=
+(diagnostic-detail)=
 ## Diagnostics tool
 * [Diagnostics tool overview](diagnostics-tool-overview)
 * [Enable diagnostics tool](enable-diagnostics-tool)
