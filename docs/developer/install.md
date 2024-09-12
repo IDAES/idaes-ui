@@ -3,10 +3,10 @@
 ## Before installation:
 
 1. The Flowsheet Visualizer UI supports `Python >= 3.8`
-1. The Flowsheet Visualizer UI needs `NodeJS 18`
+1. The Flowsheet Visualizer UI needs `Node.js 18`
 1. For best practices, you can create a separate Python environment and install it there
 
-## Install
+## Installation
 
 If you want to install for development
 
@@ -15,7 +15,7 @@ If you want to install for development
     1. From the root of the cloned repo run:  
     `pip install -e .`  
     `pip install -r requirements-dev.txt`
-1. Install NodeJS dependency (Optional)
+1. Install Node.js dependency (Optional)
     1. For install testing dependency from the root of the cloned repo run:  
     `npm install`
     2. For install React dependency Navigate to IDAES-UI folder and run:  
