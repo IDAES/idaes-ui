@@ -17,6 +17,7 @@ To use the {{ visabbr }} to visualize your own flowsheet:
 # create the flowsheet and put in variable 'flowsheet'
 flowsheet.visualize("Flowsheet Name")
 ```
+---
 
 (fv-run-script)=
 ### Run from within a Python script
@@ -43,6 +44,9 @@ visualize(
     loop_forever: bool
 )
 ```
+
+---
+
 (fv-overview)=
 ## {{ visabbr }} overview
 ![fv-overview](/static/fv/fv-overview-diagnostic-open.png){w="100%"}
