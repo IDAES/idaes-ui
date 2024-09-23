@@ -8,7 +8,7 @@ import { faSquareCheck, faSquare } from '@fortawesome/free-solid-svg-icons';
 
 //interface
 import {
-    ToggleStreamTableInLogInterface, 
+    ToggleStreamTableInLogInterface,
     DiagnosticsPanelParamsInterface
 } from '@/interface/appMainContext_interface';
 
@@ -34,7 +34,7 @@ import StreamTable from '@/streamTable/StreamTable';
 import { FvHeaderStateInterface } from '@/interface/appMainContext_interface';
 
 // define ViewId
-export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'diagnosticsRunner' | 'streamTable' | 'streamTableAndDiagnostics' | 'new' ;
+export type ViewId = 'components' | 'flowsheet' | 'diagnostics' | 'diagnosticsRunner' | 'streamTable' | 'streamTableAndDiagnostics' | 'new';
 
 const DraggablePanel = () => {
     // extract context
@@ -42,11 +42,11 @@ const DraggablePanel = () => {
         panelState, // which panel is show
         setPanelState, // use for update panel state
         fvHeaderState, // stream name labels show: true false
-        setFvHeaderState, 
+        setFvHeaderState,
         diagnosticsRunFnNameListState, // array of diagnostics function names
         setDiagnosticsRunnerDisplayState,
         viewInLogPanel, // bottom panel toggle stream table or diagnostics logs
-		setViewInLogPanel,
+        setViewInLogPanel,
         setDiagnosticsRefreshState, // update diagnostics refresh by changing state bool to control useEffect
     } = useContext(AppContext);
 
@@ -60,18 +60,18 @@ const DraggablePanel = () => {
      * it take one param.
      * @param clickedElementName use this clickedElementName to set viewInLogPanel.clickedElementName = true otherwise false
      */
-    function toggleStreamTableDiagnosticsRunnerHandler(clickedElementName:string){
+    function toggleStreamTableDiagnosticsRunnerHandler(clickedElementName: string) {
         // validation when passed in param is not a valid viewInLogPanel key name, log and return.
-        if(!Object.keys(viewInLogPanel).includes(clickedElementName)){
+        if (!Object.keys(viewInLogPanel).includes(clickedElementName)) {
             return;
         }
         // update state set viewInLogPanel.clickedElementName = true then show this panel, other false.
-        setViewInLogPanel((prevState:ToggleStreamTableInLogInterface)=>{
-            const copyState = {...prevState};
-            Object.keys(copyState).forEach((el:string)=>{
-                if(el == clickedElementName){
+        setViewInLogPanel((prevState: ToggleStreamTableInLogInterface) => {
+            const copyState = { ...prevState };
+            Object.keys(copyState).forEach((el: string) => {
+                if (el == clickedElementName) {
                     copyState[el] = true;
-                }else{
+                } else {
                     copyState[el] = false;
                 }
             })
@@ -85,22 +85,22 @@ const DraggablePanel = () => {
      * @param None
      * @returns JSX element use to display in bottom mosaic panel. now is flowsheet diagnostics panel or stream table panel.
      */
-    function diagnosticsRunnerOrStreamTableDisplay(){
+    function diagnosticsRunnerOrStreamTableDisplay() {
         /**
          * 1.panelState.diagnostics.show == true, viewInLogPanel.diagnosticsLogs == true, bottom shows diagnostics log element.
          * 2.panelState.diagnostics.show == true, viewInLogPanel.streamTable == true, bottom shows streamTable element.
          * 3.panelState.diagnostics.show == false, bottom should only show stream table.
          */
-        if(panelState.diagnostics.show === true && viewInLogPanel.diagnosticsLogs){
-            return <DiagnosticsLogPanel/>
-        }
-        
-        if(panelState.diagnostics.show === true && viewInLogPanel.streamTable === true){
-            return <StreamTable/>
+        if (panelState.diagnostics.show === true && viewInLogPanel.diagnosticsLogs) {
+            return <DiagnosticsLogPanel />
         }
 
-        if(panelState.diagnostics.show === false){
-            return <StreamTable/>
+        if (panelState.diagnostics.show === true && viewInLogPanel.streamTable === true) {
+            return <StreamTable />
+        }
+
+        if (panelState.diagnostics.show === false) {
+            return <StreamTable />
         }
 
         // default return a react fragment element contain error message.
@@ -115,7 +115,7 @@ const DraggablePanel = () => {
         streamTableAndDiagnostics: diagnosticsRunnerOrStreamTableDisplay(),
     };
 
-    const TITLE_MAP:any = {
+    const TITLE_MAP: any = {
         components: 'Components',
         flowsheet: 'Diagram',
         diagnostics: 'Diagnostics',
@@ -124,104 +124,102 @@ const DraggablePanel = () => {
         streamTableAndDiagnostics: "Diagnostics Logs"
     };
 
-    const renderTile = (id:any, path:any) => {
+    const renderTile = (id: any, path: any) => {
         // initial default toolbarBtn use fragment
         let toolBarBtn = <></>;
         // conditionally render toolbarBtn
         toolBarBtn = conditionallyRenderPanelHeaderBtn(
-                        id, 
-                        showSteamNameHandler, 
-                        showLabelsHandler, 
-                        isShowSteamName, 
-                        isShowLabels, 
-                        diagnosticsRunFnNameListState, 
-                        setDiagnosticsRunnerDisplayState,
-                        viewInLogPanel, 
-                        setDiagnosticsRefreshState
-                    );
-        
+            id,
+            showSteamNameHandler,
+            showLabelsHandler,
+            isShowSteamName,
+            isShowLabels,
+            diagnosticsRunFnNameListState,
+            setDiagnosticsRunnerDisplayState,
+            viewInLogPanel,
+            setDiagnosticsRefreshState
+        );
+
         return (
             <>
-            {/* <MessageBar /> */}
-            <MosaicWindow<ViewId>
-                path={path}
-                createNode={() => 'new'}
-                title={TITLE_MAP[id]}
+                {/* <MessageBar /> */}
+                <MosaicWindow<ViewId>
+                    path={path}
+                    createNode={() => 'new'}
+                    title={TITLE_MAP[id]}
 
-                //render customized header foe each panel
-                renderToolbar={(title, path) => (
-                    <div className="mosaic_customized_toolbar_header">
-                        <div className="mosaic_customized_toolbar_title_container">
-                            {
-                                /**
-                                 * Base on which title to render title display in panel header.
-                                 * 
-                                 * only when title is "diagnostics runner" which is means is the diagnostics panel
-                                 * it needs to display 2 title stream table, and diagnostics runner
-                                 * these two title use to click and toggle show diagnostics runner and stream table.
-                                 */
-                                TITLE_MAP[id] == TITLE_MAP.streamTableAndDiagnostics ?
-                                    // for diagnostics runner panel
-                                    <>
-                                        <p 
-                                            onClick={()=>toggleStreamTableDiagnosticsRunnerHandler('streamTable')}
-                                            className={`
-                                                ${
-                                                    viewInLogPanel.streamTable ?      "mosaic_header_toolbar_title_activate" :
-                                                    "mosaic_header_toolbar_title_deactivate"
-                                                }
+                    //render customized header foe each panel
+                    renderToolbar={(title, path) => (
+                        <div className="mosaic_customized_toolbar_header">
+                            <div className="mosaic_customized_toolbar_title_container">
+                                {
+                                    /**
+                                     * Base on which title to render title display in panel header.
+                                     * 
+                                     * only when title is "diagnostics runner" which is means is the diagnostics panel
+                                     * it needs to display 2 title stream table, and diagnostics runner
+                                     * these two title use to click and toggle show diagnostics runner and stream table.
+                                     */
+                                    TITLE_MAP[id] == TITLE_MAP.streamTableAndDiagnostics ?
+                                        // for diagnostics runner panel
+                                        <>
+                                            <p
+                                                onClick={() => toggleStreamTableDiagnosticsRunnerHandler('streamTable')}
+                                                className={`
+                                                ${viewInLogPanel.streamTable ? "mosaic_header_toolbar_title_activate" :
+                                                        "mosaic_header_toolbar_title_deactivate"
+                                                    }
                                                 mosaic_header_toolbar_title diagnostics_runner_panel_title
                                             `}
-                                        >
-                                            Stream Table
-                                        </p>
-                                        <p 
-                                            onClick={()=>{
-                                                panelState.diagnostics.show && toggleStreamTableDiagnosticsRunnerHandler('diagnosticsLogs');
-                                            }}
-                                            className={`
-                                                ${  
-                                                    viewInLogPanel.diagnosticsLogs ?      "mosaic_header_toolbar_title_activate" :
-                                                    "mosaic_header_toolbar_title_deactivate"
-                                                }
+                                            >
+                                                Stream Table
+                                            </p>
+                                            <p
+                                                onClick={() => {
+                                                    panelState.diagnostics.show && toggleStreamTableDiagnosticsRunnerHandler('diagnosticsLogs');
+                                                }}
+                                                className={`
+                                                ${viewInLogPanel.diagnosticsLogs ? "mosaic_header_toolbar_title_activate" :
+                                                        "mosaic_header_toolbar_title_deactivate"
+                                                    }
 
                                                 ${
                                                     // css when diagnostics panel not open, the log tab in log panel should not display
                                                     !panelState.diagnostics.show &&
                                                     "mosaic_header_tool_bar_fully_deactivate"
-                                                }
+                                                    }
                                                 mosaic_header_toolbar_title diagnostics_runner_panel_title
                                             `}
-                                        >
-                                            {TITLE_MAP[id]}
-                                        </p>
-                                    </> :
-                                    // for other panels render one title only
-                                    <p className="mosaic_header_toolbar_title">{TITLE_MAP[id]}</p>
-                            }
+                                            >
+                                                {TITLE_MAP[id]}
+                                            </p>
+                                        </> :
+                                        // for other panels render one title only
+                                        <p className="mosaic_header_toolbar_title">{TITLE_MAP[id]}</p>
+                                }
+                            </div>
+                            <div className="mosaic_customized_toolbar_btn_container">
+                                {
+                                    // return toolbar elements template and render on page
+                                    conditionallyRenderPanelHeaderBtn(
+                                        id,
+                                        showSteamNameHandler,
+                                        showLabelsHandler,
+                                        isShowSteamName,
+                                        isShowLabels,
+                                        diagnosticsRunFnNameListState,
+                                        setDiagnosticsRunnerDisplayState,
+                                        viewInLogPanel,
+                                        setDiagnosticsRefreshState
+                                    )
+                                }
+                            </div>
                         </div>
-                        <div className="mosaic_customized_toolbar_btn_container">
-                            {   
-                                // return toolbar elements template and render on page
-                                conditionallyRenderPanelHeaderBtn(
-                                    id, 
-                                    showSteamNameHandler, 
-                                    showLabelsHandler, 
-                                    isShowSteamName, 
-                                    isShowLabels, 
-                                    diagnosticsRunFnNameListState, 
-                                    setDiagnosticsRunnerDisplayState,
-                                    viewInLogPanel,
-                                    setDiagnosticsRefreshState
-                                )
-                            }
-                        </div>
-                    </div>
-                )}
-            >
-                {/*Content is render here*/}
-                {ELEMENT_MAP[id]}
-            </MosaicWindow>
+                    )}
+                >
+                    {/*Content is render here*/}
+                    {ELEMENT_MAP[id]}
+                </MosaicWindow>
             </>
         );
     };
@@ -230,17 +228,17 @@ const DraggablePanel = () => {
      * Here setState fns to toggle stream name and lable
      */
     //toggle show steam names
-    function showSteamNameHandler(){
-        setFvHeaderState((prev:FvHeaderStateInterface)=>{
-            let copyPrev = {...prev, isShowSteamName : !prev.isShowSteamName};
+    function showSteamNameHandler() {
+        setFvHeaderState((prev: FvHeaderStateInterface) => {
+            let copyPrev = { ...prev, isShowSteamName: !prev.isShowSteamName };
             return copyPrev;
         })
     }
 
     //toggle show labels
-    function showLabelsHandler(){
-        setFvHeaderState((prev:FvHeaderStateInterface)=>{
-            let copyPrev = {...prev, isShowLabels : !prev.isShowLabels};
+    function showLabelsHandler() {
+        setFvHeaderState((prev: FvHeaderStateInterface) => {
+            let copyPrev = { ...prev, isShowLabels: !prev.isShowLabels };
             return copyPrev;
         })
     }
@@ -252,15 +250,15 @@ const DraggablePanel = () => {
      * @triggers Mosaic component onChange event handler
      * @returns None
      */
-    function mosaicLayoutChangeHandler(layout:any){
-        if(panelState.diagnostics.show){
+    function mosaicLayoutChangeHandler(layout: any) {
+        if (panelState.diagnostics.show) {
             updateDiagnosticsPanelLocation(layout);
         }
-        
+
         localStorage.setItem('mosaicLayout', JSON.stringify(layout));
 
         // overwrite layout state every when change layout
-        setCurrentLayout(()=>{
+        setCurrentLayout(() => {
             return layout;
         })
     }
@@ -270,19 +268,19 @@ const DraggablePanel = () => {
      * use for restore diag panel to the correct position.
      * @params layout, the layout mosaic will pass in when handle window changes.
      */
-    function updateDiagnosticsPanelLocation(layout:any){
+    function updateDiagnosticsPanelLocation(layout: any) {
         let diagnosticsPanelParams: DiagnosticsPanelParamsInterface;
         let readDiagnosticsPanelParams = localStorage.getItem("diagnosticsPanelParams");
 
-        if(readDiagnosticsPanelParams){
+        if (readDiagnosticsPanelParams) {
             diagnosticsPanelParams = JSON.parse(readDiagnosticsPanelParams);
-        }else{
+        } else {
             diagnosticsPanelParams = initialDiagnosticsPanelParams();
         }
 
         // read diagnostics location from and update to local storage
-        Object.keys(layout).forEach(el=>{
-            if(layout[el] == "diagnostics"){
+        Object.keys(layout).forEach(el => {
+            if (layout[el] == "diagnostics") {
                 diagnosticsPanelParams.direction = layout.direction;
                 diagnosticsPanelParams.splitPercentage = layout.splitPercentage;
                 diagnosticsPanelParams.diagnosticsPanelLocationInItem = el;
@@ -290,9 +288,9 @@ const DraggablePanel = () => {
                 diagnosticsPanelParams.diagnosticsPanelStayWith = undefined;
             }
 
-            if(typeof layout[el] == "object"){
-                Object.keys(layout[el]).forEach(subEl=>{
-                    if(layout[el][subEl] == "diagnostics"){
+            if (typeof layout[el] == "object") {
+                Object.keys(layout[el]).forEach(subEl => {
+                    if (layout[el][subEl] == "diagnostics") {
                         diagnosticsPanelParams.direction = layout[el].direction;
                         diagnosticsPanelParams.splitPercentage = layout[el].splitPercentage;
                         const otherPanelAt = subEl == "first" ? "second" : "first";
@@ -312,11 +310,11 @@ const DraggablePanel = () => {
      * The diagnostics panel params is use for locate where is the diagnostics should
      * stay at in mosaic window
      */
-    function initialDiagnosticsPanelParams(){
+    function initialDiagnosticsPanelParams() {
         let diagnosticsPanelParams = localStorage.getItem("diagnosticsPanelParams");
 
         // if not found diagnostics panel params just initial it, if already has just ignore
-        if(!diagnosticsPanelParams){
+        if (!diagnosticsPanelParams) {
             /**
              * explain naming of diagnosticsPanelParams:
              * diagnosticsPanel must be nested inside a obj so it must has:
@@ -331,16 +329,16 @@ const DraggablePanel = () => {
              */
             const diagnosticsPanelParams = {
                 direction: "row",
-                diagnosticsPanelParamsLocationInItem:"first",
-                diagnosticsPanelLocationInObj:"second",
-                diagnosticsPanelStayWith:"flowsheet",
-                splitPercentage:55
+                diagnosticsPanelParamsLocationInItem: "first",
+                diagnosticsPanelLocationInObj: "second",
+                diagnosticsPanelStayWith: "flowsheet",
+                splitPercentage: 55
             }
 
             localStorage.setItem("diagnosticsPanelParams", JSON.stringify(diagnosticsPanelParams));
 
             return diagnosticsPanelParams;
-        }else{
+        } else {
             return JSON.parse(diagnosticsPanelParams);
         }
     }
@@ -351,27 +349,27 @@ const DraggablePanel = () => {
      * first second direction splitPercentage are mosaic's required way to write down the obj key
      * @returns  obj, mosaic layout
      */
-    function setupDefaultMosaicLayout(){
+    function setupDefaultMosaicLayout() {
         let mosaicLayout;
-        if(panelState.diagnostics.show){
+        if (panelState.diagnostics.show) {
             mosaicLayout = {
                 "direction": "column",
-                "first":{
+                "first": {
                     "direction": "row",
-                    "first":"flowsheet",
-                    "second":"diagnostics",
-                    "splitPercentage":55
+                    "first": "flowsheet",
+                    "second": "diagnostics",
+                    "splitPercentage": 55
                 },
                 "second": "streamTableAndDiagnostics",
                 "splitPercentage": 60
             };
         }
-        
+
         // diagnostics not show
-        if(!panelState.diagnostics.show){
-            mosaicLayout= {
+        if (!panelState.diagnostics.show) {
+            mosaicLayout = {
                 "direction": "column",
-                "first":"flowsheet",
+                "first": "flowsheet",
                 "second": "streamTableAndDiagnostics",
                 "splitPercentage": 60
             };
@@ -380,17 +378,17 @@ const DraggablePanel = () => {
         // localStorage.setItem("mosaicLayout", JSON.stringify(mosaicLayout));
         return mosaicLayout;
     }
-    
+
     /**
      * @Description read current layout and diagnostics panel params then
      * base on diagnostics show or hide to update current layout
      * @returns up to date layout
      */
-    function getMosaicLayout(){
-        try{
+    function getMosaicLayout() {
+        try {
             initialDiagnosticsPanelParams();
 
-            if(panelState.diagnostics.show){
+            if (panelState.diagnostics.show) {
                 let copyCurrentLayout = JSON.parse(JSON.stringify(currentLayout));
 
                 /**
@@ -403,23 +401,23 @@ const DraggablePanel = () => {
                  * the mosaic will only update displayed panel obj and store to local storage
                  * this will make the diagnostics panel disappeared forever.
                  */
-                if(!JSON.stringify(currentLayout).includes("diagnostics")){
-                    if(!localStorage.getItem("diagnosticsPanelParams")){
+                if (!JSON.stringify(currentLayout).includes("diagnostics")) {
+                    if (!localStorage.getItem("diagnosticsPanelParams")) {
                         initialDiagnosticsPanelParams();
                     }
-                    
+
                     const readDiagnosticsPanelParams = localStorage.getItem("diagnosticsPanelParams");
-                    if(readDiagnosticsPanelParams){
+                    if (readDiagnosticsPanelParams) {
                         let diagnosticsPanelParams = JSON.parse(readDiagnosticsPanelParams);
                         /**
                          * This is for restore diagnostics panel when diagnostics panel stand alone and 
                          * panelState.show is false and change mosaic layout
                          */
-                        if(!diagnosticsPanelParams.diagnosticsPanelLocationInObj){
+                        if (!diagnosticsPanelParams.diagnosticsPanelLocationInObj) {
                             const otherPanelAt = diagnosticsPanelParams.diagnosticsPanelLocationInItem == "first" ? "second" : "first";
                             const rebuildOtherPanelObj = {
-                                direction : copyCurrentLayout.direction ?  copyCurrentLayout.direction: "row",
-                                splitPercentage : copyCurrentLayout.splitPercentage ? copyCurrentLayout.splitPercentage : 55,
+                                direction: copyCurrentLayout.direction ? copyCurrentLayout.direction : "row",
+                                splitPercentage: copyCurrentLayout.splitPercentage ? copyCurrentLayout.splitPercentage : 55,
                                 first: copyCurrentLayout['first'] ? copyCurrentLayout['first'] : "flowsheet",
                                 second: copyCurrentLayout['second'] ? copyCurrentLayout['second'] : "streamTableAndDiagnostics",
 
@@ -432,31 +430,31 @@ const DraggablePanel = () => {
                         /**
                          * This is for restore diagnostics panel when diagnostics panel stage nested with other panel in a obj
                          */
-                        if(diagnosticsPanelParams.diagnosticsPanelLocationInObj){
+                        if (diagnosticsPanelParams.diagnosticsPanelLocationInObj) {
                             const stayWithPanelName = diagnosticsPanelParams.diagnosticsPanelStayWith ? diagnosticsPanelParams.diagnosticsPanelStayWith : "flowsheet";
-                            let stayWithPanelKey = Object.keys(copyCurrentLayout).find(el=>{
-                                if(copyCurrentLayout[el] == stayWithPanelName){
+                            let stayWithPanelKey = Object.keys(copyCurrentLayout).find(el => {
+                                if (copyCurrentLayout[el] == stayWithPanelName) {
                                     return el
                                 }
                             });
                             const otherPanelName = stayWithPanelName == "flowsheet" ? "streamTableAndDiagnostics" : "flowsheet";
                             const otherPanelAt = stayWithPanelKey == "first" ? "second" : "first";
-                            
+
                             // in case stayWithPanelKey undefined, assign to first.
-                            if(!stayWithPanelKey) stayWithPanelKey = "first";
-                            
+                            if (!stayWithPanelKey) stayWithPanelKey = "first";
+
                             // const otherPanelAt = diagnosticsPanelParams.diagnosticsPanelLocationInObj == "first" ? "second" : "first";
-                            const rebuildPanelWithDiagnosticsObj:any = {
+                            const rebuildPanelWithDiagnosticsObj: any = {
                                 direction: diagnosticsPanelParams.direction ? diagnosticsPanelParams.direction : "column",
-                                splitPercentage : copyCurrentLayout.splitPercentage ? copyCurrentLayout.splitPercentage : 55,
+                                splitPercentage: copyCurrentLayout.splitPercentage ? copyCurrentLayout.splitPercentage : 55,
                             }
                             rebuildPanelWithDiagnosticsObj[stayWithPanelKey] = stayWithPanelName;
-                            
+
                             // double check make sure stayWithPanelKey != diagnosticsPanelParams.diagnosticsPanelLocationInObj to avoid error
-                            if(stayWithPanelKey == diagnosticsPanelParams.diagnosticsPanelLocationInObj){
+                            if (stayWithPanelKey == diagnosticsPanelParams.diagnosticsPanelLocationInObj) {
                                 stayWithPanelKey == "first" ? diagnosticsPanelParams.diagnosticsPanelLocationInObj = "second" : diagnosticsPanelParams.diagnosticsPanelLocationInObj = "first";
                             }
-                            
+
                             rebuildPanelWithDiagnosticsObj[diagnosticsPanelParams.diagnosticsPanelLocationInObj] = "diagnostics";
                             copyCurrentLayout = JSON.parse(JSON.stringify(copyCurrentLayout));
                             copyCurrentLayout[stayWithPanelKey] = rebuildPanelWithDiagnosticsObj;
@@ -471,14 +469,14 @@ const DraggablePanel = () => {
             /**
              * This handles when panelState.diagnostics.show if false to remove the diagnostics panel from mosaic layout
              */
-            
-            if(!panelState.diagnostics.show){
+
+            if (!panelState.diagnostics.show) {
                 let copyLayoutHolder: string = JSON.stringify(currentLayout);
-                let copyLayout: {[key:string] : any} = JSON.parse(copyLayoutHolder);
+                let copyLayout: { [key: string]: any } = JSON.parse(copyLayoutHolder);
 
                 // when diagnostics at first layer of mosaicLayout obj
-                Object.keys(copyLayout).forEach(el=>{
-                    if(copyLayout[el] == "diagnostics"){
+                Object.keys(copyLayout).forEach(el => {
+                    if (copyLayout[el] == "diagnostics") {
                         // remove diagnostics
                         delete copyLayout[el];
                         const otherPanelKey = el == "first" ? "second" : "first";
@@ -491,14 +489,14 @@ const DraggablePanel = () => {
                     }
                 })
 
-                Object.keys(copyLayout).forEach(el=>{
-                    if(typeof copyLayout[el] == "object"){
-                        Object.keys(copyLayout[el]).forEach(subEl=>{
-                            if(copyLayout[el][subEl] == "diagnostics"){
+                Object.keys(copyLayout).forEach(el => {
+                    if (typeof copyLayout[el] == "object") {
+                        Object.keys(copyLayout[el]).forEach(subEl => {
+                            if (copyLayout[el][subEl] == "diagnostics") {
                                 delete copyLayout[el][subEl];
-                                if(copyLayout[el].first){
+                                if (copyLayout[el].first) {
                                     copyLayout[el] = copyLayout[el].first
-                                }else{
+                                } else {
                                     copyLayout[el] = copyLayout[el].second
                                 }
                             }
@@ -508,20 +506,20 @@ const DraggablePanel = () => {
 
                 return copyLayout;
             }
-        }catch{
+        } catch {
             console.log(`error in get mosaic layout rest layout`)
             setupDefaultMosaicLayout();
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         // update default layout when panelState.diagnostics.show changes
         // this will trigger life cycle to re-render.
-        setCurrentLayout(()=>{
+        setCurrentLayout(() => {
             const mosaicLayout = localStorage.getItem('mosaicLayout');
-            if(mosaicLayout){
+            if (mosaicLayout) {
                 return JSON.parse(mosaicLayout);
-            }else{
+            } else {
                 return setupDefaultMosaicLayout();
             }
         })
@@ -551,7 +549,7 @@ const DraggablePanel = () => {
             // }}
             ////mosaic panel without components (variable)
             onChange={mosaicLayoutChangeHandler}
-            initialValue = {
+            initialValue={
                 getMosaicLayout() // this function returns mosaic layout
             }
         />
@@ -568,16 +566,16 @@ const DraggablePanel = () => {
  * @returns 
  */
 function conditionallyRenderPanelHeaderBtn(
-    id:string, 
-    showSteamNameHandler:() => void, 
-    showLabelsHandler:() => void, 
-    isShowSteamName:boolean, 
-    isShowLabels:boolean, 
-    nextStepsFunctionNameList:String[], 
-    setDiagnosticsRunnerDisplay:any,
-    viewInLogPanel:any,
-    setDiagnosticsRefreshState:any
-){
+    id: string,
+    showSteamNameHandler: () => void,
+    showLabelsHandler: () => void,
+    isShowSteamName: boolean,
+    isShowLabels: boolean,
+    nextStepsFunctionNameList: String[],
+    setDiagnosticsRunnerDisplay: any,
+    viewInLogPanel: any,
+    setDiagnosticsRefreshState: any
+) {
     /**
      *  use id from Mosaic > renderTile callback to conditionally render toolbar btn
      *  Args:
@@ -587,10 +585,10 @@ function conditionallyRenderPanelHeaderBtn(
      *      isShowSteamName: bool
      *      isShowLabels: bool
      */
-    switch (id){
+    switch (id) {
         // render toolbar btn base on panel id
         case "components":
-            return<div className="mosaic_toolbar_btn_container">
+            return <div className="mosaic_toolbar_btn_container">
                 <Button minimal>
                     <Icon icon={IconNames.MINIMIZE} size={20}></Icon>
                 </Button>
@@ -603,7 +601,7 @@ function conditionallyRenderPanelHeaderBtn(
             </div>
             break;
         case "flowsheet":
-            return<div className="mosaic_toolbar_btn_container">
+            return <div className="mosaic_toolbar_btn_container">
                 {/*zoom*/}
                 <Button id="zoom-in-btn" minimal>
                     <Icon icon={IconNames.ZOOM_IN} size={20} />
@@ -619,31 +617,31 @@ function conditionallyRenderPanelHeaderBtn(
                     <Icon icon={IconNames.EYE_OPEN} size={20} />
                     <ul className="mosaic_dropdown_view">
                         <li id="stream-names-toggle" onClick={showSteamNameHandler} data-toggle={`${isShowSteamName}`}>
-                        {
-                            isShowSteamName
-                            ?
-                            <FontAwesomeIcon icon={faSquareCheck} className="mosaic_toolbar_diagram_view_icon_stroke_only"/>
-                            :
-                            <FontAwesomeIcon icon={faSquare} className="mosaic_toolbar_diagram_view_icon_stroke_only"/>
-                        }
+                            {
+                                isShowSteamName
+                                    ?
+                                    <FontAwesomeIcon icon={faSquareCheck} className="mosaic_toolbar_diagram_view_icon_stroke_only" />
+                                    :
+                                    <FontAwesomeIcon icon={faSquare} className="mosaic_toolbar_diagram_view_icon_stroke_only" />
+                            }
                             <span>Stream Name</span>
                         </li>
                         <li id="show-label-toggle" onClick={showLabelsHandler} data-toggle={isShowLabels ? "false" : "true"}>
                             {
-                                isShowLabels 
-                                ?
-                                <FontAwesomeIcon icon={faSquareCheck} className="mosaic_toolbar_diagram_view_icon_stroke_only"/>
-                                :
-                                <FontAwesomeIcon icon={faSquare} className="mosaic_toolbar_diagram_view_icon_stroke_only"/>
+                                isShowLabels
+                                    ?
+                                    <FontAwesomeIcon icon={faSquareCheck} className="mosaic_toolbar_diagram_view_icon_stroke_only" />
+                                    :
+                                    <FontAwesomeIcon icon={faSquare} className="mosaic_toolbar_diagram_view_icon_stroke_only" />
                             }
                             <span>Labels</span>
                         </li>
                     </ul>
                 </Button>
                 {/*download*/}
-                <Button className="mosaic_flowsheet_header_download" minimal>
+                <Button id="diagram_download_icon" className="mosaic_flowsheet_header_download" minimal>
                     <Icon icon={IconNames.BRING_DATA} size={20} />
-                    <ul 
+                    <ul
                         id="flowsheet_component_header_dropdown_container" className="mosaic_dropdown_download"
                     >
                         <li id="headerExportImageBtn">Export PNG</li>
@@ -653,15 +651,15 @@ function conditionallyRenderPanelHeaderBtn(
             </div>
             break;
         case "diagnostics":
-            function diagnosticsRefreshHandler(){
-                setDiagnosticsRefreshState((prev:boolean) => !prev);
+            function diagnosticsRefreshHandler() {
+                setDiagnosticsRefreshState((prev: boolean) => !prev);
             }
 
-            return<div className="mosaic_toolbar_btn_container">
+            return <div className="mosaic_toolbar_btn_container">
                 <p className="mosaic_diagnostic_toolbar_content">BLOCK: FLOWSHEET</p>
-                <div 
-                    className="mosaic_toolbar_btn_icon_with_text clickable_btn" 
-                    onClick={()=>diagnosticsRefreshHandler()}
+                <div
+                    className="mosaic_toolbar_btn_icon_with_text clickable_btn"
+                    onClick={() => diagnosticsRefreshHandler()}
                 >
                     <Icon icon={IconNames.REFRESH} size={20} />
                     <span className="mosaic_toolbar_btn_icon_with_text_text">Refresh</span>
@@ -669,27 +667,27 @@ function conditionallyRenderPanelHeaderBtn(
             </div>
             break;
         case "streamTable":
-            return<div className="mosaic_toolbar_btn_container">
+            return <div className="mosaic_toolbar_btn_container">
                 <StreamTableHeader />
             </div>
             break;
         case "streamTableAndDiagnostics":
-            return<div className="mosaic_toolbar_btn_container">
+            return <div className="mosaic_toolbar_btn_container">
                 {!viewInLogPanel.diagnosticsLogs && <StreamTableHeader />}
                 {viewInLogPanel.diagnosticsLogs && <DiagnosticsLogHeader />}
             </div>
             break
         case "diagnosticsRunner":
-            const options = nextStepsFunctionNameList.map((el, index)=><option value={`${el}`} key={`diagnosticsRunnerSelection${el}`}>{el}</option>)
+            const options = nextStepsFunctionNameList.map((el, index) => <option value={`${el}`} key={`diagnosticsRunnerSelection${el}`}>{el}</option>)
             /**
              * @description handle diagnostics runner displayer header selector change update diagnosticsRunnerDisplay value in context to decide which 
              * runned next steps to display
              * @param event select element change event
              */
-            function diagnosticsRunnerSelectChangeHandler(event:React.ChangeEvent<HTMLSelectElement>){
+            function diagnosticsRunnerSelectChangeHandler(event: React.ChangeEvent<HTMLSelectElement>) {
                 setDiagnosticsRunnerDisplay(event.currentTarget.value)
             }
-            return(
+            return (
                 <div className="mosaic_toolbar_btn_container">
                     <select name="diagnosticsRunnerSelection" id="" className="mosaic_diagnosticsRunner_select" onChange={diagnosticsRunnerSelectChangeHandler}>
                         <option value="default">Select a function</option>
@@ -698,7 +696,7 @@ function conditionallyRenderPanelHeaderBtn(
                 </div>
             )
         default:
-            return<></>
+            return <></>
             break;
     }
 }

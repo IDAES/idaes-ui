@@ -15,6 +15,8 @@ Tests for the IDAES Flowsheet Visualizer (IFV).
 
 These are currently integration tests, because the start/stop the embedded HTTP server.
 """
+import io
+import logging
 import glob
 import json
 import logging
@@ -22,8 +24,13 @@ import os
 from pathlib import Path
 import re
 import time
+import tempfile
+import platform
+
 
 import pytest
+import asyncio
+
 requests = pytest.importorskip("requests")
 
 from pyomo.environ import ConcreteModel
@@ -33,6 +40,9 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
 )
 from idaes.models.unit_models import Flash
 from idaes_ui.fv import fsvis, errors, validate_flowsheet
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module")
@@ -344,3 +354,180 @@ def test_loop_forever():
         print("check thread")
         assert thr.is_alive()
     # threads should die when process exits
+
+
+@pytest.mark.unit
+def test_visualize_return(flash_model):
+    flowsheet = flash_model.fs
+    visualizer = fsvis.visualize(flowsheet, browser=False, save=False)
+
+    assert hasattr(visualizer, "store")
+    assert hasattr(visualizer, "port")
+    assert hasattr(visualizer, "server")
+    assert hasattr(visualizer, "save_diagram")
+
+
+from playwright.sync_api import sync_playwright
+
+
+@pytest.fixture(scope="module")
+def browser():
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        yield browser
+        browser.close()
+
+
+@pytest.mark.unit
+def test_saved_diagram_as_svg_and_png(flash_model):
+    """
+    test visualizer.save_diagram saved diagram as svg in screenshots folder
+    """
+
+    flowsheet_name = "test_diagram"
+
+    async def run_visualizer_and_save():
+        # Run visualizer and save diagram
+        visualizer = fsvis.visualize(flash_model.fs, flowsheet_name, browser=False)
+
+        visualizer.save_diagram(
+            screenshot_name=flowsheet_name,
+            save_to=os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "screenshots",
+            ),
+            display="false",
+            image_type="svg",
+        )
+
+        visualizer.save_diagram(
+            screenshot_name=flowsheet_name,
+            save_to=os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "screenshots",
+            ),
+            display="false",
+            image_type="png",
+        )
+
+        # Verify screenshot is saved to save path
+
+        current_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        screenshot_at_folder_path = os.path.join(current_dir_path, "screenshots")
+        has_svg = os.path.exists(
+            os.path.join(screenshot_at_folder_path, f"{flowsheet_name}.svg")
+        )
+
+        has_png = os.path.exists(
+            os.path.join(screenshot_at_folder_path, f"{flowsheet_name}.png")
+        )
+
+        if has_svg and has_png:
+            return True
+        else:
+            return False
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        is_screenshot_saved = loop.run_until_complete(run_visualizer_and_save())
+    finally:
+        loop.close()
+    assert is_screenshot_saved
+
+
+@pytest.mark.unit
+def test_screenshots_save_path(flash_model):
+    flowsheet_name = "test_diagram"
+    save_diagram_type = "svg"
+    user_defined_save_path = (
+        "./some/user_defined_path"  # start from current folder this path should valid
+    )
+
+    # Create invalid file path with an invalid directory name to test path validation
+    if platform.system() == "Windows":
+        user_defined_invalid_path = "Z:\\non_existent_folder\\invalid_path"
+    else:
+        user_defined_invalid_path = "/some/invalid/path"
+
+    assert not os.path.exists(
+        user_defined_invalid_path
+    ), "Invalid path should not exist"
+
+    async def run_visualizer_and_save_diagram():
+        # Run visualizer and save diagram assign save_diagram return as save_diagram returns
+        # 1: without save_to param, should use default save path
+        without_save_path_return = fsvis.visualize(
+            flash_model.fs, flowsheet_name, browser=False
+        ).save_diagram(
+            screenshot_name=flowsheet_name,
+            display="false",
+            image_type=save_diagram_type,
+        )
+
+        # 2: test user defined valid path
+        user_defined_valid_save_path_return = fsvis.visualize(
+            flash_model.fs, flowsheet_name, browser=False
+        ).save_diagram(
+            screenshot_name=flowsheet_name,
+            save_to=user_defined_save_path,
+            display="false",
+            image_type=save_diagram_type,
+        )
+
+        # 3: input with invalid user's path, should use default save path
+        invalid_path_return = fsvis.visualize(
+            flash_model.fs, flowsheet_name, browser=False
+        ).save_diagram(
+            screenshot_name=flowsheet_name,
+            save_to=user_defined_invalid_path,
+            display="false",
+            image_type=save_diagram_type,
+        )
+
+        return {
+            "default_save_path": without_save_path_return["default_save_path"],
+            "diagram_name": flowsheet_name,
+            "diagram_type": save_diagram_type,
+            "without_save_path": without_save_path_return["diagram_saved_path"],
+            "user_defined_valid_save_path": user_defined_valid_save_path_return[
+                "diagram_saved_path"
+            ],
+            "invalid_user_save_path": invalid_path_return["diagram_saved_path"],
+        }
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        save_diagram_return = loop.run_until_complete(run_visualizer_and_save_diagram())
+    finally:
+        loop.close()
+
+    screenshot_file_name = (
+        f'{save_diagram_return["diagram_name"]}.{save_diagram_return["diagram_type"]}'
+    )
+
+    # define default save path
+    default_save_path = (
+        f'{save_diagram_return["default_save_path"]}/{screenshot_file_name}'
+    )
+
+    # check 1 assert when save_to is empty use default_save_path
+    logging.info(f"default save path={default_save_path}")
+    logging.info(f'save diagram path={save_diagram_return["without_save_path"]}')
+    assert save_diagram_return["without_save_path"] == default_save_path
+
+    # check 2 assert when user gives valid save_to, the file should download to path
+    user_defined_valid_path_has_file = os.path.exists(
+        save_diagram_return["user_defined_valid_save_path"]
+    )
+    logging.info(
+        f"is user defined valid path has saved file={user_defined_valid_path_has_file}"
+    )
+    assert user_defined_valid_path_has_file
+
+    # check 3 assert when user give an invalid path, system should log error, and use default path to save
+    logging.info(
+        f'when user give invalid save path, invalid path been rewrite to default path={save_diagram_return["invalid_user_save_path"] == default_save_path}'
+    )
+    assert save_diagram_return["invalid_user_save_path"] == default_save_path
