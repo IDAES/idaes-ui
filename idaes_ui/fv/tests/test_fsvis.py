@@ -378,6 +378,18 @@ def browser():
         browser.close()
 
 
+def clear_screenshot_folder(folder_path: str, extensions: list[str]):
+    """
+    define a pytest utility tool function, read from screenshots folder, if any png or svg files exist, remove them first
+    Args:
+        folder_path: str, the path of the folder to clear
+        extensions: list[str], the list of file extensions to remove
+    """
+    for file in os.listdir(folder_path):
+        if any(file.endswith(ext) for ext in extensions):
+            os.remove(os.path.join(folder_path, file))
+
+
 @pytest.mark.unit
 def test_saved_diagram_as_svg_and_png(flash_model):
     """
