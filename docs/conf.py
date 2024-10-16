@@ -15,9 +15,10 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
+    "sphinxcontrib.video",
 ]
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".pytest_cache"]
 
 # HTML
 static_dir = "static"
@@ -25,7 +26,10 @@ html_theme = "sphinx_book_theme"
 html_static_path = [static_dir]
 html_logo = "static/logo.png"
 html_theme_options = {
-    "logo": {"image_light": f"{static_dir}/logo.png", "image_dark": f"{static_dir}/logo.png"},
+    "logo": {
+        "image_light": f"{static_dir}/logo.png",
+        "image_dark": f"{static_dir}/logo.png",
+    },
     "repository_provider": "github",
     "repository_url": "https://github.com/IDAES/idaes-ui",
     "use_repository_button": True,
@@ -33,16 +37,19 @@ html_theme_options = {
 }
 
 # MyST
-myst_heading_anchors = 3
+myst_heading_anchors = 6
 myst_enable_extensions = [
     "deflist",  # definition lists
-    "attrs_inline", # inline attributes on images using MD syntax
-    "substitution", # for global substitutions; see myst_substitutions
+    "attrs_inline",  # inline attributes on images using MD syntax
+    "substitution",  # for global substitutions; see myst_substitutions
 ]
 myst_substitutions = {
     # Change these two lines to rename the Flowsheet Visualizer (!)
     "vistitle": "Flowsheet Visualizer",
     "visabbr": "FV",
+    "mov": "mov",
+    "mp4": "mp4",
+    "video-width": 800,
 }
 
 # Autodoc
