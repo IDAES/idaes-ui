@@ -521,8 +521,8 @@ def test_screenshots_save_path(flash_model):
     )
 
     # define default save path
-    default_save_path = (
-        f'{save_diagram_return["default_save_path"]}/{screenshot_file_name}'
+    default_save_path = os.path.join(
+        save_diagram_return["default_save_path"], screenshot_file_name
     )
 
     # check 1 assert when save_to is empty use default_save_path
