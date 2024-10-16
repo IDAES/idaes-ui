@@ -446,7 +446,9 @@ async def _async_save_diagram(
             # Wait for download to complete
             download_path = await download.path()
 
-            diagram_saved_path = f"{save_to}/{screenshot_name}.{image_type}"
+            diagram_saved_path = os.path.join(
+                save_to, f"{screenshot_name}.{image_type}"
+            )
             # Move download to save_to and display image and display image saved path
             if os.path.exists(download_path):
                 # Save image to save to and display
