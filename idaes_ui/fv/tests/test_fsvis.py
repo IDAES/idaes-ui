@@ -398,46 +398,43 @@ def test_saved_diagram_as_svg_and_png(flash_model):
 
     flowsheet_name = "test_diagram"
 
+    # define file name list to check if saved
+    screenshot_file_names = [f"{flowsheet_name}.png", f"{flowsheet_name}.svg"]
+
+    # define screenshot save path
+    screenshot_save_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "screenshots",
+    )
+
     async def run_visualizer_and_save():
         # Run visualizer and save diagram
         visualizer = fsvis.visualize(flash_model.fs, flowsheet_name, browser=False)
 
+        # save svg screenshot
         visualizer.save_diagram(
             screenshot_name=flowsheet_name,
-            save_to=os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                "screenshots",
-            ),
+            save_to=screenshot_save_path,
             display="false",
             image_type="svg",
         )
 
+        # save png screenshot
         visualizer.save_diagram(
             screenshot_name=flowsheet_name,
-            save_to=os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                "screenshots",
-            ),
+            save_to=screenshot_save_path,
             display="false",
             image_type="png",
         )
 
-        # Verify screenshot is saved to save path
-
-        current_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        screenshot_at_folder_path = os.path.join(current_dir_path, "screenshots")
-        has_svg = os.path.exists(
-            os.path.join(screenshot_at_folder_path, f"{flowsheet_name}.svg")
-        )
-
-        has_png = os.path.exists(
-            os.path.join(screenshot_at_folder_path, f"{flowsheet_name}.png")
-        )
-
-        if has_svg and has_png:
-            return True
-        else:
-            return False
+        # check if png and svg file exist
+        for screenshot_file_name in screenshot_file_names:
+            has_file = os.path.exists(
+                os.path.join(screenshot_save_path, screenshot_file_name)
+            )
+            if not has_file:
+                return False
+        return True
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -446,6 +443,10 @@ def test_saved_diagram_as_svg_and_png(flash_model):
     finally:
         loop.close()
     assert is_screenshot_saved
+
+    clear_screenshot_folder(
+        screenshot_save_path, [f"{flowsheet_name}.png", f"{flowsheet_name}.svg"]
+    )
 
 
 @pytest.mark.unit
