@@ -45,7 +45,7 @@ build-backend = "setuptools.build_meta"
 
         # for compatibility with IDAES unit formatting
         # following IDAES/idaes-pse#1438 is released
-        "pint < 0.24",
+        "pint < 0.25",
 
         # for generate a screenshot and open the browser asynchronously
         "nest_asyncio",
