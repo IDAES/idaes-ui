@@ -416,16 +416,17 @@ async def _async_save_diagram(
     from IPython.display import display as IPythonDisplay
 
     async with async_playwright() as p:
+        timeout = 800000
         browser = await p.chromium.launch(
-            headless=True, args=["--no-sandbox"], timeout=800000
+            headless=True, args=["--no-sandbox"], timeout=timeout
         )
         context = await browser.new_context(viewport={"width": 1920, "height": 1080})
         page = await context.new_page()
 
         try:
             # Go to visualizer URL and wait document load
-            await page.goto(live_server_url)
-            await page.wait_for_load_state("networkidle")
+            await page.goto(live_server_url, timeout=timeout)
+            await page.wait_for_load_state("networkidle", timeout=timeout)
 
             # Hover on download menu show download option list
             await page.hover("#diagram_download_icon")
@@ -437,14 +438,14 @@ async def _async_save_diagram(
                 await page.click("#headerExportSvgBtn")
 
             # Click download btn on UI pop modal
-            async with page.expect_download() as download_info:
+            async with page.expect_download(timeout=timeout) as download_info:
                 await page.click(".control-button")
 
             # Get download value
             download = await download_info.value
 
             # Wait for download to complete
-            download_path = await download.path()
+            download_path = await download.path(timeout=timeout)
 
             diagram_saved_path = os.path.join(
                 save_to, f"{screenshot_name}.{image_type}"
