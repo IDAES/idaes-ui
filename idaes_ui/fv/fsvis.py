@@ -438,7 +438,7 @@ async def _async_save_diagram(
 
             # Click download btn on UI pop modal
             async with page.expect_download() as download_info:
-                await page.click(".control-button", timeout=500000)
+                await page.click(".control-button", timeout=6000000)
 
             # Get download value
             download = await download_info.value
