@@ -30,6 +30,7 @@ import platform
 
 import pytest
 import asyncio
+from playwright.async_api import async_playwright
 
 requests = pytest.importorskip("requests")
 
@@ -367,12 +368,9 @@ def test_visualize_return(flash_model):
     assert hasattr(visualizer, "save_diagram")
 
 
-from playwright.sync_api import sync_playwright
-
-
 @pytest.fixture(scope="module")
 def browser():
-    with sync_playwright() as p:
+    with async_playwright() as p:
         browser = p.chromium.launch()
         yield browser
         browser.close()
