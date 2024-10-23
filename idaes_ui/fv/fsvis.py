@@ -416,6 +416,7 @@ async def _async_save_diagram(
     from IPython.display import display as IPythonDisplay
 
     async with async_playwright() as p:
+        _log.info("launch browser, Max timeout 30s")
         browser = await p.chromium.launch(
             headless=True, args=["--no-sandbox"], timeout=3000000
         )
@@ -436,6 +437,7 @@ async def _async_save_diagram(
             else:
                 await page.click("#headerExportSvgBtn")
 
+            _log.info("Downloading image, Max timeout 30s")
             # Click download btn on UI pop modal
             async with page.expect_download() as download_info:
                 await page.click(".control-button", timeout=3000000)
