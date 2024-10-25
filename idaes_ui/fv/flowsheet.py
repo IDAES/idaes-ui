@@ -284,20 +284,20 @@ class FlowsheetSerializer:
             stream_states_dict,
         )  # deferred to avoid circ. import
 
-        # We might have this information from generating self.serialized_components
-        # but I (Makayla) don't know how that connects to the stream names so this
-        # will be left alone for now
         for stream_name, stream_value in stream_states_dict(self.streams).items():
             label = ""
-            for var, var_value in stream_value.define_display_vars().items():
-                var = var.capitalize()
+            if not hasattr(stream_value, "define_display_vars"):
+                self.labels[stream_name] = "None"
+            else:
+                for var, var_value in stream_value.define_display_vars().items():
+                    var = var.capitalize()
 
-                for k, v in var_value.items():
-                    if k is None:
-                        label += f"{var} {round(value(v), self._sig_figs)}\n"
-                    else:
-                        label += f"{var} {k} {round(value(v), self._sig_figs)}\n"
-            self.labels[stream_name] = label[:-2]
+                    for k, v in var_value.items():
+                        if k is None:
+                            label += f"{var} {round(value(v), self._sig_figs)}\n"
+                        else:
+                            label += f"{var} {k} {round(value(v), self._sig_figs)}\n"
+                self.labels[stream_name] = label[:-2]
 
     def _map_edges(self):
         # Map the arcs to the ports to construct the edges
@@ -418,9 +418,9 @@ class FlowsheetSerializer:
                     "performance_contents"
                 ] = performance_df
             else:
-                self._serialized_contents[unit_name][
-                    "performance_contents"
-                ] = pd.DataFrame({}, columns=["Variable", "Value"])
+                self._serialized_contents[unit_name]["performance_contents"] = (
+                    pd.DataFrame({}, columns=["Variable", "Value"])
+                )
         elif unit in self._known_endpoints:
             # Unit is a subcomponent AND it is connected to an Arc. Or maybe it's in
             # an indexed block. Find the top-level parent unit and assign the
@@ -559,9 +559,9 @@ class FlowsheetSerializer:
             # )
             .apply(
                 lambda col: col.apply(
-                    lambda x: round(x, self._sig_figs)
-                    if isinstance(x, (int, float))
-                    else x
+                    lambda x: (
+                        round(x, self._sig_figs) if isinstance(x, (int, float)) else x
+                    )
                 )
             )
         )
