@@ -30,6 +30,26 @@ class SaveDiagramScreenshot:
         screenshot_save_to: str = None,
         display: bool = False,
     ) -> dict:
+        """Capture Screenshot of Flowsheet Diagram
+
+        This function allows users to capture a screenshot of a flowsheet diagram.
+
+        The screenshot can be saved either to a user-defined path or to the default ./screenshot folder.
+
+        Additionally, users can control whether to display the screenshot in the running environment by adjusting the display argument (currently only support display in Jupyter notebook).
+
+        Args:
+            screenshot_name: string, use to save as screenshot name, default is flowsheet name from parent function
+            image_type: string, use to save as screenshot image type, default is svg, now supporting svg, png
+            screenshot_save_to: string, use to define where screenshot should save to, default is ./screenshots
+            display: bool, use to control if display screenshot or not
+
+        Returns:
+            dict: A dictionary with the following keys:
+                screenshot_image_type (str) : screenshot saved image type name as string.
+                validated_save_path (str) : the final save path after validation by the function _validate_and_create_save_path.
+                diagram_saved_path (str): the path where the diagram is saved.
+        """
         # clear server print in console to prevent too many output
         clear_output(wait=True)
 
