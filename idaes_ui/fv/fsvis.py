@@ -417,9 +417,7 @@ async def _async_save_diagram(
 
     async with async_playwright() as p:
         _log.info("launch browser, Max timeout 30s")
-        browser = await p.chromium.launch(
-            headless=True, args=["--no-sandbox"], timeout=30000
-        )
+        browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
         context = await browser.new_context(viewport={"width": 1920, "height": 1080})
         page = await context.new_page()
 
@@ -440,7 +438,7 @@ async def _async_save_diagram(
             _log.info("Downloading image, Max timeout 30s")
             # Click download btn on UI pop modal
             async with page.expect_download() as download_info:
-                await page.click(".control-button", timeout=30000)
+                await page.click(".control-button")
 
             # Get download value
             download = await download_info.value
