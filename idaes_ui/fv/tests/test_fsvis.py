@@ -418,9 +418,9 @@ async def test_saved_diagram_as_svg_and_png(flash_model):
         # save svg screenshot
         visualizer.save_diagram(
             screenshot_name=flowsheet_name,
-            save_to=screenshot_save_path,
-            display=False,
             image_type="svg",
+            screenshot_save_to=screenshot_save_path,
+            display=False,
         )
 
         # check if svg file is saved
@@ -431,9 +431,9 @@ async def test_saved_diagram_as_svg_and_png(flash_model):
         # save png screenshot
         visualizer.save_diagram(
             screenshot_name=flowsheet_name,
-            save_to=screenshot_save_path,
-            display=False,
             image_type="png",
+            screenshot_save_to=screenshot_save_path,
+            display=False,
         )
         # check if png file is saved
         assert os.path.exists(
@@ -480,7 +480,7 @@ def test_screenshots_save_path(flash_model):
             flash_model.fs, flowsheet_name, browser=False
         ).save_diagram(
             screenshot_name=flowsheet_name,
-            save_to=user_defined_save_path,
+            screenshot_save_to=user_defined_save_path,
             display="false",
             image_type=save_diagram_type,
         )
@@ -490,7 +490,7 @@ def test_screenshots_save_path(flash_model):
             flash_model.fs, flowsheet_name, browser=False
         ).save_diagram(
             screenshot_name=flowsheet_name,
-            save_to=user_defined_invalid_path,
+            screenshot_save_to=user_defined_invalid_path,
             display="false",
             image_type=save_diagram_type,
         )
