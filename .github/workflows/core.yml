@@ -79,7 +79,7 @@ jobs:
           playwright install
         
       - name: Run pytest
-        run: pytest -v -s --pyargs idaes_ui.fv timeout=600
+        run: pytest -v -s --pyargs idaes_ui.fv --timeout=600
 
   cypress:
     name: cypress (${{ matrix.install-variant }}/py${{ matrix.python-version }}/${{ matrix.os }})
