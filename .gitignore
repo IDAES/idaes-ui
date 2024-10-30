@@ -142,4 +142,9 @@ shared_variable.json
 saved_flowsheet/
 
 # cypress
-screenshots
+
+# remove files related to test
+screenshots/
+test_dragram.json
+test_diagram.png
+test_diagram.svg
