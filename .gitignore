@@ -145,6 +145,6 @@ saved_flowsheet/
 
 # remove files related to test
 screenshots/
-test_dragram.json
+test_diagram.json
 test_diagram.png
 test_diagram.svg
