@@ -388,8 +388,8 @@ def clear_screenshot_folder(folder_path: str, extensions: list[str]):
             os.remove(os.path.join(folder_path, file))
 
 
-@pytest.mark.unit
-def test_saved_diagram_as_svg_and_png(flash_model):
+@pytest.mark.asyncio
+async def test_saved_diagram_as_svg_and_png(flash_model):
     """
     test visualizer.save_diagram saved diagram as svg in screenshots folder
     """
@@ -405,7 +405,13 @@ def test_saved_diagram_as_svg_and_png(flash_model):
         "screenshots",
     )
 
-    async def run_visualizer_and_save():
+    # make sure dir is exist
+    os.makedirs(screenshot_save_path, exist_ok=True)
+
+    # cleanup screenshot folder
+    clear_screenshot_folder(screenshot_save_path, [".png", ".svg"])
+
+    try:
         # Run visualizer and save diagram
         visualizer = fsvis.visualize(flash_model.fs, flowsheet_name, browser=False)
 
@@ -413,38 +419,31 @@ def test_saved_diagram_as_svg_and_png(flash_model):
         visualizer.save_diagram(
             screenshot_name=flowsheet_name,
             save_to=screenshot_save_path,
-            display="false",
+            display=False,
             image_type="svg",
+        )
+
+        # check if svg file is saved
+        assert os.path.exists(
+            os.path.join(screenshot_save_path, f"{flowsheet_name}.svg")
         )
 
         # save png screenshot
         visualizer.save_diagram(
             screenshot_name=flowsheet_name,
             save_to=screenshot_save_path,
-            display="false",
+            display=False,
             image_type="png",
         )
+        # check if png file is saved
+        assert os.path.exists(
+            os.path.join(screenshot_save_path, f"{flowsheet_name}.png")
+        )
 
-        # check if png and svg file exist
-        for screenshot_file_name in screenshot_file_names:
-            has_file = os.path.exists(
-                os.path.join(screenshot_save_path, screenshot_file_name)
-            )
-            if not has_file:
-                return False
-        return True
-
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    try:
-        is_screenshot_saved = loop.run_until_complete(run_visualizer_and_save())
     finally:
-        loop.close()
-    assert is_screenshot_saved
-
-    clear_screenshot_folder(
-        screenshot_save_path, [f"{flowsheet_name}.png", f"{flowsheet_name}.svg"]
-    )
+        clear_screenshot_folder(
+            screenshot_save_path, [f"{flowsheet_name}.png", f"{flowsheet_name}.svg"]
+        )
 
 
 @pytest.mark.unit
