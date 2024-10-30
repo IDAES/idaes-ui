@@ -115,7 +115,7 @@ class SaveDiagramScreenshot:
             try:
                 # launch browser
                 _log.info("launching browser, Max timeout 30s")
-                browser = await p.chromium.launch(headless=False, args=["--no-sandbox"])
+                browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
                 context = await browser.new_context(
                     viewport={"width": 1920, "height": 1080}
                 )
