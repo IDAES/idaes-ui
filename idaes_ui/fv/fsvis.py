@@ -26,6 +26,7 @@ import webbrowser
 from idaes import logger
 from .model_server import FlowsheetServer
 from . import persist, errors
+from .save_diagram_screenshot import SaveDiagramScreenshot
 
 
 # Logging
@@ -198,94 +199,16 @@ def visualize(
     if loop_forever:
         _loop_forever(quiet)
 
-    def save_diagram(
-        screenshot_name: str = name,
-        image_type: str = "svg",
-        save_to: str = "screenshots",
-        display: bool = True,
-    ) -> dict:
-        """Capture Screenshot of Flowsheet Diagram
-
-        This function enables users to capture a screenshot of a flowsheet diagram.
-
-        The screenshot can be saved either to a user-defined path or to the default ./screenshot folder.
-
-        Additionally, users can control whether to display the screenshot in the running environment by adjusting the display argument.
-
-        Args:
-            screenshot_name: string, use to save as screenshot name, default is flowsheet name from parent function
-            image_type: string, use to save as screenshot image type, default is svg, now supporting svg, png
-            save_to: string, use to define where screenshot should save to, default is ./screenshots
-            display: bool, use to control if display screenshot or not
-
-        Returns:
-            dict: A dictionary with the following keys:
-                screenshot_image_type (str) : screenshot saved image type name as string.
-                validated_save_path (str) : the final save path after validation by the function _validate_and_create_save_path.
-                diagram_saved_path (str): the path where the diagram is saved.
-        """
-        import asyncio
-        import nest_asyncio
-        from IPython.display import clear_output
-
-        # clear server print in console to prevent too many output
-        clear_output(wait=True)
-
-        # define live server URL let backend running chrome to get screen
-        live_server_url = f"http://localhost:{web_server.port}/app?id={name}"
-
-        # re-log visualizer running at URL
-        _log.info(f"Visualizer live server is running at: {live_server_url}")
-
-        # define image type use as lower case string, if undefined assign svg as default
-        default_image_types = ("png", "svg")
-
-        # set image_type to lower for later use to compare with default_image_types
-        if image_type:
-            image_type = image_type.lower()
-
-        # if user set image_type arg invalid set it as default svg and print message
-        if not image_type or not image_type in default_image_types:
-            _log.warning(
-                f"[{image_type} is not supported] Only PNG and SVG are supported as diagram screenshot types. The default image type has been set to SVG."
-            )
-            image_type = "svg"
-
-        # set file save path
-        validate_path_return = _validate_and_create_save_path(save_to)
-        valid_save_path = validate_path_return["path_to_use"]
-
-        # log save_to_info if user's save path is invalid
-        if not valid_save_path == save_to:
-            _log.warning(
-                f"The save path {save_to} is invalid, now save path change to {valid_save_path}"
-            )
-
-        # use async loop to run async playwright diagram async generator
-        nest_asyncio.apply()
-        loop = asyncio.get_event_loop()
-        save_diagram_return = loop.run_until_complete(
-            _async_save_diagram(
-                screenshot_name=screenshot_name,
-                live_server_url=live_server_url,
-                save_to=valid_save_path,
-                image_type=image_type,
-                display=display,
-            )
-        )
-
-        return {
-            "screenshot_image_type": image_type,
-            "valid_save_path": valid_save_path,
-            "default_save_path": validate_path_return["default_save_path"],
-            "diagram_saved_path": save_diagram_return["diagram_saved_path"],
-        }
+    # call saveDiagramScreenshot class to get save_diagram function and return to user to use for get screenshot
+    save_diagram_screenshot_class = SaveDiagramScreenshot(
+        name=name, port=web_server.port
+    )
 
     return VisualizeResult(
         store=datastore,
         port=web_server.port,
         server=web_server,
-        save_diagram=save_diagram,
+        save_diagram=save_diagram_screenshot_class.save_diagram_screenshot,
     )
 
 
@@ -344,175 +267,3 @@ def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None)
 def _init_logging(lvl):
     ui_logger = logger.getIdaesLogger("ui", level=lvl, tag="ui")
     ui_logger.setLevel(lvl)
-
-
-def _validate_and_create_save_path(save_to):
-    """
-    check user's path is valid or use default path
-
-    Args:
-        save_to: string, the path user provided
-    Returns:
-        path_to_use: the path use to save diagram screenshot
-    """
-    # setup default saving path
-    default_path = os.path.join(os.getcwd(), "screenshots")
-
-    if save_to is None or save_to.strip() == "":
-        _log.warning(f"No path provided. Using default path: {default_path}")
-        path_to_use = default_path
-    else:
-        # change path to abs path
-        abs_path = os.path.abspath(save_to)
-
-        # check if path exist
-        if not os.path.exists(abs_path):
-            try:
-                os.makedirs(abs_path)
-                _log.info(f"Created directory: {abs_path}")
-                path_to_use = abs_path
-            except Exception as e:
-                _log.error(f"Error creating directory {abs_path}: {e}")
-                _log.info(f"Using default path: {default_path}")
-                path_to_use = default_path
-        else:
-            # check can write into user's path
-            if os.access(abs_path, os.W_OK):
-                path_to_use = abs_path
-            else:
-                _log.warning(f"No write permission for {abs_path}")
-                _log.info(f"Using default path: {default_path}")
-                path_to_use = default_path
-
-    # make sure default path is exist
-    if path_to_use == default_path and not os.path.exists(default_path):
-        os.makedirs(default_path)
-
-    _log.warning(f"save path is {path_to_use}")
-    return {"path_to_use": path_to_use, "default_save_path": default_path}
-
-
-async def _async_save_diagram(
-    screenshot_name: str,
-    live_server_url: str,
-    save_to: str,
-    image_type: str,
-    display: bool,
-):
-    """
-    use playwright simulate user click website, to save diagram as svg or png screenshot into user defined save_path or default folder
-
-    Args:
-        screenshot_name: string use as screenshot saved name, if undefined will use flowsheet as screenshot saved name
-        live_server_url: string use for playwright to open browser on
-        save_to: string where to save the screenshot file
-        image_type: string the screenshot image type
-        display: bool to display or not display it in jupyter
-    """
-    # import playwright to generate screenshot
-    from playwright.async_api import async_playwright
-    from IPython.display import SVG
-    from IPython.display import Image
-    from IPython.display import display as IPythonDisplay
-
-    async with async_playwright() as p:
-        _log.info("launch browser, Max timeout 30s")
-        browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
-        context = await browser.new_context(viewport={"width": 1920, "height": 1080})
-        page = await context.new_page()
-
-        try:
-            # Go to visualizer URL and wait document load
-            await page.goto(live_server_url)
-            await page.wait_for_load_state("networkidle")
-
-            # Hover on download menu show download option list
-            await page.hover("#diagram_download_icon")
-
-            # Base on image_type to click different image download btn
-            if image_type == "png":
-                await page.click("#headerExportImageBtn")
-            else:
-                await page.click("#headerExportSvgBtn")
-
-            _log.info("Downloading image, Max timeout 30s")
-            # Click download btn on UI pop modal
-            async with page.expect_download() as download_info:
-                await page.click(".control-button")
-
-            # Get download value
-            download = await download_info.value
-
-            # Wait for download to complete
-            download_path = await download.path()
-
-            diagram_saved_path = os.path.join(
-                save_to, f"{screenshot_name}.{image_type}"
-            )
-            # Move download to save_to and display image and display image saved path
-            if os.path.exists(download_path):
-                # Save image to save to and display
-
-                # read from download screenshot file
-                with open(download_path, "rb") as source_file:
-                    file_content = source_file.read()
-                # write to save path
-                with open(diagram_saved_path, "wb") as target_file:
-                    target_file.write(file_content)
-
-                # remove playwright downloaded screenshot file when diagram_saved_path != download_path
-                if diagram_saved_path != download_path and os.path.exists(
-                    download_path
-                ):
-                    os.remove(download_path)
-
-                if os.path.exists(diagram_saved_path):
-                    _log.info(f"File downloaded: {diagram_saved_path}")
-                else:
-                    _log.error(f"screenshot fail to save to: {diagram_saved_path}")
-
-                # get if user is in jupyter notebook or not
-                # if not in jupyter notebook will only return screenshot path
-                in_jupyter = _is_jupyter()
-                if in_jupyter and display:
-                    display = True
-                else:
-                    display = False
-
-                # check display and image_type to out put image and image path
-                if display and image_type == "svg":
-                    # display svg and display screenshot
-                    IPythonDisplay(SVG(filename=diagram_saved_path))
-
-                if display and image_type == "png":
-                    # display png images
-                    IPythonDisplay(Image(filename=diagram_saved_path))
-            else:
-                _log.error("Diagram file not found")
-                return None
-
-        except Exception as e:
-            _log.error(f"Unable to capture diagram: {e}")
-            return None
-
-        finally:
-            await browser.close()
-
-        return {"diagram_saved_path": diagram_saved_path}
-
-
-def _is_jupyter():
-    """Check if the code is running in a Jupyter notebook environment"""
-    try:
-        # try import get_ipython to identify if user is in jupyter
-        from IPython import get_ipython
-
-        shell = get_ipython().__class__.__name__
-        if shell == "ZMQInteractiveShell":
-            return True  # Jupyter notebook or qtconsole
-        elif shell == "TerminalInteractiveShell":
-            return False  # Terminal running IPython
-        else:
-            return False  # Other type (?)
-    except NameError:
-        return False  # Probably standard Python interpreter
