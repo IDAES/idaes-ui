@@ -16,7 +16,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    animation: messageBarShowUp .8s ease-in-out forwards;
+    animation: messageBarShowUp .5s ease-in-out forwards;
     background-color: #333333;
     border-radius: 1px solid blue;
     border-top-left-radius: 5px;
@@ -43,7 +43,7 @@
 }
 
 .bg_successful{
-    background-color: rgb(0, 158, 32);
+    background-color: #333333;
 }
 
 .bg_error{
