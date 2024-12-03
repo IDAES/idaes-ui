@@ -12,6 +12,7 @@ tasks with the {{ visabbr }}.
 
 * [Flowsheet Visualizer Concepts](fv-concepts)
 * [Flowsheet Visualizer How-to](fv-howto)
+* [Save and Preview Diagram](save-preview-diagram)
 
 ```{toctree}
 :hidden: true
