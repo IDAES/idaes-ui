@@ -18,4 +18,5 @@ hidden: true
 ---
 install
 fv/index
+save-diagram/index
 ```
