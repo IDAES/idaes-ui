@@ -2,4 +2,4 @@
 
 # For adding copyright headers (see addheader.yml and the readme)
 addheader >= 0.3.0
-idaes-pse @ git+https://github.com/IDAES/idaes-pse@main
+idaes-pse >=2.7.0
