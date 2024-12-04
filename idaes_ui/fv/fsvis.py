@@ -267,3 +267,69 @@ def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None)
 def _init_logging(lvl):
     ui_logger = logger.getIdaesLogger("ui", level=lvl, tag="ui")
     ui_logger.setLevel(lvl)
+
+
+def export_flowsheet_diagram(flowsheet, name: Union[str, Path]) -> Path:
+    """Export the flowsheet as a diagram.
+
+    Some example invocations (flowsheet is in `m.fs`)::
+
+        # write SVG to file in current directory
+        export_flowsheet_diagram(m.fs, "foo.svg")
+        export_flowsheet_diagram(m.fs, Path("foo.svg"))
+
+        # write PNG to file in current directory
+        export_flowsheet_diagram(m.fs, "foo.png")
+
+        # write SVG to file in user's home directory
+        export_flowsheet_diagram(m.fs, "~/foo.svg")
+        export_flowsheet_diagram(m.fs, Path("~/foo.svg"))
+
+        # write SVG to file in subdirectory
+        export_flowsheet_diagram(m.fs, "./bar/foo.svg")
+        export_flowsheet_diagram(m.fs, Path("./bar/foo.svg"))
+
+    Args:
+       flowsheet: Flowsheet object to visualize and export
+       name: Diagram filename or full path. The output format is determined
+             from the file extension, ".svg" for SVG and ".png" for PNG.
+
+    Returns:
+       Path to output diagram
+
+    Raises:
+       ValueError: If input file extension is missing or not recognized.
+       IOError: If output file cannot be written, e.g., a permissions error
+    """
+    if isinstance(name, Path):
+        p = name.expanduser()
+        if p.suffix == "":
+            raise ValueError("File extension is required")
+        p.resolve()
+        d = p.parent
+        imtype, basename = p.suffix[1:], p.stem
+    elif name.rfind(".") < 1:
+        raise ValueError("File extension is required")
+    elif name.startswith(".") or name.startswith("/") or name.startswith("~"):
+        p = Path(name)
+        p = p.expanduser()
+        p.resolve()
+        d = p.parent
+        imtype, basename = p.suffix[1:], p.stem
+    else:
+        d = Path(".")
+        basename, imtype = name.split(".", 1)
+    try:
+        d.mkdir(parents=True, exist_ok=True)
+    except Exception as err:
+        raise IOError(f"Cannot make directory {d}: {err}")
+    if imtype not in ("svg", "png"):
+        raise ValueError(f"File extension must be '.svg' or '.png' (got: '.{imtype}')")
+    vs = visualize(flowsheet, basename, browser=False)
+    r = vs.save_diagram(
+        screenshot_name=basename,
+        screenshot_save_to=str(d),
+        image_type=imtype,
+        display=False,
+    )
+    return Path(r["diagram_saved_path"])
