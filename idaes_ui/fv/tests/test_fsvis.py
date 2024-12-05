@@ -541,3 +541,45 @@ def test_screenshots_save_path(flash_model):
         f'when user give invalid save path, invalid path been rewrite to default path={save_diagram_return["invalid_user_save_path"] == default_save_path}'
     )
     assert save_diagram_return["invalid_user_save_path"] == default_save_path
+
+
+@pytest.mark.integration
+def test_export_flowsheet_diagram(flash_model, tmp_path):
+    flowsheet = flash_model.fs
+
+    # work in a temporary directory managed by pytest
+    os.chdir(tmp_path)
+
+    def check_file(path: Path, bytes: int = 100):
+        assert path.exists()
+        assert path.is_file()
+        assert path.stat().st_size >= bytes
+
+    ## Happy paths
+
+    # write SVG to file in current directory
+    fsvis.export_flowsheet_diagram(flowsheet, "foo.svg")
+    check_file(tmp_path / "foo.svg")
+    fsvis.export_flowsheet_diagram(flowsheet, Path("foo.svg"))
+    check_file(tmp_path / "foo.svg")
+
+    # write PNG to file in current directory
+    fsvis.export_flowsheet_diagram(flowsheet, "foo.png")
+    check_file(tmp_path / "foo.png")
+
+    # write SVG to file in subdirectory
+    fsvis.export_flowsheet_diagram(flowsheet, "./bar/foo.svg")
+    check_file(tmp_path / "bar" / "foo.svg")
+    fsvis.export_flowsheet_diagram(flowsheet, Path("./bar/foo.svg"))
+    check_file(tmp_path / "bar" / "foo.svg")
+
+    ## Unhappy paths
+
+    with pytest.raises(ValueError):
+        fsvis.export_flowsheet_diagram(flowsheet, "foo.txt")
+
+    with pytest.raises(ValueError):
+        fsvis.export_flowsheet_diagram(flowsheet, "foo")
+
+    with pytest.raises(IOError):
+        fsvis.export_flowsheet_diagram(flowsheet, Path("/") / "aoxomoxoa" / "foo.svg")
