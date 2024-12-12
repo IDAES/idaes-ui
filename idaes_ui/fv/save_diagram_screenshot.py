@@ -95,17 +95,21 @@ class SaveDiagramScreenshot:
                     display=display,
                 )
             )
+
+            if save_diagram_return is None:
+                raise Exception("Failed to save diagram")
+
             _log.info(f"save diagram in save_diagram_screenshot.py success")
-        except Exception as e:
-            _log.error(f"save diagram in save_diagram_screenshot.py fail: {e}")
-            return
-        finally:
+
             return {
                 "screenshot_image_type": image_type,
                 "valid_save_path": valid_screenshot_save_path,
                 "default_save_path": self.default_screenshot_save_path,
                 "diagram_saved_path": save_diagram_return["diagram_saved_path"],
             }
+        except Exception as e:
+            _log.error(f"save diagram in save_diagram_screenshot.py fail: {e}")
+            return
 
     async def _async_save_diagram(
         self,
@@ -269,13 +273,15 @@ class SaveDiagramScreenshot:
                         # display png images
                         IPythonDisplay(Image(filename=customized_screenshot_save_path))
 
+                return {"diagram_saved_path": customized_screenshot_save_path}
+
             except Exception as e:
-                _log.error(f"_async_save_diagram error: {e}")
-                return None
+                _log.info(f"_async_save_diagram error: {e}")
+                raise e
 
             finally:
+                # close browser any way
                 await browser.close()
-                return {"diagram_saved_path": customized_screenshot_save_path}
 
     def _validate_and_create_save_path(self, save_to):
         """
