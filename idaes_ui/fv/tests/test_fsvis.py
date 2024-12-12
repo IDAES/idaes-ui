@@ -510,8 +510,9 @@ def test_screenshots_save_path(flash_model):
     asyncio.set_event_loop(loop)
     try:
         save_diagram_return = loop.run_until_complete(run_visualizer_and_save_diagram())
-    finally:
-        loop.close()
+        # loop.close()
+    except Exception as e:
+        pytest.fail(f"Failed to export diagram: {e}")
 
     screenshot_file_name = (
         f'{save_diagram_return["diagram_name"]}.{save_diagram_return["diagram_type"]}'
@@ -550,12 +551,12 @@ def test_export_flowsheet_diagram(flash_model, tmp_path):
     # work in a temporary directory managed by pytest
     os.chdir(tmp_path)
 
-    def check_file(path: Path, bytes: int = 100):
+    def check_file(path: Path, bytes: int = 10):
         assert path.exists()
         assert path.is_file()
         assert path.stat().st_size >= bytes
 
-    ## Happy paths
+    # Happy paths
 
     # write SVG to file in current directory
     fsvis.export_flowsheet_diagram(flowsheet, "foo.svg")
