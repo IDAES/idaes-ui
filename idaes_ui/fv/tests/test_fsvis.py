@@ -484,5 +484,10 @@ def test_export_flowsheet_diagram(flash_model, tmp_path):
     with pytest.raises(ValueError):
         fsvis.export_flowsheet_diagram(flowsheet, "foo")
 
-    with pytest.raises((OSError, IOError)):
-        fsvis.export_flowsheet_diagram(flowsheet, Path("/") / "aoxomoxoa" / "foo.svg")
+    if platform.system() != "Windows":
+        with pytest.raises(IOError):
+            fsvis.export_flowsheet_diagram(
+                flowsheet, Path("/") / "aoxomoxoa" / "foo.svg"
+            )
+
+    # TODO: test Windows
