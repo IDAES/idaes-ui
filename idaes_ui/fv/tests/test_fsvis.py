@@ -388,8 +388,8 @@ def clear_screenshot_folder(folder_path: str, extensions: list[str]):
             os.remove(os.path.join(folder_path, file))
 
 
-@pytest.mark.asyncio
-async def test_saved_diagram_as_svg_and_png(flash_model):
+@pytest.mark.integration
+def test_saved_diagram_as_svg_and_png(flash_model):
     """
     test visualizer.save_diagram saved diagram as svg in screenshots folder
     """
