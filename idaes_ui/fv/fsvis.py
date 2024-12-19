@@ -325,8 +325,7 @@ def export_flowsheet_diagram(flowsheet, name: Union[str, Path]) -> Path:
         raise IOError(f"Cannot make directory {d}: {err}")
     if imtype not in ("svg", "png"):
         raise ValueError(f"File extension must be '.svg' or '.png' (got: '.{imtype}')")
-    vs = visualize(flowsheet, basename, browser=False)
-    r = vs.save_diagram(
+    r = visualize(flowsheet, basename, browser=False).save_diagram(
         screenshot_name=basename,
         screenshot_save_to=str(d),
         image_type=imtype,
