@@ -16,6 +16,7 @@
 # stdlib
 from collections import namedtuple
 from pathlib import Path
+import os
 import sys
 import time
 from typing import Optional, Union, Dict, Tuple
@@ -25,6 +26,8 @@ import webbrowser
 from idaes import logger
 from .model_server import FlowsheetServer
 from . import persist, errors
+from .save_diagram_screenshot import SaveDiagramScreenshot
+
 
 # Logging
 _log = logger.getLogger(__name__)
@@ -46,7 +49,9 @@ MAX_SAVED_VERSIONS = 100
 #: - port = Port number (integer) where web server is listening
 #: - server = :class:`idaes.core.ui.fv.model_server.FlowsheetServer` object for the web server thread
 #:
-VisualizeResult = namedtuple("VisualizeResult", ["store", "port", "server"])
+VisualizeResult = namedtuple(
+    "VisualizeResult", ["store", "port", "server", "save_diagram"]
+)
 
 
 def visualize(
@@ -62,6 +67,7 @@ def visualize(
     log_level: int = logger.WARNING,
     quiet: bool = False,
     loop_forever: bool = False,
+    screenshot: bool = True,
 ) -> VisualizeResult:
     """Visualize the flowsheet in a web application.
 
@@ -193,7 +199,17 @@ def visualize(
     if loop_forever:
         _loop_forever(quiet)
 
-    return VisualizeResult(store=datastore, port=web_server.port, server=web_server)
+    # call saveDiagramScreenshot class to get save_diagram function and return to user to use for get screenshot
+    save_diagram_screenshot_class = SaveDiagramScreenshot(
+        name=name, port=web_server.port
+    )
+
+    return VisualizeResult(
+        store=datastore,
+        port=web_server.port,
+        server=web_server,
+        save_diagram=save_diagram_screenshot_class.save_diagram_screenshot,
+    )
 
 
 def _loop_forever(quiet):
@@ -251,3 +267,68 @@ def _handle_existing_save_path(name, save_path, max_versions=10, overwrite=None)
 def _init_logging(lvl):
     ui_logger = logger.getIdaesLogger("ui", level=lvl, tag="ui")
     ui_logger.setLevel(lvl)
+
+
+def export_flowsheet_diagram(flowsheet, name: Union[str, Path]) -> Path:
+    """Export the flowsheet as a diagram.
+
+    Some example invocations (flowsheet is in `m.fs`)::
+
+        # write SVG to file in current directory
+        export_flowsheet_diagram(m.fs, "foo.svg")
+        export_flowsheet_diagram(m.fs, Path("foo.svg"))
+
+        # write PNG to file in current directory
+        export_flowsheet_diagram(m.fs, "foo.png")
+
+        # write SVG to file in user's home directory
+        export_flowsheet_diagram(m.fs, "~/foo.svg")
+        export_flowsheet_diagram(m.fs, Path("~/foo.svg"))
+
+        # write SVG to file in subdirectory
+        export_flowsheet_diagram(m.fs, "./bar/foo.svg")
+        export_flowsheet_diagram(m.fs, Path("./bar/foo.svg"))
+
+    Args:
+       flowsheet: Flowsheet object to visualize and export
+       name: Diagram filename or full path. The output format is determined
+             from the file extension, ".svg" for SVG and ".png" for PNG.
+
+    Returns:
+       Path to output diagram
+
+    Raises:
+       ValueError: If input file extension is missing or not recognized.
+       IOError: If output file cannot be written, e.g., a permissions error
+    """
+    if isinstance(name, Path):
+        p = name.expanduser()
+        if p.suffix == "":
+            raise ValueError("File extension is required")
+        p.resolve()
+        d = p.parent
+        imtype, basename = p.suffix[1:], p.stem
+    elif name.rfind(".") < 1:
+        raise ValueError("File extension is required")
+    elif name.startswith(".") or name.startswith("/") or name.startswith("~"):
+        p = Path(name)
+        p = p.expanduser()
+        p.resolve()
+        d = p.parent
+        imtype, basename = p.suffix[1:], p.stem
+    else:
+        d = Path(".")
+        basename, imtype = name.split(".", 1)
+    try:
+        d.mkdir(parents=True, exist_ok=True)
+    except Exception as err:
+        raise IOError(f"Cannot make directory {d}: {err}")
+    if imtype not in ("svg", "png"):
+        raise ValueError(f"File extension must be '.svg' or '.png' (got: '.{imtype}')")
+    r = visualize(flowsheet, basename, browser=False).save_diagram(
+        screenshot_name=basename,
+        screenshot_save_to=str(d),
+        image_type=imtype,
+        display=False,
+    )
+    return Path(r["diagram_saved_path"])
