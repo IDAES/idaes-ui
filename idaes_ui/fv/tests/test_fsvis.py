@@ -15,6 +15,8 @@ Tests for the IDAES Flowsheet Visualizer (IFV).
 
 These are currently integration tests, because the start/stop the embedded HTTP server.
 """
+import io
+import logging
 import glob
 import json
 import logging
@@ -22,8 +24,14 @@ import os
 from pathlib import Path
 import re
 import time
+import tempfile
+import platform
+
 
 import pytest
+import asyncio
+from playwright.async_api import async_playwright
+
 requests = pytest.importorskip("requests")
 
 from pyomo.environ import ConcreteModel
@@ -33,6 +41,9 @@ from idaes.models.properties.activity_coeff_models.BTX_activity_coeff_VLE import
 )
 from idaes.models.unit_models import Flash
 from idaes_ui.fv import fsvis, errors, validate_flowsheet
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module")
@@ -344,3 +355,139 @@ def test_loop_forever():
         print("check thread")
         assert thr.is_alive()
     # threads should die when process exits
+
+
+@pytest.mark.unit
+def test_visualize_return(flash_model):
+    flowsheet = flash_model.fs
+    visualizer = fsvis.visualize(flowsheet, browser=False, save=False)
+
+    assert hasattr(visualizer, "store")
+    assert hasattr(visualizer, "port")
+    assert hasattr(visualizer, "server")
+    assert hasattr(visualizer, "save_diagram")
+
+
+@pytest.fixture(scope="module")
+def browser():
+    with async_playwright() as p:
+        browser = p.chromium.launch()
+        yield browser
+        browser.close()
+
+
+def clear_screenshot_folder(folder_path: str, extensions: list[str]):
+    """
+    define a pytest utility tool function, read from screenshots folder, if any png or svg files exist, remove them first
+    Args:
+        folder_path: str, the path of the folder to clear
+        extensions: list[str], the list of file extensions to remove
+    """
+    for file in os.listdir(folder_path):
+        if any(file.endswith(ext) for ext in extensions):
+            os.remove(os.path.join(folder_path, file))
+
+
+@pytest.mark.integration
+def test_saved_diagram_as_svg_and_png(flash_model):
+    """
+    test visualizer.save_diagram saved diagram as svg in screenshots folder
+    """
+
+    flowsheet_name = "test_diagram"
+
+    # define file name list to check if saved
+    screenshot_file_names = [f"{flowsheet_name}.png", f"{flowsheet_name}.svg"]
+
+    # define screenshot save path
+    screenshot_save_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "screenshots",
+    )
+
+    # make sure dir is exist
+    os.makedirs(screenshot_save_path, exist_ok=True)
+
+    # cleanup screenshot folder
+    clear_screenshot_folder(screenshot_save_path, [".png", ".svg"])
+
+    try:
+        # Run visualizer and save diagram
+        visualizer = fsvis.visualize(flash_model.fs, flowsheet_name, browser=False)
+
+        # save svg screenshot
+        visualizer.save_diagram(
+            screenshot_name=flowsheet_name,
+            image_type="svg",
+            screenshot_save_to=screenshot_save_path,
+            display=False,
+        )
+
+        # check if svg file is saved
+        assert os.path.exists(
+            os.path.join(screenshot_save_path, f"{flowsheet_name}.svg")
+        )
+
+        # save png screenshot
+        visualizer.save_diagram(
+            screenshot_name=flowsheet_name,
+            image_type="png",
+            screenshot_save_to=screenshot_save_path,
+            display=False,
+        )
+        # check if png file is saved
+        assert os.path.exists(
+            os.path.join(screenshot_save_path, f"{flowsheet_name}.png")
+        )
+
+    finally:
+        clear_screenshot_folder(
+            screenshot_save_path, [f"{flowsheet_name}.png", f"{flowsheet_name}.svg"]
+        )
+
+
+@pytest.mark.integration
+def test_export_flowsheet_diagram(flash_model, tmp_path):
+    flowsheet = flash_model.fs
+
+    # work in a temporary directory managed by pytest
+    os.chdir(tmp_path)
+
+    def check_file(path: Path, bytes: int = 10):
+        assert path.exists()
+        assert path.is_file()
+        assert path.stat().st_size >= bytes
+
+    # Happy paths
+
+    # write SVG to file in current directory
+    fsvis.export_flowsheet_diagram(flowsheet, "foo.svg")
+    check_file(tmp_path / "foo.svg")
+    fsvis.export_flowsheet_diagram(flowsheet, Path("foo.svg"))
+    check_file(tmp_path / "foo.svg")
+
+    # write PNG to file in current directory
+    fsvis.export_flowsheet_diagram(flowsheet, "foo.png")
+    check_file(tmp_path / "foo.png")
+
+    # write SVG to file in subdirectory
+    fsvis.export_flowsheet_diagram(flowsheet, "./bar/foo.svg")
+    check_file(tmp_path / "bar" / "foo.svg")
+    fsvis.export_flowsheet_diagram(flowsheet, Path("./bar/foo.svg"))
+    check_file(tmp_path / "bar" / "foo.svg")
+
+    ## Unhappy paths
+
+    with pytest.raises(ValueError):
+        fsvis.export_flowsheet_diagram(flowsheet, "foo.txt")
+
+    with pytest.raises(ValueError):
+        fsvis.export_flowsheet_diagram(flowsheet, "foo")
+
+    if platform.system() != "Windows":
+        with pytest.raises(IOError):
+            fsvis.export_flowsheet_diagram(
+                flowsheet, Path("/") / "aoxomoxoa" / "foo.svg"
+            )
+
+    # TODO: test Windows

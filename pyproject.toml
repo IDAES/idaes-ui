@@ -43,12 +43,18 @@ build-backend = "setuptools.build_meta"
         "setuptools",
         "pydantic ~= 2.0",
 
-        # Pint 0.24.1 for Python 3.9 compatibility
-        "pint >= 0.24.1",
+        # for compatibility with IDAES unit formatting
+        # following IDAES/idaes-pse#1438 is released
+        "pint < 0.25",
 
-        # fastapi is not used at the moment; uncomment once fastapi is needed again
-        # "fastapi",
-        # "uvicorn",
+        # for generate a screenshot and open the browser asynchronously
+        "nest_asyncio",
+
+        # for return screenshot image to jupyter and identify if user is in jupyter environment
+        "IPython",
+
+        # request for screenshot function to use playwright to open browser in background and capture image
+        "playwright==1.42.0",
     ]
 
     keywords = ["IDAES", "energy systems", "chemical engineering", "process modeling"]
@@ -57,7 +63,6 @@ build-backend = "setuptools.build_meta"
 testing = [
     "pytest",
     "pytest-icdiff >= 0.7",  # readable dict diffs for test_flowsheet and others
-    "playwright==1.42.0",
     "pytest-playwright==0.4.4",
     "requests==2.31.0",
     # "httpx",  # fastapi testing
