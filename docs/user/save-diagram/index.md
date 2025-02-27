@@ -1,40 +1,42 @@
 (save-preview-diagram)=
-# Save and Preview Diagram  
+# Save and Preview Flowsheet Diagram  
 
 ### Overview:  
-As we know, you can use IDAES UI to open a web page in your browser and view the diagram image by using:
-```python
-m.fs.visualize('flowsheet_name')
-```
-The `visualize` function returns a call back function named `save_diagram`
-This function allows you to:
-1. Preview the most current stage of the diagram image.
-2. Save the most current stage of the diagram image (SVG, PNG) to your defined path.
+IDAES UI allows you to preview your flowsheet diagram at any time while working on it by calling `export_flowsheet_diagram`.
 
 ### Usage:
-1. Call the `visualize` function without opening the browser by adding the parameter `browser=False` and assign the result to a variable.
-```python
-visualization_dict = m.fs.visualize('flowsheet_name', browser=False)
+The export_flowsheet_diagram function is used to return the current stage of the flowsheet diagram at any time after you have initialized your model.
+* It can save the diagram to your preferred path or the default path.
+* It can display the current stage of the flowsheet diagram in a Jupyter Notebook.
+
+### Parameters:
+`export_flowsheet_diagram` takes three parameters:
+* `flowsheet`: The flowsheet object
+* `name`: The diagram filename or full path where you prefer to save the diagram. The output format is determined by the file extension (".svg" for SVG and ".png" for PNG).
+* `display`: Boolean, to determent if you want to review current flowsheet in jupyter notebook
+
+#### Let's go over it step by step.
+1. Import `export_flowsheet_diagram` function from `idaes_ui package`
+    ```python
+    from idaes_ui.fv.fsvis import export_flowsheet_diagram
+    ```
+
+2. After initializing your model, you should have `m.fs`.   
+Then, you can call `export_flowsheet_diagram`.
+    ```python
+    export_flowsheet_diagram(m.fs, '~/Download/my_flowsheet_diagram.svg', display=True)
+    ```
+
+3. Then, you can see the flowsheet diagram's saved path in the log.
+
+### View flowsheet diagram
+1. To view the image, after calling `export_flowsheet_diagram`, you can visit the path shown in the log.
+2. To view the flowsheet diagram in a Jupyter Notebook, set `display=True`. This will automatically display the flowsheet diagram in the notebook.
+
+### Demo
+```{video} /static/save_diagram/videos/demo_video_export_flowsheet_diagram.mp4
+:width: 800
+:nocontrols:
+:autoplay: true
+:loop:
 ```
-
-2. Call the `save_diagram` function from visualization_dict.  
-
-Arguments are:
- * `screenshot_name`: string (Optional) — The name of the screenshot you would like to use. If not assigned, the flowsheet name will be used as the default.
- * `image_type`: string (Optional) — The type of image you would like to save. Currently, it only supports PNG and SVG. If not specified, it will use SVG as the default.
- * `screenshot_save_to`: str (Optional) — The path where you would like to save the diagram screenshot. If not specified, it will save to the IDAES-UI package/screenshots by default.
- * `display`: boolean (Optional) — A flag to control whether to display in Jupyter or not. If not specified, it will default to `False`.
-
-```python
-visualization_dict.save_diagram(
-    screenshot_name='my_diagram', 
-    image_type='svg', 
-    screenshot_save_to='~/user/screenshots', 
-    display=True
-)
-```
-
-3. You should now see the saved diagram screenshot image in your defined `screenshot_save_to` path, with the specified `image_type`. If `display` is set to `True`, you should also see the diagram image displayed in the Jupyter Notebook.
-
-
-
