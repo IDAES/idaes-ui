@@ -10,7 +10,7 @@ README for IDAES-UI docs
 # Change to the docs directory
 
 # Install the required packages
-pip install -r requirement.txt
+pip install -r requirements.txt
 
 # Install sphinx-autobuild
 # This is necessary for building a local development server to view live changes.
