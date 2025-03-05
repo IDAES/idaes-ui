@@ -11,6 +11,7 @@ If you wish to develop or extend IDAES UIs, please also see the [developer docum
 
 * [Installation](installation)
 * [{{vistitle}}](fv_main_page)
+* [Save and Preview Diagram](save_diagram)
 
 ```{toctree}
 ---
@@ -18,4 +19,5 @@ hidden: true
 ---
 install
 fv/index
+save-diagram/index
 ```

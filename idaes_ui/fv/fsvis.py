@@ -269,7 +269,9 @@ def _init_logging(lvl):
     ui_logger.setLevel(lvl)
 
 
-def export_flowsheet_diagram(flowsheet, name: Union[str, Path]) -> Path:
+def export_flowsheet_diagram(
+    flowsheet, name: Union[str, Path], display: bool = False
+) -> Path:
     """Export the flowsheet as a diagram.
 
     Some example invocations (flowsheet is in `m.fs`)::
@@ -322,13 +324,13 @@ def export_flowsheet_diagram(flowsheet, name: Union[str, Path]) -> Path:
     try:
         d.mkdir(parents=True, exist_ok=True)
     except Exception as err:
-        raise IOError(f"Cannot make directory {d}: {err}")
+        raise IOError(f"Cannot make directory {d}: {err}") from err
     if imtype not in ("svg", "png"):
         raise ValueError(f"File extension must be '.svg' or '.png' (got: '.{imtype}')")
     r = visualize(flowsheet, basename, browser=False).save_diagram(
         screenshot_name=basename,
         screenshot_save_to=str(d),
         image_type=imtype,
-        display=False,
+        display=display,
     )
     return Path(r["diagram_saved_path"])
