@@ -57,7 +57,6 @@ jobs:
         #   - '3.10'
         #   - '3.11'
           - '3.12'
-        # sufi todo check why it isnt tested for others and test with python 3.13
           - '3.13'
         os:
           - linux
@@ -104,7 +103,7 @@ jobs:
           - win64
         include:
           - os: linux
-            runner-image: ubuntu-latest
+            runner-image: ubuntu-22.04
           - os: win64
             runner-image: windows-2022
     steps:
