@@ -276,7 +276,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
           * `/setting`: Retrieve a setting value.
           * `/path/to/file`: Retrieve file stored static directory
         """
-
+        if _log.isEnabledFor(logging.DEBUG):
+            _log.debug(f"begin do_GET: path={self.path}")
         # Query url param
         u, queries = self._parse_flowsheet_url(self.path)
         id_ = queries.get("id", None) if queries else None
@@ -286,6 +287,8 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
             self.send_error(
                 400, message=f"Query parameter 'id' is required for '{u.path}'"
             )
+            if _log.isEnabledFor(logging.DEBUG):
+                _log.debug(f"  end do_GET: path={self.path} status=error missing 'id'")
             return
 
         # From path get what to do
@@ -300,6 +303,10 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
                     400,
                     message=f"Query parameter 'setting_key' is required for '{u.path}'",
                 )
+                if _log.isEnabledFor(logging.DEBUG):
+                    _log.debug(
+                        f"  end do_GET: path={self.path} status=error missing 'setting_key'"
+                    )
                 return
             self._get_setting(setting_key_)
         elif u.path == "/diagnostics":
@@ -309,13 +316,20 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
             self.directory = _static_dir  # keep here: overwritten if set earlier
             super().do_GET()
 
+        if _log.isEnabledFor(logging.DEBUG):
+            _log.debug(f"begin do_GET: path={self.path} status=ok")
+
     def _get_app(self, id_):
         """Read index file, process to insert flowsheet identifier, and return it."""
+        if _log.isEnabledFor(logging.DEBUG):
+            _log.debug(f"begin /app")
         p = Path(_template_dir / "index.html")
         with open(p, "r", encoding="utf-8") as fp:
             s = fp.read()
             page = s.format(flowsheet_id=id_)
         self._write_html(200, page)
+        if _log.isEnabledFor(logging.DEBUG):
+            _log.debug(f"end /app")
 
     def _get_fs(self, id_: str):
         """Get updated flowsheet.
@@ -326,18 +340,24 @@ class FlowsheetServerHandler(http.server.SimpleHTTPRequestHandler):
         Returns:
             None
         """
+        if _log.isEnabledFor(logging.DEBUG):
+            _log.debug(f"begin /fs")
         try:
             merged = self.server.update_flowsheet(id_)
         except errors.FlowsheetUnknown as err:
             # User error: user asked for a flowsheet by an unknown ID
             self.send_error(404, message=str(err))
+            _log.error(f"  end /fs: status=error bad-id")
             return
         except (errors.FlowsheetNotFound, errors.ProcessingError) as err:
             # Internal error: flowsheet ID is found, but other things are missing
             self.send_error(500, message=str(err))
+            _log.error(f"  end /fs: status=error msg={str(err)}")
             return
         # Return merged flowsheet
         self._write_json(200, merged)
+        if _log.isEnabledFor(logging.DEBUG):
+            _log.debug(f"  end /fs: status=ok")
 
     def _get_setting(self, setting_key_: str):
         """Get setting value.

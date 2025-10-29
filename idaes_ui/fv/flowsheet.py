@@ -45,7 +45,7 @@ class FileBaseNameExistsError(Exception):
     pass
 
 
-def validate_flowsheet(fs: Dict) -> Tuple[bool, str]:
+def validate_flowsheet(fs: Dict, strict: bool = False) -> Tuple[bool, str]:
     """Validate a flowsheet.
 
     Expected format is below.
@@ -80,6 +80,8 @@ def validate_flowsheet(fs: Dict) -> Tuple[bool, str]:
 
     Args:
         fs: Flowsheet to validate
+        strict: In this mode some warnings will be failures: when components
+                are in the model but not in the diagram (that's it for now).
 
     Return:
         Tuple of (True, "") for OK, and (False, "<message>") for failure
@@ -115,16 +117,15 @@ def validate_flowsheet(fs: Dict) -> Tuple[bool, str]:
             return False, f"Cell id '{cell_id}' not found in unit models or arcs"
         cell_ids.add(cell_id)
     # Check if all model id's are in the cells
+    # If not, in strict mode Fail; otherwise, issue a warning and keep on truckin'
     if cell_ids != component_ids:
         missing = component_ids - cell_ids
-        sfx = "s" if len(missing) > 1 else ""
-        return (
-            False,
-            (
-                f"Component id{sfx} {missing} {'are' if sfx else 'is'} not in the"
-                " layout cells"
-            ),
-        )
+        n_missing = len(missing)
+        message = f"{n_missing} components not shown in the diagram: {missing}"
+        if strict:
+            return False, message
+        else:
+            _log.warning(message)
     return True, ""
 
 
@@ -256,7 +257,13 @@ class FlowsheetSerializer:
                 component, StateBlock
             ):
                 # skip physical parameter / state blocks
-                pass
+                try:
+                    comp_name = component.getname()
+                except AttributeError:
+                    comp_name = "<unknown>"
+                _log.debug(
+                    f"Skipping physical parameter or state block for component '{comp_name}'"
+                )
             else:
                 # Find unit models nested within indexed blocks
                 type_ = self.get_unit_model_type(component)
@@ -284,20 +291,20 @@ class FlowsheetSerializer:
             stream_states_dict,
         )  # deferred to avoid circ. import
 
-        # We might have this information from generating self.serialized_components
-        # but I (Makayla) don't know how that connects to the stream names so this
-        # will be left alone for now
         for stream_name, stream_value in stream_states_dict(self.streams).items():
             label = ""
-            for var, var_value in stream_value.define_display_vars().items():
-                var = var.capitalize()
+            if not hasattr(stream_value, "define_display_vars"):
+                self.labels[stream_name] = "None"
+            else:
+                for var, var_value in stream_value.define_display_vars().items():
+                    var = var.capitalize()
 
-                for k, v in var_value.items():
-                    if k is None:
-                        label += f"{var} {round(value(v), self._sig_figs)}\n"
-                    else:
-                        label += f"{var} {k} {round(value(v), self._sig_figs)}\n"
-            self.labels[stream_name] = label[:-2]
+                    for k, v in var_value.items():
+                        if k is None:
+                            label += f"{var} {round(value(v), self._sig_figs)}\n"
+                        else:
+                            label += f"{var} {k} {round(value(v), self._sig_figs)}\n"
+                self.labels[stream_name] = label[:-2]
 
     def _map_edges(self):
         # Map the arcs to the ports to construct the edges
@@ -382,8 +389,10 @@ class FlowsheetSerializer:
 
     def _add_unit_model_with_ports(self, unit, unit_type):
         unit_name = unit.getname()
+        _log.debug(f"Attempting to add unit model '{unit_name}'")
         if unit.parent_block() == self.flowsheet:
             # The unit is top-level and therefore should be displayed.
+            _log.debug(f"Found top-level unit '{unit_name}': will be displayed")
             self.unit_models[unit] = {
                 "name": unit_name,
                 "type": unit_type,
@@ -406,11 +415,12 @@ class FlowsheetSerializer:
             # performance_contents is a dict like:
             # {'vars': {'Heat Duty': <pyomo.core.base.var._GeneralVarData object>,
             #           'Pressure Change': <pyomo.core.base.var._GeneralVarData>}}
-            if performance_contents:
+            if performance_contents and hasattr(performance_contents, "vars"):
                 # If performance contents is not empty or None then stick it into a
                 # dataframe and convert the GeneralVars to actual values
                 performance_df = pd.DataFrame(
-                    performance_contents["vars"].items(), columns=["Variable", "Value"]
+                    performance_contents["vars"].items(),
+                    columns=["Variable", "Value"],
                 )
                 performance_df["Value"] = performance_df["Value"].map(value)
                 performance_df = self._make_valid_json(performance_df)
@@ -418,13 +428,16 @@ class FlowsheetSerializer:
                     "performance_contents"
                 ] = performance_df
             else:
-                self._serialized_contents[unit_name][
-                    "performance_contents"
-                ] = pd.DataFrame({}, columns=["Variable", "Value"])
+                self._serialized_contents[unit_name]["performance_contents"] = (
+                    pd.DataFrame({}, columns=["Variable", "Value"])
+                )
         elif unit in self._known_endpoints:
             # Unit is a subcomponent AND it is connected to an Arc. Or maybe it's in
             # an indexed block. Find the top-level parent unit and assign the
             # serialized link to the parent.
+            _log.debug(
+                f"Found connected but non-top-level unit '{unit_name}': might be displayed"
+            )
             parent_unit = unit.parent_block()
             while not parent_unit == self.flowsheet:
                 parent_unit = parent_unit.parent_block()
@@ -443,7 +456,9 @@ class FlowsheetSerializer:
         else:
             # The unit is neither top-level nor connected; do not display this unit,
             # since it is a subcomponent.
-            pass
+            _log.info(
+                f"Unit '{unit_name}' is neither top-level nor connected: will not be displayed"
+            )
 
     @staticmethod
     def get_unit_model_type(unit) -> str:
@@ -559,9 +574,9 @@ class FlowsheetSerializer:
             # )
             .apply(
                 lambda col: col.apply(
-                    lambda x: round(x, self._sig_figs)
-                    if isinstance(x, (int, float))
-                    else x
+                    lambda x: (
+                        round(x, self._sig_figs) if isinstance(x, (int, float)) else x
+                    )
                 )
             )
         )
